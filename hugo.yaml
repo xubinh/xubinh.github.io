@@ -12,3 +12,8 @@ params:
     - name: github
       title: GitHub
       url: https://github.com/xubinh
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
