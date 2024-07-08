@@ -71,8 +71,9 @@ params:
       url: https://github.com/xubinh
 
   editPost:
+    disabled: true
     URL: "https://github.com/xubinh/xubinh.github.io/tree/main/content"
-    Text: "提出修改意见"
+    Text: "提出修改意见 "
     appendFilePath: true
 
   # label:
