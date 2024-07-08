@@ -1,7 +1,20 @@
 baseURL: https://example.org/
-languageCode: en-us
 title: xubinh's blog
+copyright: "© 2024 [xubinh's blog](https://xubinh.github.io/) All rights reserved."
+languageCode: zh-cn
 theme: PaperMod
+menu:
+  main:
+    - name: 所有文章
+      url: archives/
+      weight: 5
+    - name: 所有标签
+      url: tags/
+      weight: 10
+    - name: 搜索
+      url: search/
+      weight: 15
+mainSections: ["posts"]
 params:
   homeInfoParams:
     Title: Hi there 👋
