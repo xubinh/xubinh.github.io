@@ -6,6 +6,9 @@ paginate: 5
 paginatePath: page
 theme: PaperMod
 
+mainSections: ["posts"]
+ShowPageNums: true
+
 menu:
   main:
     - name: 所有文章
@@ -17,7 +20,7 @@ menu:
     - name: 搜索
       url: search/
       weight: 15
-mainSections: ["posts"]
+
 params:
   homeInfoParams:
     Title: Hi there 👋
@@ -28,6 +31,7 @@ params:
     - name: github
       title: GitHub
       url: https://github.com/xubinh
+
 outputs:
   home:
     - HTML
