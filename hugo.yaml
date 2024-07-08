@@ -5,8 +5,23 @@ languageCode: zh-cn
 paginate: 5
 paginatePath: page
 theme: PaperMod
-
 mainSections: ["posts"]
+enableInlineShortcodes: true
+enableRobotsTXT: true
+buildDrafts: false
+buildFuture: false
+buildExpired: false
+enableEmoji: true
+pygmentsUseClasses: true
+
+minify:
+  disableXML: true
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
 
 menu:
   main:
@@ -23,6 +38,26 @@ menu:
       weight: 15
 
 params:
+  env: production
+  description: xubinh's blog
+  author: xubinh
+  ShowShareButtons: true
+  ShareButtons: ["twitter"]
+  ShowReadingTime: true
+  disableSpecial1stPost: true
+  displayFullLangName: true
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: true
+  ShowRssButtonInSectionTermList: true
+  ShowAllPagesInArchive: true
+  ShowToc: true
+  comments: false
+  # images: ["images/papermod-cover.png"]
+
+  defaultTheme: auto
+  disableThemeToggle: false
+
   ShowPageNums: true
 
   homeInfoParams:
@@ -35,8 +70,76 @@ params:
       title: GitHub
       url: https://github.com/xubinh
 
-outputs:
-  home:
-    - HTML
-    - RSS
-    - JSON
+  editPost:
+    URL: "https://github.com/xubinh/xubinh.github.io/tree/main/content"
+    Text: "提出修改意见"
+    appendFilePath: true
+
+  # label:
+  # iconSVG: '<svg xmlns="http://www.w3.org/2000/svg" height="25" viewBox="0 -960 960 960" fill="currentColor"><path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>'
+  # text: "Home"
+  # icon: icon.png
+  # iconHeight: 35
+
+  # analytics:
+  #     google:
+  #         SiteVerificationTag: "XYZabc"
+
+  assets:
+    disableHLJS: true
+  #     favicon: "<link / abs url>"
+  #     favicon16x16: "<link / abs url>"
+  #     favicon32x32: "<link / abs url>"
+  #     apple_touch_icon: "<link / abs url>"
+  #     safari_pinned_tab: "<link / abs url>"
+
+  # cover:
+  #     hidden: true # hide everywhere but not in structured data
+  #     hiddenInList: true # hide on list pages and home
+  #     hiddenInSingle: true # hide on single page
+
+  # fuseOpts:
+  #     isCaseSensitive: false
+  #     shouldSort: true
+  #     location: 0
+  #     distance: 1000
+  #     threshold: 0.4
+  #     minMatchCharLength: 0
+  #     keys: ["title", "permalink", "summary", "content"]
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    noClasses: false
+    # anchorLineNos: true
+    # codeFences: true
+    # guessSyntax: true
+    # lineNos: true
+    # style: monokai
+
+# privacy:
+#   vimeo:
+#     disabled: false
+#     simple: true
+
+#   twitter:
+#     disabled: false
+#     enableDNT: true
+#     simple: true
+
+#   instagram:
+#     disabled: false
+#     simple: true
+
+#   youtube:
+#     disabled: false
+#     privacyEnhanced: true
+
+services:
+  instagram:
+    disableInlineCSS: true
+
+  twitter:
+    disableInlineCSS: true
