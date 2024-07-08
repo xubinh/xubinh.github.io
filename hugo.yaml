@@ -7,7 +7,6 @@ paginatePath: page
 theme: PaperMod
 
 mainSections: ["posts"]
-ShowPageNums: true
 
 menu:
   main:
@@ -22,6 +21,8 @@ menu:
       weight: 15
 
 params:
+  ShowPageNums: true
+
   homeInfoParams:
     Title: Hi there 👋
     Content: |
