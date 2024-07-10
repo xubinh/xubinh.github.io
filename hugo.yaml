@@ -24,6 +24,7 @@ outputs:
     - JSON
 
 taxonomies:
+  category: categories
   tag: tags
   series: series
 
@@ -58,6 +59,7 @@ params:
   ShowToc: true
   comments: false
   # images: ["images/papermod-cover.png"]
+  math: true
 
   defaultTheme: auto
   disableThemeToggle: false

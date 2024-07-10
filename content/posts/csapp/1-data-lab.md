@@ -3,8 +3,8 @@ title: "笔记: CSAPP - Data Lab"
 description: 熟悉整数与浮点数实现以及C语言位运算之间的关系
 date: 2024-07-10T13:42:52+08:00
 draft: false
-series: ["csapp"]
 tags: ["csapp"]
+series: ["csapp"]
 author: ["xubinh"]
 type: posts
 ---
@@ -123,7 +123,7 @@ type: posts
 
 $$
 \begin{equation}
-P \oplus Q = (P \wedge \neg Q) \vee (\neg P \wedge Q) = \neg (\neg (P \wedge \neg Q) \wedge \neg (\neg P \wedge Q)), \tag{1} \label{1.3.1.bitXor-1}
+P \oplus Q = (P \wedge \neg Q) \vee (\neg P \wedge Q) = \neg (\neg (P \wedge \neg Q) \wedge \neg (\neg P \wedge Q)), \label{1.3.1.bitXor-1}
 \end{equation}
 $$
 
@@ -178,8 +178,8 @@ $$
 
 $$
 \begin{numcases}{}
-x + 1 \equiv 2^{w} - 1 - x \ \ (\text{mod}\ \  2^{w}), \tag{2} \label{1.3.3.isTmax-1}\\
-x \neq 2^w - 1. \tag{3} \label{1.3.3.isTmax-2}
+x + 1 \equiv 2^{w} - 1 - x \ \ (\text{mod}\ \  2^{w}), \label{1.3.3.isTmax-1} \\\\
+x \neq 2^w - 1. \label{1.3.3.isTmax-2}
 \end{numcases}
 $$
 
