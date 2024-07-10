@@ -23,6 +23,9 @@ outputs:
     - RSS
     - JSON
 
+taxonomies:
+  series: ["csapp"]
+
 menu:
   main:
     - name: 所有文章
