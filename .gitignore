@@ -1,3 +1,4 @@
 /public/
 /.prettierrc
 /timestamps/
+.hugo_build.lock
