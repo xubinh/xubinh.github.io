@@ -42,7 +42,7 @@ params:
   description: xubinh's blog
   author: xubinh
   ShowShareButtons: true
-  ShareButtons: ["twitter"]
+  # ShareButtons: ["twitter"]
   ShowReadingTime: true
   disableSpecial1stPost: true
   displayFullLangName: true
