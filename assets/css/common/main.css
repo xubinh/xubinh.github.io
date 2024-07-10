@@ -1,0 +1,92 @@
+.main {
+    position: relative;
+    min-height: calc(100vh - var(--header-height) - var(--footer-height));
+    max-width: calc(var(--main-width) + var(--gap) * 2);
+    margin: auto;
+    padding: var(--gap);
+}
+
+.page-header h1 {
+    font-size: 40px;
+}
+
+.pagination {
+    display: flex;
+}
+
+.pagination a {
+    color: var(--theme);
+    font-size: 13px;
+    line-height: 36px;
+    background: var(--primary);
+    border-radius: calc(36px / 2);
+    padding: 0 16px;
+}
+
+.pagination .next {
+    margin-inline-start: auto;
+}
+
+
+.social-icons a {
+    display: inline-flex;
+    padding: 10px;
+}
+
+.social-icons a svg {
+    height: 26px;
+    width: 26px;
+}
+
+code {
+    direction: ltr;
+}
+
+div.highlight,
+pre {
+    position: relative;
+}
+
+/* 右上角 "复制代码" 按钮 */
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    /* padding: 8px 16px; */
+    font-size: 14px;
+    user-select: none;
+}
+
+div.highlight:hover .copy-code,
+pre:hover .copy-code {
+    display: block;
+}
+
+/* 新增样式, 用于鼠标移开代码块后仍然显示 "复制代码" 按钮 */
+div.highlight .copy-code.clicked,
+pre .copy-code.clicked {
+    display: block;
+}
+
+@font-face {
+    font-family: 'HYZhengYuan';
+    src: url('assets/fonts/HYZhengYuan-55W.woff2') format('woff2'),
+        /* url('assets/fonts/HYZhengYuan-55W.woff') format('woff'), */
+        url('assets/fonts/HYZhengYuan-55W.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'HYZhengYuan';
+    src: url('assets/fonts/HYZhengYuan-75W.woff2') format('woff2'),
+        /* url('assets/fonts/HYZhengYuan-75W.woff') format('woff'), */
+        url('assets/fonts/HYZhengYuan-75W.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
