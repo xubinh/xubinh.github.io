@@ -5,7 +5,7 @@ languageCode: zh-cn
 paginate: 5
 paginatePath: page
 theme: PaperMod
-mainSections: ["posts"]
+mainSections: ["posts", "posts/csapp"]
 enableInlineShortcodes: true
 enableRobotsTXT: true
 buildDrafts: false
