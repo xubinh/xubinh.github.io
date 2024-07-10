@@ -1,11 +1,12 @@
 ---
 title: "笔记: CSAPP - Data Lab"
-summary: 熟悉整数与浮点数实现以及C语言位运算之间的关系
+description: 熟悉整数与浮点数实现以及C语言位运算之间的关系
 date: 2024-07-10T13:42:52+08:00
 draft: false
-series: "csapp"
+series: ["csapp"]
 tags: ["csapp"]
 author: ["xubinh"]
+type: posts
 ---
 
 > - **具体代码请移步至[GitHub](https://github.com/xubinh/csapp/tree/main/1-data-lab).**

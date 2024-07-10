@@ -5,7 +5,7 @@ languageCode: zh-cn
 paginate: 5
 paginatePath: page
 theme: PaperMod
-mainSections: ["posts", "posts/csapp"]
+mainSections: ["posts"]
 enableInlineShortcodes: true
 enableRobotsTXT: true
 buildDrafts: false
@@ -24,7 +24,7 @@ outputs:
     - JSON
 
 taxonomies:
-  series: ["csapp"]
+  series: csapp
 
 menu:
   main:
