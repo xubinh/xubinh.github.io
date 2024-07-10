@@ -68,9 +68,9 @@ params:
   ShowPageNums: true
 
   homeInfoParams:
-    Title: Hi there 👋
+    Title: 你好! 👋
     Content: |
-      Welcome to my blog!
+      欢迎来到我的博客.
 
   socialIcons:
     - name: github
