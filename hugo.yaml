@@ -63,8 +63,8 @@ params:
   ShowAllPagesInArchive: true
   ShowToc: true
   comments: false
-  # images: ["images/papermod-cover.png"]
   math: true
+  # images: ["images/papermod-cover.png"]
 
   defaultTheme: auto
   disableThemeToggle: false
