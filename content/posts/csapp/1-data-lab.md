@@ -124,7 +124,11 @@ math: true
 
 $$
 \begin{equation}
-P \oplus Q = (P \wedge \neg Q) \vee (\neg P \wedge Q) = \neg (\neg (P \wedge \neg Q) \wedge \neg (\neg P \wedge Q)), \label{1.3.1.bitXor-1}
+    \label{1.3.1.bitXor-1}
+    \begin{aligned}
+        P \oplus Q &= (P \wedge \neg Q) \vee (\neg P \wedge Q) \\\\
+                   &= \neg (\neg (P \wedge \neg Q) \wedge \neg (\neg P \wedge Q)),
+    \end{aligned}
 \end{equation}
 $$
 
