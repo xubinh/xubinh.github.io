@@ -150,6 +150,7 @@
                     <a
                         href="{{ .URL | absLangURL }}"
                         title="{{ .Title | default .Name }} {{- cond $is_search (" (Alt + /)" | safeHTMLAttr) ("" | safeHTMLAttr ) }}"
+                        target="_blank"
                         {{- cond $is_search (" accesskey=/" | safeHTMLAttr) ("" | safeHTMLAttr ) }}
                         ><span {{- if eq $menu_item_url $page_url }}class="active"{{- end }}>
                             {{- .Pre }}
