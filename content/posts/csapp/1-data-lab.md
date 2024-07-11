@@ -7,6 +7,7 @@ tags: ["csapp"]
 series: ["csapp"]
 author: ["xubinh"]
 type: posts
+math: true
 ---
 
 > - **具体代码请移步至[GitHub](https://github.com/xubinh/csapp/tree/main/1-data-lab).**
