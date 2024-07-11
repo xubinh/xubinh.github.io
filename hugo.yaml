@@ -31,17 +31,21 @@ taxonomies:
 
 menu:
   main:
-    - name: 所有文章
+    - name: 文章
       url: archives/
       weight: 5
 
-    - name: 所有标签
+    - name: 标签
       url: tags/
       weight: 10
 
     - name: 搜索
       url: search/
       weight: 15
+
+    - name: GitHub
+      url: https://github.com/xubinh
+      weight: 20
 
 params:
   env: production
@@ -72,10 +76,10 @@ params:
     Content: |
       欢迎来到我的博客.
 
-  socialIcons:
-    - name: github
-      title: GitHub
-      url: https://github.com/xubinh
+  # socialIcons:
+  #   - name: github
+  #     title: GitHub
+  #     url: https://github.com/xubinh
 
   editPost:
     disabled: true
