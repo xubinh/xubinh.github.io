@@ -16,22 +16,21 @@ type: posts
 - `gdb` : 直接启动环境
 - `gdb <executable>` : 指定可执行文件并启动环境
 
-> [!NOTE]
-> 常用的是 `gdb <executable>` 命令, 以直接载入可执行文件.
+> - 常用的是 `gdb <executable>` 命令, 以直接载入可执行文件.
 
 **设置断点**:
 
 - `break <function-name>` : 将断点设置在函数入口处
 - `break *<memory-address>` : 将断点设置在指定内存位置
 
-> [!NOTE] > `<function-name>` 可以是函数名称, 例如 `my_func`; 而 `<memory-address>` 可以是某个具体的内存地址, 例如 `0x4328afe`, 使用内存地址设置断点时务必前缀一个星号 `*`.
+> - `<function-name>` 可以是函数名称, 例如 `my_func`; 而 `<memory-address>` 可以是某个具体的内存地址, 例如 `0x4328afe`, 使用内存地址设置断点时务必前缀一个星号 `*`.
 
 **禁用和启用断点**:
 
 - `disable n` : 暂时禁用断点
 - `enable n` : 重新启用断点
 
-> [!NOTE] > `n` 指 gdb 为该断点分配的序号. gdb 在设置断点时会为每一个断点分配一个正整数序号, 从 1 开始从小到大分配. 可以直接使用序号对断点进行操作.
+> - `n` 指 gdb 为该断点分配的序号. gdb 在设置断点时会为每一个断点分配一个正整数序号, 从 1 开始从小到大分配. 可以直接使用序号对断点进行操作.
 
 **删除断点**:
 
@@ -61,7 +60,7 @@ type: posts
 - `print (char *) <memory-address>` : 打印字符串
 - `print *(int *) <memory-address>` : 打印整数
 
-> [!NOTE] > `<memory-address>` 可以是一般的内存地址, 例如 `0x423fabd`, 也可以是某个表达式, 例如 `($rip + 0x423fabd)`.
+> - `<memory-address>` 可以是一般的内存地址, 例如 `0x423fabd`, 也可以是某个表达式, 例如 `($rip + 0x423fabd)`.
 
 **打印二进制内容**:
 
@@ -71,7 +70,6 @@ type: posts
 - `x/s <memory-address>` : 打印指定地址处的字符串
 - `x/a <memory-address>` : 打印指定地址处所存储的地址 (以当前位置到前一个最近的全局符号的偏移的形式打印)
 
-> [!NOTE]
 > 命令 `x` 以字节块的形式组织并打印二进制内容, 上述命令中的 `[n]`, `[s]` 和 `[f]` 分别代表要显示的字节块的 "数量 (number)", "大小 (size)" 以及 "格式 (format)". 其中:
 >
 > - 数量 `[n]` 为正整数;

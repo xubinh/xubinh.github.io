@@ -5,7 +5,7 @@ defaultContentLanguage: zh
 languageCode: zh-cn
 paginate: 5
 paginatePath: page
-theme: PaperMod
+theme: ["hugo-notice", "PaperMod"]
 mainSections: ["posts"]
 enableInlineShortcodes: true
 enableRobotsTXT: true
