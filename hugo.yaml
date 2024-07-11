@@ -120,16 +120,16 @@ params:
   #     keys: ["title", "permalink", "summary", "content"]
 
 markup:
+  defaultMarkdownHandler: goldmark
   goldmark:
+    extensions:
+      extras:
+        delete:
+          enable: true
     renderer:
       unsafe: true
   highlight:
     noClasses: false
-    # anchorLineNos: true
-    # codeFences: true
-    # guessSyntax: true
-    # lineNos: true
-    # style: monokai
 
 # privacy:
 #   vimeo:
