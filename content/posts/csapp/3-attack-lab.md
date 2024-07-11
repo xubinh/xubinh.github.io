@@ -58,7 +58,7 @@ unsigned getbuf(){
   - 零件仓库中的任意函数的起始地址.
 - 在对 `rtarget` 实施返回导向编程攻击时只允许使用位于函数 `start_farm` 和 `end_farm` 之间的代码生成零件.
 
-{{< notice caution >}}
+{{< notice tip >}}
 在运行 `ctarget` 时可能会报如下错误:
 
 ```text
