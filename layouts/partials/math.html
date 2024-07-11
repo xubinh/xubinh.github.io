@@ -9,26 +9,26 @@
     window.MathJax = {
         loader: {
             load: [
+                // "[tex]/empheq",
                 "[tex]/cases",
-                "[tex]/empheq"
-            ]
+            ],
         },
         tex: {
             inlineMath: [
-                ['\\(', '\\)'],
-                ['$', '$']
+                ["\\(", "\\)"],
+                ["$", "$"],
             ],
             displayMath: [
-                ['\\[', '\\]'],
-                ['$$', '$$']
+                ["\\[", "\\]"],
+                ["$$", "$$"],
             ],
-            tags: 'ams',
+            tags: "ams",
             packages: {
                 "[+]": [
+                    // "empheq",
                     "cases",
-                    "empheq"
-                ]
-            }
-        }
+                ],
+            },
+        },
     };
 </script>
