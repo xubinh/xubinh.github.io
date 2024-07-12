@@ -75,21 +75,53 @@ pre .copy-code.clicked {
 
 @font-face {
     font-family: 'HYZhengYuan';
-    src: url('/fonts/HYZhengYuan-55W.woff2') format('woff2'),
-        url('/fonts/HYZhengYuan-55W.ttf') format('truetype');
+    src: url('/fonts/HYZhengYuan-65W.woff2') format('woff2'),
+        url('/fonts/HYZhengYuan-65W.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'HYZhengYuan';
-    src: url('/fonts/HYZhengYuan-75W.woff2') format('woff2'),
-        url('/fonts/HYZhengYuan-75W.ttf') format('truetype');
+    src: url('/fonts/HYZhengYuan-85W.woff2') format('woff2'),
+        url('/fonts/HYZhengYuan-85W.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
 }
 
-/* 尝试将字体托管在服务器, 但是回过头一想从 Google 下载和从 GitHub 下载实际上没什么区别 */
+@font-face {
+    font-family: 'SauceCodePro NFM';
+    src: url('/fonts/SauceCodeProNerdFontMono-Medium.woff2') format('woff2'),
+        url('/fonts/SauceCodeProNerdFontMono-Medium.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SauceCodePro NFM';
+    src: url('/fonts/SauceCodeProNerdFontMono-Bold.woff2') format('woff2'),
+        url('/fonts/SauceCodeProNerdFontMono-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SauceCodePro NFM';
+    src: url('/fonts/SauceCodeProNerdFontMono-MediumItalic.woff2') format('woff2'),
+        url('/fonts/SauceCodeProNerdFontMono-MediumItalic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'SauceCodePro NFM';
+    src: url('/fonts/SauceCodeProNerdFontMono-BoldItalic.woff2') format('woff2'),
+        url('/fonts/SauceCodeProNerdFontMono-BoldItalic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
+}
+
+/* 尝试将 Source Code Pro 字体托管在服务器, 但是回过头一想从 Google 下载和从 GitHub 下载实际上没什么区别 */
 /* @font-face {
     font-family: 'Source Code Pro';
     src: url('/fonts/SourceCodePro-Regular.woff2') format('woff2'),

@@ -189,17 +189,23 @@
     margin-bottom: 0;
 }
 
+/* 同时控制代码块和内联代码 */
 .post-content code {
-    font-family: "Source Code Pro", "HYZhengYuan", monospace;
-    margin: auto 4px;
-    padding: 3px 6px;
+    /* font-family: "Source Code Pro", "HYZhengYuan", monospace; */
+    font-family: "SauceCodePro NFM", "HYZhengYuan", monospace;
+    /* margin: auto 4px; */
+    margin: 0;
+    padding: 0;
     /* font-size: 0.78em; */
-    font-size: 14px;
+    font-size: 14.7px;
     line-height: 1.6;
-    background: var(--code-bg);
-    border-radius: 2px;
+    /* 正文的 line-height 已设置为 1.6875 */
+    /* background: var(--code-bg); */
+    /* border-radius: 2px; */
+    color: #636363;
 }
 
+/* 仅针对代码块 */
 .post-content pre code {
     display: grid;
     margin: auto 0;
