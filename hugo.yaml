@@ -48,6 +48,7 @@ menu:
       weight: 20
 
 params:
+  copyrightStartYear: 2024
   env: production
   description: xubinh's blog
   author: xubinh

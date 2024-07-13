@@ -4,14 +4,19 @@
             {{- if site.Copyright }}
                 <span>{{ site.Copyright | markdownify }}</span>
             {{- else }}
-                <span>&copy; {{ now.Year }} <a href="{{ "" | absLangURL }}">{{ site.Title }}</a> All rights reserved.</span>
+                <span
+                    >Copyright&nbsp;&copy;&nbsp;
+                    {{- if and site.Params.CopyrightStartYear (not (eq site.Params.CopyrightStartYear now.Year)) -}}
+                        {{ site.Params.CopyrightStartYear }}-
+                    {{- end -}}{{- now.Year -}}&nbsp;<a href="{{ "" | absLangURL }}">{{ site.Title }}</a> All rights reserved
+                </span>
             {{- end }}
-            {{- print " " }}
+            {{- print " · " }}
         {{- end }}
 
         {{- with site.Params.footer.text }}
             {{ . | markdownify }}
-            {{- print " " }}
+            {{- print " · " }}
         {{- end }}
 
 
