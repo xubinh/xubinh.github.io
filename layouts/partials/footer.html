@@ -8,7 +8,7 @@
                     >Copyright&nbsp;&copy;&nbsp;
                     {{- if and site.Params.CopyrightStartYear (not (eq site.Params.CopyrightStartYear now.Year)) -}}
                         {{ site.Params.CopyrightStartYear }}-
-                    {{- end -}}{{- now.Year -}}&nbsp;<a href="{{ "" | absLangURL }}">{{ site.Title }}</a> All rights reserved
+                    {{- end -}}{{- now.Year -}}&nbsp;<a href="{{ "" | absLangURL }}">{{ site.Title }}</a>&nbsp;All rights reserved
                 </span>
             {{- end }}
             {{- print " · " }}
