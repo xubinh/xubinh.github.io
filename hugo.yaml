@@ -130,7 +130,10 @@ markup:
     renderer:
       unsafe: true
   highlight:
+    # anchorLineNos: true
+    lineNos: true
     noClasses: false
+    tabWidth: 4
 
 # privacy:
 #   vimeo:
