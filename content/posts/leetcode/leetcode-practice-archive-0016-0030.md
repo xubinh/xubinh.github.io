@@ -78,3 +78,104 @@ public:
     }
 };
 ```
+
+## 8. 字符串转换整数 (atoi)
+
+英文题目名称: String to Integer (atoi)
+
+标签: 字符串
+
+思路:
+
+- 本题题型为模拟题, 没什么技巧.
+- 一开始还以为可以使用上一题 (即 [7. 整数反转](https://leetcode.cn/problems/reverse-integer/description/)) 的用于判断是否溢出的结论速通, 后来发现上一题的结论是有前提条件的, 而该前提条件在本题中并不成立, 因此只能手动判断是否溢出.
+
+代码:
+
+```cpp
+class Solution {
+public:
+    int myAtoi(string s) {
+        const int N = s.length();
+        int current_position = 0;
+
+        // 去除前导空格:
+        while (current_position < N && s[current_position] == ' ') {
+            current_position++;
+        }
+
+        // 如果到字符串尾, 或者下一个字符不是符号或数字, 则不存在有效数字部分,
+        // 直接返回:
+        if (current_position == N
+            || (s[current_position] != '+' && s[current_position] != '-'
+                && (s[current_position] < '0' || s[current_position] > '9'))) {
+            return 0;
+        }
+
+        // 读取符号:
+        bool is_integer_positive = true;
+        int integer_sign = 1;
+        if (s[current_position] == '-') {
+            is_integer_positive = false;
+            integer_sign = -1;
+        }
+        if (s[current_position] == '+' || s[current_position] == '-') {
+            current_position++;
+        }
+
+        // 确定数字部分的结束位置:
+        int integer_part_end_position = current_position;
+        while (integer_part_end_position < N
+               && s[integer_part_end_position] >= '0'
+               && s[integer_part_end_position] <= '9') {
+            integer_part_end_position++;
+        }
+
+        // 去除前导零, 确定数字部分的开始位置:
+        int integer_part_start_position = current_position;
+        while (integer_part_start_position < integer_part_end_position
+               && s[integer_part_start_position] == '0') {
+            integer_part_start_position++;
+        }
+
+        // 手动检查是否存在溢出:
+        bool is_overflow = false;
+        if (integer_part_end_position - integer_part_start_position > 10) {
+            is_overflow = true;
+        } else if (integer_part_end_position - integer_part_start_position
+                   < 10) {
+            is_overflow = false;
+        } else {
+            const string extreme_integer =
+                is_integer_positive ? "2147483647" : "2147483648";
+
+            for (int compare_position_offset = 0; compare_position_offset < 10;
+                 compare_position_offset++) {
+                if (s[integer_part_start_position + compare_position_offset]
+                    < extreme_integer[compare_position_offset]) {
+                    break;
+                } else if (s[integer_part_start_position
+                             + compare_position_offset]
+                           > extreme_integer[compare_position_offset]) {
+                    is_overflow = true;
+                    break;
+                }
+            }
+        }
+
+        if (is_overflow) {
+            return is_integer_positive ? 2147483647 : (-2147483647 - 1);
+        }
+
+        int integer_result = 0;
+        current_position = integer_part_start_position;
+        while (current_position < integer_part_end_position) {
+            integer_result = integer_result * 10
+                             + integer_sign * (s[current_position] - '0');
+            current_position++;
+        }
+
+        return integer_result;
+    }
+};
+```
