@@ -64,6 +64,7 @@ params:
   ShowAllPagesInArchive: true
   ShowToc: true
   comments: false
+  tocOpen: true
   # math: true
   # images: ["images/papermod-cover.png"]
 
