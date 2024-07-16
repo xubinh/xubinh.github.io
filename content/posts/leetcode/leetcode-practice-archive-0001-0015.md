@@ -164,7 +164,9 @@ public:
         }
 
         vector<int> char2latest_idx(257, -1); // 哈希表, 存储每个字符的最新下标
-        vector<int> current2previous_idx(n, -1); // next 数组, 从当前下标跳到左边最近相同字符的下标 (如果没有则跳到 -1)
+        vector<int> current2previous_idx(
+            n, -1); // next 数组, 从当前下标跳到左边最近相同字符的下标
+                    // (如果没有则跳到 -1)
 
         // 利用哈希表构造 next 数组:
         for (int i = 0; i < n; i++) {
@@ -189,10 +191,14 @@ public:
         int current_no_duplecate_length = 1;
         for (int i = 1; i < n; i++) {
             // 动态规划 + 滚动数组:
-            current_no_duplecate_length = min(current_no_duplecate_length + 1, i - current2previous_idx[i]);
+            current_no_duplecate_length = min(current_no_duplecate_length + 1,
+                                              i - current2previous_idx[i]);
 
-            // 由于最终答案为所有 n 个元素开始延伸的最长不重复子串的长度的最大值, 所以直接在滚动过程中进行求解最大值:
-            max_no_duplecate_length = max(max_no_duplecate_length, current_no_duplecate_length);
+            // 由于最终答案为所有 n
+            // 个元素开始延伸的最长不重复子串的长度的最大值,
+            // 所以直接在滚动过程中进行求解最大值:
+            max_no_duplecate_length =
+                max(max_no_duplecate_length, current_no_duplecate_length);
         }
 
         return max_no_duplecate_length;
@@ -252,7 +258,8 @@ public:
         if (nums1.empty() || nums2.empty()) {
             const auto &nums = nums1.empty() ? nums2 : nums1;
             int size = nums.size();
-            return size % 2 ? nums[size / 2] : (nums[size / 2 - 1] + nums[size / 2]) / 2.0;
+            return size % 2 ? nums[size / 2]
+                            : (nums[size / 2 - 1] + nums[size / 2]) / 2.0;
         }
 
         // 总是使得数组 1 最长, 降低思维难度:
@@ -269,7 +276,10 @@ public:
         bool is_odd = total_size % 2;
 
         // 对数组 1 进行二分:
-        int left = max(0, threshold - nums2_size); // 最左端并不一定是 0, 因为有可能整个数组 2 的元素全部纳入都不够
+        int left =
+            max(0, threshold
+                       - nums2_size); // 最左端并不一定是 0, 因为有可能整个数组
+                                      // 2 的元素全部纳入都不够
         int right = min(nums1_size, threshold) + 1; // 最右端同理
         int cut_1, cut_2;
         while (1) {
@@ -281,7 +291,8 @@ public:
             int left_max = get_left_max(nums1, nums2, cut_1, cut_2);
 
             // 右上和右下的最小值:
-            int right_min = get_right_min(nums1, nums2, cut_1, cut_2, nums1_size, nums2_size);
+            int right_min = get_right_min(nums1, nums2, cut_1, cut_2,
+                                          nums1_size, nums2_size);
 
             // 如果分割符合性质直接退出:
             if (left_max <= right_min) {
@@ -289,26 +300,36 @@ public:
             }
 
             // 否则需要确定往左二分还是往右二分:
-            bool is_nums1_bigger = cut_1 == 0 ? false : (cut_2 == 0 ? true : nums1[cut_1 - 1] > nums2[cut_2 - 1]);
+            bool is_nums1_bigger =
+                cut_1 == 0
+                    ? false
+                    : (cut_2 == 0 ? true : nums1[cut_1 - 1] > nums2[cut_2 - 1]);
             left = is_nums1_bigger ? left : cut_1 + 1; // 条件传送
-            right = is_nums1_bigger ? cut_1 : right; // 条件传送
+            right = is_nums1_bigger ? cut_1 : right;   // 条件传送
         }
 
         int left_max = get_left_max(nums1, nums2, cut_1, cut_2);
-        int right_min = get_right_min(nums1, nums2, cut_1, cut_2, nums1_size, nums2_size);
+        int right_min =
+            get_right_min(nums1, nums2, cut_1, cut_2, nums1_size, nums2_size);
 
         return is_odd ? right_min : (left_max + right_min) / 2.0;
     }
 
-    inline int get_left_max(const vector<int> &nums1, const vector<int> &nums2, const int cut_1, const int cut_2) {
-        return cut_1 == 0 ? nums2[cut_2 - 1]
-                          : (cut_2 == 0 ? nums1[cut_1 - 1] : max(nums1[cut_1 - 1], nums2[cut_2 - 1]));
+    inline int get_left_max(const vector<int> &nums1, const vector<int> &nums2,
+                            const int cut_1, const int cut_2) {
+        return cut_1 == 0
+                   ? nums2[cut_2 - 1]
+                   : (cut_2 == 0 ? nums1[cut_1 - 1]
+                                 : max(nums1[cut_1 - 1], nums2[cut_2 - 1]));
     }
 
-    inline int get_right_min(const vector<int> &nums1, const vector<int> &nums2, const int cut_1, const int cut_2,
+    inline int get_right_min(const vector<int> &nums1, const vector<int> &nums2,
+                             const int cut_1, const int cut_2,
                              const int nums1_size, const int nums2_size) {
-        return cut_1 == nums1_size ? nums2[cut_2]
-                                   : (cut_2 == nums2_size ? nums1[cut_1] : min(nums1[cut_1], nums2[cut_2]));
+        return cut_1 == nums1_size
+                   ? nums2[cut_2]
+                   : (cut_2 == nums2_size ? nums1[cut_1]
+                                          : min(nums1[cut_1], nums2[cut_2]));
     }
 };
 ```
@@ -383,7 +404,9 @@ public:
             }
 
             // 拓展当前字符的回文半径:
-            while (i - P_i_temp >= 0 && i + P_i_temp <= n && s[i - P_i_temp] == s[i + P_i_temp] && ++P_i_temp){}
+            while (i - P_i_temp >= 0 && i + P_i_temp <= n
+                   && s[i - P_i_temp] == s[i + P_i_temp] && ++P_i_temp) {
+            }
 
             P[i] = P_i_temp;
 
@@ -530,7 +553,9 @@ public:
 
                     // 尝试匹配多个字符:
                     bool dp_j = false;
-                    for (int k = j - 1; k >= 0 && (c == '.' || c == s[k]) && !(dp_j = dp[k]); k--) {
+                    for (int k = j - 1;
+                         k >= 0 && (c == '.' || c == s[k]) && !(dp_j = dp[k]);
+                         k--) {
                     }
                     dp[j] = dp_j;
                 }
@@ -599,19 +624,25 @@ public:
         int n = preorder.size();
         return _buildTree(preorder, inorder, 0, n, 0, n);
     }
-    TreeNode *_buildTree(vector<int> &preorder, vector<int> &inorder, int preorder_left, int preorder_right,
+    TreeNode *_buildTree(vector<int> &preorder, vector<int> &inorder,
+                         int preorder_left, int preorder_right,
                          int inorder_left, int inorder_right) {
         if (preorder_left == preorder_right) {
             return nullptr;
         }
         int val = preorder[preorder_left];
-        int left_sub_tree_length =
-            find(inorder.begin() + inorder_left, inorder.begin() + inorder_right, val) - inorder.begin() - inorder_left;
+        int left_sub_tree_length = find(inorder.begin() + inorder_left,
+                                        inorder.begin() + inorder_right, val)
+                                   - inorder.begin() - inorder_left;
         auto new_node = new TreeNode(val);
-        new_node->left = _buildTree(preorder, inorder, preorder_left + 1, preorder_left + 1 + left_sub_tree_length,
-                                    inorder_left, inorder_left + left_sub_tree_length);
-        new_node->right = _buildTree(preorder, inorder, preorder_left + 1 + left_sub_tree_length, preorder_right,
-                                     inorder_left + left_sub_tree_length + 1, inorder_right);
+        new_node->left =
+            _buildTree(preorder, inorder, preorder_left + 1,
+                       preorder_left + 1 + left_sub_tree_length, inorder_left,
+                       inorder_left + left_sub_tree_length);
+        new_node->right =
+            _buildTree(preorder, inorder,
+                       preorder_left + 1 + left_sub_tree_length, preorder_right,
+                       inorder_left + left_sub_tree_length + 1, inorder_right);
         return new_node;
     }
 };
@@ -637,13 +668,16 @@ public:
         int right_ptr = 0;
         int n = nums.size();
         while (1) {
-            // 进入前需要确保 nums_at_right_ptr == nums[right_ptr], 而循环过程中 nums_at_right_ptr 必然保持不变:
-            while (right_ptr < n - 1 && nums[right_ptr] == nums[right_ptr + 1]) {
+            // 循环不变量: nums_at_right_ptr == nums[right_ptr].
+            // - 循环过程中 nums_at_right_ptr 必然保持不变.
+            while (right_ptr < n - 1
+                   && nums[right_ptr] == nums[right_ptr + 1]) {
                 right_ptr++;
             }
 
             // 一旦退出循环, 要么遍历到了末尾, 要么相邻两个元素不相等.
-            // 但是无论哪种情况 nums_at_right_ptr 代表的都是同值元素的最后一个元素, 可以直接赋值:
+            // 但是无论哪种情况 nums_at_right_ptr
+            // 代表的都是同值元素的最后一个元素, 可以直接赋值:
             nums[left_ptr] = nums[right_ptr];
             left_ptr++;
 
@@ -811,7 +845,9 @@ public:
         _maxPathSum(root->right, mps_all_right, mps_root_right);
 
         // 构造结果:
-        mps_all = max(max(mps_all_left, mps_all_right), root->val + max(0, mps_root_left) + max(0, mps_root_right));
+        mps_all =
+            max(max(mps_all_left, mps_all_right),
+                root->val + max(0, mps_root_left) + max(0, mps_root_right));
         mps_root = root->val + max(0, max(mps_root_left, mps_root_right));
 
         return;
@@ -841,9 +877,12 @@ public:
             return {};
         }
 
-        queue<TreeNode *> last_layer_tree_node_pointers;  // 前一层的所有非空树结点指针队列 A
-        queue<TreeNode *> current_layer_tree_node_pointers;  // 当前层的所有非空树结点指针队列 B
-        last_layer_tree_node_pointers.push(root);  // 初始时 A 等于 `root`
+        queue<TreeNode *>
+            last_layer_tree_node_pointers; // 前一层的所有非空树结点指针队列 A
+        queue<TreeNode *>
+            current_layer_tree_node_pointers; // 当前层的所有非空树结点指针队列
+                                              // B
+        last_layer_tree_node_pointers.push(root); // 初始时 A 等于 `root`
         vector<vector<int>> result;
         while (1) {
             vector<int> last_layer_tree_node_pointer_values;
@@ -873,7 +912,8 @@ public:
             }
 
             // 否则将 B 赋值给 A, 维护循环不变量:
-            swap(last_layer_tree_node_pointers, current_layer_tree_node_pointers);
+            swap(last_layer_tree_node_pointers,
+                 current_layer_tree_node_pointers);
         }
 
         return result;
@@ -910,7 +950,8 @@ public:
     }
 
     // 按从右往左的顺序进行前序遍历:
-    void _rightSideView_helper(TreeNode *root, int level, int &best_level, vector<int> &result) {
+    void _rightSideView_helper(TreeNode *root, int level, int &best_level,
+                               vector<int> &result) {
         // 在首次进入某一层时收集当前结点:
         if (level > best_level) {
             best_level++;
@@ -949,7 +990,8 @@ public:
 代码:
 
 ```cpp
-#define is_first_or_last_line(current_line_number, numRows_minus_1) ((current_line_number) % (numRows_minus_1) == 0)
+#define is_first_or_last_line(current_line_number, numRows_minus_1)            \
+    ((current_line_number) % (numRows_minus_1) == 0)
 
 class Solution {
 public:
@@ -966,33 +1008,41 @@ public:
         int current_position_in_collected_chars = 0;
 
         // 从上往下遍历 Z 字形变换中的每一行:
-        for (int current_line_number = 0; current_line_number < numRows; current_line_number++) {
+        for (int current_line_number = 0; current_line_number < numRows;
+             current_line_number++) {
             // 主字符在原字符串中的下标:
             int current_main_position_in_input_string = current_line_number;
 
             // 副字符在原字符串中的下标:
-            int current_second_position_in_input_string = (numRows - 1) + (numRows - 1 - current_line_number);
+            int current_second_position_in_input_string =
+                (numRows - 1) + (numRows - 1 - current_line_number);
 
             // 主, 副字符每进入下一个循环时增加的增量:
             int delta_in_input_string = 2 * (numRows - 1);
 
             // 遍历当前行中的每个循环:
-            while (current_main_position_in_input_string < input_string_length) {
+            while (current_main_position_in_input_string
+                   < input_string_length) {
                 // 添加主字符:
-                collected_chars[current_position_in_collected_chars] = s[current_main_position_in_input_string];
+                collected_chars[current_position_in_collected_chars] =
+                    s[current_main_position_in_input_string];
                 current_position_in_collected_chars++;
                 current_main_position_in_input_string += delta_in_input_string;
 
                 // 首尾行只相交一次, 没有副字符:
-                if (is_first_or_last_line(current_line_number, numRows_minus_1)) {
+                if (is_first_or_last_line(current_line_number,
+                                          numRows_minus_1)) {
                     continue;
                 }
 
                 // 为其余行添加副字符:
-                if (current_second_position_in_input_string < input_string_length) {
-                    collected_chars[current_position_in_collected_chars] = s[current_second_position_in_input_string];
+                if (current_second_position_in_input_string
+                    < input_string_length) {
+                    collected_chars[current_position_in_collected_chars] =
+                        s[current_second_position_in_input_string];
                     current_position_in_collected_chars++;
-                    current_second_position_in_input_string += delta_in_input_string;
+                    current_second_position_in_input_string +=
+                        delta_in_input_string;
                 }
             }
         }
