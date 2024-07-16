@@ -1,5 +1,5 @@
 ---
-title: "Leetcode 题解归档: 0001-0015"
+title: "LeetCode 题解归档 (0001~0015)"
 date: 2024-07-14T23:49:00+08:00
 draft: false
 tags: ["leetcode"]
@@ -9,7 +9,9 @@ type: posts
 math: true
 ---
 
-## 1. 两数之和 | Two Sum
+## 1. 两数之和
+
+英文题目名称: Two Sum
 
 标签: 数组, 哈希表
 
@@ -45,7 +47,9 @@ public:
 };
 ```
 
-## 2. 两数相加 | Add Two Numbers
+## 2. 两数相加
+
+英文题目名称: Add Two Numbers
 
 标签: 递归, 链表, 数学
 
@@ -132,7 +136,9 @@ public:
 };
 ```
 
-## 3. 无重复字符的最长子串 | Longest Substring Without Repeating Characters
+## 3. 无重复字符的最长子串
+
+英文题目名称: Longest Substring Without Repeating Characters
 
 标签: 哈希表, 字符串, 滑动窗口
 
@@ -193,7 +199,9 @@ public:
 };
 ```
 
-## 4. 寻找两个正序数组的中位数 | Median of Two Sorted Arrays
+## 4. 寻找两个正序数组的中位数
+
+英文题目名称: Median of Two Sorted Arrays
 
 标签: 数组, 二分查找, 分治
 
@@ -304,7 +312,9 @@ public:
 };
 ```
 
-## 5. 最长回文子串 | Longest Palindromic Substring
+## 5. 最长回文子串
+
+英文题目名称: Longest Palindromic Substring
 
 标签: 双指针, 字符串, 动态规划
 
@@ -411,7 +421,9 @@ public:
 
 Manacher 算法做得非常快, 而上面的 "4. 寻找两个正序数组的中位数" 却做了一下午. 这也体现了自己的一个做题的特点就是特别不擅长边界条件多的思路.
 
-## 10. 正则表达式匹配 | Regular Expression Matching
+## 10. 正则表达式匹配
+
+英文题目名称: Regular Expression Matching
 
 标签: 递归, 字符串, 动态规划
 
@@ -528,7 +540,9 @@ public:
 };
 ```
 
-## 11. 盛最多水的容器 | Container With Most Water
+## 11. 盛最多水的容器
+
+英文题目名称: Container With Most Water
 
 标签: 贪心, 数组, 双指针
 
@@ -564,7 +578,9 @@ public:
 };
 ```
 
-## 105. 从前序与中序遍历序列构造二叉树 | Construct Binary Tree from Preorder and Inorder Traversal
+## 105. 从前序与中序遍历序列构造二叉树
+
+英文题目名称: Construct Binary Tree from Preorder and Inorder Traversal
 
 标签: 树, 数组, 哈希表, 分治, 二叉树
 
@@ -600,7 +616,9 @@ public:
 };
 ```
 
-## 26. 删除有序数组中的重复项 | Remove Duplicates from Sorted Array
+## 26. 删除有序数组中的重复项
+
+英文题目名称: Remove Duplicates from Sorted Array
 
 标签: 数组, 双指针
 
@@ -644,7 +662,9 @@ public:
 };
 ```
 
-## 80. 删除有序数组中的重复项 II | Remove Duplicates from Sorted Array II
+## 80. 删除有序数组中的重复项 II
+
+英文题目名称: Remove Duplicates from Sorted Array II
 
 标签: 数组, 双指针
 
@@ -677,7 +697,9 @@ public:
 };
 ```
 
-## 69. x 的平方根 | Sqrt(x)
+## 69. x 的平方根
+
+英文题目名称: Sqrt(x)
 
 标签: 数学, 二分查找
 
@@ -716,7 +738,9 @@ public:
 };
 ```
 
-## 124. 二叉树中的最大路径和 | Binary Tree Maximum Path Sum
+## 124. 二叉树中的最大路径和
+
+英文题目名称: Binary Tree Maximum Path Sum
 
 标签: 树, 深度优先搜索, 动态规划, 二叉树
 
@@ -794,7 +818,9 @@ public:
 };
 ```
 
-## 102. 二叉树的层序遍历 | Binary Tree Level Order Traversal
+## 102. 二叉树的层序遍历
+
+英文题目名称: Binary Tree Level Order Traversal
 
 标签: 树, 广度优先搜索, 二叉树
 
@@ -854,7 +880,9 @@ public:
 };
 ```
 
-## 199. 二叉树的右视图 | Binary Tree Right Side View
+## 199. 二叉树的右视图
+
+英文题目名称: Binary Tree Right Side View
 
 标签: 树, 深度优先搜索, 广度优先搜索, 二叉树
 
@@ -901,7 +929,9 @@ public:
 };
 ```
 
-## 6. Z 字形变换 | Zigzag Conversion
+## 6. Z 字形变换
+
+英文题目名称: Zigzag Conversion
 
 标签: 字符串
 

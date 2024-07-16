@@ -1,6 +1,7 @@
 ---
-title: "笔记: 3. Attack Lab (CS:APP)"
+title: "CSAPP 笔记 (3): Attack Lab"
 description: "利用缓冲区溢出实施代码注入攻击, 以及利用地址无关的代码零件实施返回导向编程攻击"
+summary: "利用缓冲区溢出实施代码注入攻击, 以及利用地址无关的代码零件实施返回导向编程攻击"
 date: 2024-07-11T20:04:55+08:00
 draft: false
 tags: ["csapp"]

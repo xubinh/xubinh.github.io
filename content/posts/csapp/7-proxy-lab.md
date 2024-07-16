@@ -1,6 +1,7 @@
 ---
-title: "笔记: 7. Proxy Lab (CS:APP)"
+title: "CSAPP 笔记 (7): Proxy Lab"
 description: "实现一个简单的具有缓存功能的并发网络代理服务器"
+summary: "实现一个简单的具有缓存功能的并发网络代理服务器"
 date: 2024-07-11T20:08:55+08:00
 draft: false
 tags: ["csapp"]

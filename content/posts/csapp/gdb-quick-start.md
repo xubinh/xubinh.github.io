@@ -1,6 +1,7 @@
 ---
-title: "笔记: GDB 入门 (CS:APP)"
+title: "CSAPP 笔记 (8): GDB 入门"
 description: "十分钟熟悉 GDB 的基本操作"
+summary: "十分钟熟悉 GDB 的基本操作"
 date: 2024-07-11T20:09:55+08:00
 draft: false
 tags: ["csapp"]

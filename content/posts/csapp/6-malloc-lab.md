@@ -1,6 +1,7 @@
 ---
-title: "笔记: 6. Malloc Lab (CS:APP)"
+title: "CSAPP 笔记 (6): Malloc Lab"
 description: "模仿C语言官方 `malloc` 包, 实现一个动态内存分配器"
+summary: "模仿C语言官方 `malloc` 包, 实现一个动态内存分配器"
 date: 2024-07-11T20:07:55+08:00
 draft: false
 tags: ["csapp"]
