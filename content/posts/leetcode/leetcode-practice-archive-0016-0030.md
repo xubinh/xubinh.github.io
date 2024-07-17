@@ -179,3 +179,58 @@ public:
     }
 };
 ```
+
+## 9. 回文数
+
+英文题目名称: Palindrome Number
+
+标签: 数学
+
+思路:
+
+- 首先排除一些边界情况. 根据题意规定, 负号也会被反转, 因此负数必定不是回文数. 传入的整数不具有前导零, 如果其末尾为零则必定不是回文数.
+- 只考虑最严格的不先将整数转换为字符串再继续的做法. 最自然的想法是将整数的所有数字水平翻转然后看反转后的结果是否和翻转前的相同. 由于本题限制整数的范围为 32 位补码整数, 同时是翻转位数, 因此可以套用 [7. 整数反转](https://leetcode.cn/problems/reverse-integer/description/)中的结论判断翻转过程中是否有可能溢出.
+
+代码:
+
+```cpp
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        // 平凡情况:
+        if (x == 0) {
+            return true;
+        }
+
+        // 根据题意规定, 负号也会被反转, 因此负数必定不是回文数:
+        if (x < 0) {
+            return false;
+        }
+
+        // 传入的整数不具有前导零, 如果其末尾为零则必定不是回文数:
+        if (x % 10 == 0) {
+            return false;
+        }
+
+        int x_duplicate = x;
+
+        // 循环不变量: `current_result` 能够进行一次扩充且保证不会溢出
+        int current_result = 0;
+        while (1) {
+            current_result = current_result * 10 + x % 10;
+            x /= 10;
+
+            if (x == 0) {
+                break;
+            }
+
+            // 检查下一次扩充是否会溢出:
+            if (current_result > 214748364) {
+                return false;
+            }
+        }
+
+        return current_result == x_duplicate;
+    }
+};
+```
