@@ -234,3 +234,85 @@ public:
     }
 };
 ```
+
+## 12. 整数转罗马数字
+
+英文题目名称: Integer to Roman
+
+标签: 哈希表, 数学, 字符串
+
+思路:
+
+- 可以选择模拟或硬编码两种做法. 之所以能够使用硬编码的做法是因为罗马数字表示法将千, 百, 十, 和个位的部分拆开进行表示, 每个部分有各自的编码且互不相交, 因此在整数到罗马数字之间形成了一个双射.
+- 下面选择模拟做法. 模拟做法实际上就是在模拟硬编码的过程, 大致可描述为分块, 处理, 以及拼接三个步骤的循环. 首先将整数分为千位, 百位, 十位和个位的块, 然后依次对各个块进行编码得到对应的子串, 最终结果由这些子串拼接而成.
+
+代码:
+
+```cpp
+class Solution {
+public:
+    string get_component(int number_of_units, char name_for_one_unit,
+                         char name_for_five_units, char name_for_ten_units);
+    string intToRoman(int num);
+};
+
+string Solution::get_component(int number_of_units, char name_for_one_unit,
+                               char name_for_five_units,
+                               char name_for_ten_units) {
+    string component;
+
+    switch (number_of_units) {
+    case 0:
+        break;
+    case 1: // e.g. I
+    case 2: // e.g. II
+    case 3: // e.g. III
+        component = string(number_of_units, name_for_one_unit);
+        break;
+    case 4: // e.g. IV
+        component = {name_for_one_unit, name_for_five_units};
+        break;
+    case 5: // e.g. V
+    case 6: // e.g. VI
+    case 7: // e.g. VII
+    case 8: // e.g. VIII
+        component = {name_for_five_units};
+        component.append(number_of_units - 5, name_for_one_unit);
+        break;
+    case 9: // e.g. IX
+        component = {name_for_one_unit, name_for_ten_units};
+        break;
+    }
+
+    return component;
+}
+
+string Solution::intToRoman(int num) {
+    string result;
+    int unit = 0;
+    int number_of_units = 0;
+
+    unit = 1000;
+    number_of_units = num / unit;
+    result.append(
+        get_component(number_of_units, 'M', '\0', '\0')); // 1 <= num <= 3999
+    num %= unit;
+
+    unit = 100;
+    number_of_units = num / unit;
+    result.append(get_component(number_of_units, 'C', 'D', 'M'));
+    num %= unit;
+
+    unit = 10;
+    number_of_units = num / unit;
+    result.append(get_component(number_of_units, 'X', 'L', 'C'));
+    num %= unit;
+
+    // unit = 1;
+    // number_of_units = num / unit;
+    result.append(get_component(num, 'I', 'V', 'X'));
+    // num %= unit;
+
+    return result;
+}
+```
