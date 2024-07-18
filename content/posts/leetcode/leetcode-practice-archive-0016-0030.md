@@ -364,3 +364,58 @@ public:
     }
 };
 ```
+
+## 14. 最长公共前缀
+
+英文题目名称: Longest Common Prefix
+
+标签: 字典树, 字符串
+
+思路:
+
+- 一开始以为可以使用二分法, 写完提交却狠狠报错, 然后才反应过来公共前缀是 "all of these elements" 类型的而不是 "one of these elements" 类型的, 无法使用二分法, 只能老老实实从左往右每个位置依次检查, 没什么技术含量.
+
+代码:
+
+```cpp
+class Solution {
+public:
+    string longestCommonPrefix(vector<string> &strs) {
+        if (strs.size() == 1) {
+            return strs[0];
+        }
+
+        int minimum_string_length = numeric_limits<int>::max();
+        for (const auto &a_string : strs) {
+            minimum_string_length =
+                min(minimum_string_length, (int)a_string.length());
+        }
+
+        int maximum_common_length = 0;
+        for (int current_compare_position = 0;
+             current_compare_position < minimum_string_length;
+             current_compare_position++) {
+            char current_compare_character = strs[0][current_compare_position];
+            bool are_all_characters_the_same = true;
+            for (int string_index = 1; string_index < strs.size();
+                 string_index++) {
+                if (strs[string_index][current_compare_position]
+                    != current_compare_character) {
+                    are_all_characters_the_same = false;
+                    break;
+                }
+            }
+
+            if (are_all_characters_the_same == false) {
+                break;
+            }
+
+            maximum_common_length++;
+        }
+
+        string result = strs[0].substr(0, maximum_common_length);
+
+        return result;
+    }
+};
+```
