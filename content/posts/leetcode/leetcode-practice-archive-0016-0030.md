@@ -316,3 +316,51 @@ string Solution::intToRoman(int num) {
     return result;
 }
 ```
+
+## 13. 罗马数字转整数
+
+英文题目名称: Roman to Integer
+
+标签: 哈希表, 数学, 字符串
+
+思路:
+
+- 罗马数字表示法使用字母表示原子整数, 同时使用不同的字母拼接方向表示原子整数之间的加减法, 进而表示整个整数.
+- 在罗马数字表示法下, 向右拓展代表增加, 并且拓展的单位总是不超过主单位, 例如 `I` 向右拓展为 `II`, 其中拓展的单位为 `I`, 主单位也为 `I`; 而向左拓展代表减少, 并且拓展的单位同样不超过主单位, 例如 `V` 向左拓展为 `IV`, 其中拓展的单位为 `I`, 主单位为 `V`.
+- 因此当从右往左遍历一个罗马数字时, 如果发现单位减少说明遇到了向左拓展的单位, 需要减去; 反之则需要加上. 最终所得结果即为原始罗马数字所对应的整数.
+
+代码:
+
+```cpp
+class Solution {
+public:
+    int romanToInt(string s) {
+        int letter_to_number[numeric_limits<unsigned char>::max()] = {};
+
+        letter_to_number['I'] = 1;
+        letter_to_number['V'] = 5;
+        letter_to_number['X'] = 10;
+        letter_to_number['L'] = 50;
+        letter_to_number['C'] = 100;
+        letter_to_number['D'] = 500;
+        letter_to_number['M'] = 1000;
+
+        int result = 0;
+        int previous_integer = -1;
+        int current_integer = 0;
+
+        for (int current_character_position = s.length() - 1;
+             current_character_position >= 0; current_character_position--) {
+            current_integer = letter_to_number[s[current_character_position]];
+
+            // 从右向左遍历时若发现单位减小说明是向左拓展, 需要减去;
+            // 否则说明是向右拓展, 需要增加:
+            result += current_integer >= previous_integer ? current_integer
+                                                          : (-current_integer);
+            previous_integer = current_integer;
+        }
+
+        return result;
+    }
+};
+```
