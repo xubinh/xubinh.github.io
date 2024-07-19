@@ -612,3 +612,68 @@ public:
     }
 };
 ```
+
+## 17. 电话号码的字母组合
+
+英文题目名称: Letter Combinations of a Phone Number
+
+标签: 哈希表, 字符串, 回溯
+
+思路:
+
+- 没什么技术含量, 就是一个简单的 DFS.
+
+代码:
+
+```cpp
+class Solution {
+public:
+    unordered_map<char, vector<char>> digit_to_letters{
+        {'2', {'a', 'b', 'c'}}, {'3', {'d', 'e', 'f'}},
+        {'4', {'g', 'h', 'i'}}, {'5', {'j', 'k', 'l'}},
+        {'6', {'m', 'n', 'o'}}, {'7', {'p', 'q', 'r', 's'}},
+        {'8', {'t', 'u', 'v'}}, {'9', {'w', 'x', 'y', 'z'}}};
+    void DFS_for_letter_combinations(vector<string> &letter_combinations,
+                                     char *collected_letters,
+                                     int current_digit_position,
+                                     const string &digits);
+    vector<string> letterCombinations(string &digits);
+};
+
+void Solution::DFS_for_letter_combinations(vector<string> &letter_combinations,
+                                           char *collected_letters,
+                                           int current_digit_position,
+                                           const string &digits) {
+    if (current_digit_position == digits.length()) {
+        letter_combinations.emplace_back(collected_letters);
+        return;
+    }
+
+    char current_digit = digits[current_digit_position];
+
+    for (char current_letter : digit_to_letters[current_digit]) {
+        collected_letters[current_digit_position] = current_letter;
+        DFS_for_letter_combinations(letter_combinations, collected_letters,
+                                    current_digit_position + 1, digits);
+    }
+
+    return;
+}
+
+vector<string> Solution::letterCombinations(string &digits) {
+    if (digits.empty()) {
+        return {};
+    }
+
+    vector<string> letter_combinations;
+    char *collected_letters = new char[digits.size() + 1];
+    collected_letters[digits.size()] = '\0';
+
+    DFS_for_letter_combinations(letter_combinations, collected_letters, 0,
+                                digits);
+
+    delete[] collected_letters;
+
+    return letter_combinations;
+}
+```
