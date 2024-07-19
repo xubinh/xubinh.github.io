@@ -800,3 +800,46 @@ public:
     }
 };
 ```
+
+## 19. 删除链表的倒数第 N 个结点
+
+英文题目名称: Remove Nth Node From End of List
+
+标签: 链表, 双指针
+
+思路:
+
+- 脑筋急转弯类型的题目, 第一次做的时候被坑过一遍, 后边想忘都忘不了. 由于待删除结点相对于链表末结点的距离已知, 同时一个结点是否为链表末结点是可以检测的, 因此可以使用双指针的方法, 先将左右指针错开与待删除结点和链表末结点之间的距离 (即 `n - 1`) 相同的距离, 然后左右指针再同步前进, 当右指针指向链表末结点时左指针便必然指向待删除结点.
+- 由于本题是单链表, 需要将指针指向待删除结点的父结点, 为了处理待删除结点恰好为头结点的情况, 可以使用一个伪头结点 (dummy head) 作为头结点的父结点 (需要注意的是待删除结点的父结点与链表末结点之间的距离为 `n`).
+
+代码:
+
+```cpp
+class Solution {
+public:
+    ListNode *removeNthFromEnd(ListNode *head, int n) {
+        ListNode *dummy_head = new ListNode();
+        dummy_head->next = head;
+
+        ListNode *delete_position = dummy_head;
+
+        // 首先拉开距离:
+        ListNode *list_tail = delete_position;
+        for (int i = 0; i < n; i++) {
+            list_tail = list_tail->next;
+        }
+
+        // 然后固定距离, 同步前进:
+        while (list_tail->next) {
+            delete_position = delete_position->next;
+            list_tail = list_tail->next;
+        }
+
+        // 最后停下来的位置即为待删除位置:
+        delete_position->next = delete_position->next->next;
+
+        // 还需要考虑删除头结点的情况:
+        return dummy_head->next;
+    }
+};
+```
