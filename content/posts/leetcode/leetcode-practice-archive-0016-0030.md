@@ -457,16 +457,23 @@ public:
                 break;
             }
 
+            int main_value = nums[main_pointer];
+
             // 固定主指针情况下的最大三元组小于 0, 可终止对左右指针的遍历,
             // 主指针跳到下一位置:
             if (nums[main_pointer] + nums[nums.size() - 1]
                     + nums[nums.size() - 2]
                 < 0) {
                 main_pointer++;
+
+                // 去重:
+                while (main_pointer < nums.size()
+                       && nums[main_pointer] == main_value) {
+                    main_pointer++;
+                }
+
                 continue;
             }
-
-            int main_value = nums[main_pointer];
             int left_pointer = main_pointer + 1;
             int right_pointer = nums.size() - 1;
 
@@ -676,4 +683,120 @@ vector<string> Solution::letterCombinations(string &digits) {
 
     return letter_combinations;
 }
+```
+
+## 18. 四数之和
+
+英文题目名称: 4Sum
+
+标签: 数组, 双指针, 排序
+
+思路:
+
+- 和 [15. 三数之和](https://leetcode.cn/problems/3sum/description/)同根同源, 三数之和下固定的是主指针, 拓展到四数之和下只需要同时固定主指针和副指针即可, 余下的部分由双指针解决.
+- 本题的优化方式和三数之和中的相同, 但由于增加了一个副指针, 因此主副指针的跳过方式有一点不同, 需要特别处理.
+
+代码:
+
+```cpp
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int> &nums, int target) {
+        // 合理性检查:
+        if (nums.size() < 4) {
+            return {};
+        }
+
+        sort(nums.begin(), nums.end());
+
+        vector<vector<int>> quadruples;
+
+        for (int main_pointer = 0; main_pointer < nums.size() - 3;) {
+            int main_value = nums[main_pointer];
+
+            for (int second_pointer = main_pointer + 1;
+                 second_pointer < nums.size() - 2;) {
+                int second_value = nums[second_pointer];
+
+                // 剪枝:
+                if ((long long)main_value + second_value
+                        + nums[second_pointer + 1] + nums[second_pointer + 2]
+                    > target) {
+                    break;
+                }
+
+                // 剪枝:
+                if ((long long)main_value + second_value + nums[nums.size() - 1]
+                        + nums[nums.size() - 2]
+                    < target) {
+                    second_pointer++;
+
+                    while (second_pointer < nums.size() - 2
+                           && nums[second_pointer] == second_value) {
+                        second_pointer++;
+                    }
+
+                    continue;
+                }
+
+                int left_pointer = second_pointer + 1;
+                int right_pointer = nums.size() - 1;
+
+                while (left_pointer < right_pointer) {
+                    int left_value = nums[left_pointer];
+                    int right_value = nums[right_pointer];
+                    long long current_sum = (long long)main_value + second_value
+                                            + left_value + right_value;
+
+                    if (current_sum == target) {
+                        quadruples.emplace_back(initializer_list<int>{
+                            main_value, second_value, left_value, right_value});
+
+                        left_pointer++;
+                        right_pointer--;
+
+                        while (left_pointer < right_pointer
+                               && nums[left_pointer] == left_value) {
+                            left_pointer++;
+                        }
+                        while (left_pointer < right_pointer
+                               && nums[right_pointer] == right_value) {
+                            right_pointer--;
+                        }
+                    } else if (current_sum < target) {
+                        left_pointer++;
+
+                        while (left_pointer < right_pointer
+                               && nums[left_pointer] == left_value) {
+                            left_pointer++;
+                        }
+                    } else {
+                        right_pointer--;
+
+                        while (left_pointer < right_pointer
+                               && nums[right_pointer] == right_value) {
+                            right_pointer--;
+                        }
+                    }
+                }
+
+                second_pointer++;
+
+                while (second_pointer < nums.size() - 2
+                       && nums[second_pointer] == second_value) {
+                    second_pointer++;
+                }
+            }
+
+            main_pointer++;
+
+            while (main_pointer < nums.size() - 3
+                   && nums[main_pointer] == main_value) {
+                main_pointer++;
+            }
+        }
+
+        return quadruples;
+    }
+};
 ```
