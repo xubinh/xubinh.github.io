@@ -946,3 +946,41 @@ public:
     }
 };
 ```
+
+## 21. 合并两个有序链表
+
+英文题目名称: Merge Two Sorted Lists
+
+标签: 递归, 链表
+
+思路:
+
+- 没什么技术含量. 使用 `merged_list_dummy_head` 作为合并链表的伪头结点, 然后老老实实一个一个将 `list1` 和 `list2` 中的结点往合并链表中搬, 搬到最后两个链表必然不能同时为非空, 于是只需要将非空的那个链表中的余下结点拼接至当前合并链表的末尾即可 (易知拼接后的合并链表仍然有序).
+
+代码:
+
+```cpp
+class Solution {
+public:
+    ListNode *mergeTwoLists(ListNode *list1, ListNode *list2) {
+        ListNode *merged_list_dummy_head = new ListNode();
+        ListNode *merged_list_tail = merged_list_dummy_head;
+
+        while (list1 && list2) {
+            if (list1->val < list2->val) {
+                merged_list_tail->next = list1;
+                list1 = list1->next;
+            } else {
+                merged_list_tail->next = list2;
+                list2 = list2->next;
+            }
+
+            merged_list_tail = merged_list_tail->next;
+        }
+
+        merged_list_tail->next = list1 ? list1 : list2;
+
+        return merged_list_dummy_head->next;
+    }
+};
+```
