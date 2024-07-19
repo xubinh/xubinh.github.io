@@ -419,3 +419,107 @@ public:
     }
 };
 ```
+
+## 15. 三数之和
+
+英文题目名称: 3Sum
+
+标签: 数组, 双指针, 排序
+
+思路:
+
+- 这道题我老早以前做过, 依稀记得做法是将三指针中的一个指针固定住以将原问题转化为双指针问题.
+- 对于双指针问题, 自己今天在脑海里使用一个由一维数组导出的二维矩阵 (矩阵中每个元素为一个二元组) 对其进行模拟之后有了新的体会. 假设左指针对应二维矩阵的 $i$ 下标, 右指针对应二维矩阵的 $j$ 下标, 由于一维数组已升序排序, 所导出的二维矩阵同样关于 $i$ 和 $j$ 下标升序有序. 初始时 $(i, j)$ 位于矩阵的右上角, 此后每次检查右上角二元组之和时总是会发生下列三种情况之一 (注意由矩阵的定义可知其为对称阵):
+  1. 右上角二元组之和小于目标值. 此时易知矩阵第一行中的任何二元组之和均不再可能大于等于目标值 (因为二维矩阵关于 $j$ 下标升序, 而 $j$ 下标此时位于最右端, 向左走只会令二元组之和减少). 这便将第一行以及 (由对称阵性质) 第一列的元素全部排除, 于是原矩阵归约为行数少 1, 列数少 1 的新矩阵, $(i, j)$ 向下移动 1 位 (对应于左指针右移 1 位), 移动后的 $(i, j)$ 位于新矩阵的右上角.
+  1. 右上角二元组之和大于目标值. 同理, 易知矩阵最后一列以及最后一行的二元组可全部被排除, 原矩阵归约为行数少 1, 列数少 1 的新矩阵, $(i, j)$ 向左移动 1 位 (对应于右指针左移 1 位), 移动后的 $(i, j)$ 位于新矩阵的右上角.
+  1. 右上角二元组之和等于目标值. 同理, 易知矩阵第一行, 第一列, 最后一行, 以及最后一列可同时被排除, 原矩阵归约为行数少 2, 列数少 2 的新矩阵, $(i, j)$ 向左下方移动 1 位 (对应于左/右指针分别向右/左移 1 位), 移动后的 $(i, j)$ 位于新矩阵的右上角.
+
+  易知归约终止的标志是 $(i, j)$ 移动至原矩阵的主对角线, 即 $i = j$.
+- 由于题目要求不能有重复, 首先想到的是将答案放到一个 set 中, 但直觉让我觉得很不舒服, 因此思路马上转移到如何编织合适的遍历策略来让结果天然是去重的. 最终的解决方案是首先对数组进行排序 (升序), 然后主指针从左到右进行遍历, 并在固定主指针的情况下使用双指针进行遍历. 规定主指针元素总是作为最终三元组中的最左端元素, 左右指针元素分别对应三元组中的中间和最右端元素, 于是只需要在固定主指针的情况下令左右指针的遍历范围为主指针右端的区间即可保证遍历不遗漏. 而遍历的不重复则是通过每次跳过和主/左/右指针元素值相同的所有元素实现的.
+- 根据官方题解评论区一位网友的评论, 作为一种优化, 如果发现从主指针 `main_pointer` 开始的连续三个元素构成的三元组之和 `nums[main_pointer] + nums[main_pointer + 1] + nums[main_pointer + 2]` 已经大于 0, 由于数组升序有序, 余下未遍历的所有三元组之和均大于 0, 因此可终止全体遍历; 另一方面如果发现主指针元素和数组最右端两个元素构成的三元组之和 `nums[main_pointer] + nums[nums.size() - 1] + nums[nums.size() - 2]` 已经小于 0, 同样由于数组升序有序, 在固定主指针的情况下余下未遍历的所有三元组之和均小于 0, 因此可终止对左右指针的遍历, 直接令主指针跳到下一个位置.
+
+代码:
+
+```cpp
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int> &nums) {
+        // 使数组升序有序:
+        sort(nums.begin(), nums.end());
+
+        vector<vector<int>> result;
+
+        for (int main_pointer = 0; main_pointer < nums.size() - 2;) {
+            // 最小三元组大于 0, 可终止全体遍历:
+            if (nums[main_pointer] + nums[main_pointer + 1]
+                    + nums[main_pointer + 2]
+                > 0) {
+                break;
+            }
+
+            // 固定主指针情况下的最大三元组小于 0, 可终止对左右指针的遍历,
+            // 主指针跳到下一位置:
+            if (nums[main_pointer] + nums[nums.size() - 1]
+                    + nums[nums.size() - 2]
+                < 0) {
+                main_pointer++;
+                continue;
+            }
+
+            int main_value = nums[main_pointer];
+            int left_pointer = main_pointer + 1;
+            int right_pointer = nums.size() - 1;
+
+            while (left_pointer < right_pointer) {
+                if (nums[left_pointer] + nums[right_pointer] == -main_value) {
+                    result.push_back(vector<int>{main_value, nums[left_pointer],
+                                                 nums[right_pointer]});
+
+                    left_pointer++;
+
+                    // 去重:
+                    while (left_pointer < right_pointer
+                           && nums[left_pointer] == nums[left_pointer - 1]) {
+                        left_pointer++;
+                    }
+
+                    right_pointer--;
+
+                    // 去重:
+                    while (left_pointer < right_pointer
+                           && nums[right_pointer] == nums[right_pointer + 1]) {
+                        right_pointer--;
+                    }
+                } else if (nums[left_pointer] + nums[right_pointer]
+                           < -main_value) {
+                    left_pointer++;
+
+                    // 去重:
+                    while (left_pointer < right_pointer
+                           && nums[left_pointer] == nums[left_pointer - 1]) {
+                        left_pointer++;
+                    }
+                } else {
+                    right_pointer--;
+
+                    // 去重:
+                    while (left_pointer < right_pointer
+                           && nums[right_pointer] == nums[right_pointer + 1]) {
+                        right_pointer--;
+                    }
+                }
+            }
+
+            main_pointer++;
+
+            // 去重:
+            while (main_pointer < nums.size()
+                   && nums[main_pointer] == main_value) {
+                main_pointer++;
+            }
+        }
+
+        return result;
+    }
+};
+```
