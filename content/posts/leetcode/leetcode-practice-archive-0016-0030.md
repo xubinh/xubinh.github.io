@@ -523,3 +523,92 @@ public:
     }
 };
 ```
+
+## 16. 最接近的三数之和
+
+英文题目名称: 3Sum Closest
+
+标签: 数组, 双指针, 排序
+
+思路:
+
+- 本题可以重用 [15. 三数之和](https://leetcode.cn/problems/3sum/description/)中的思路, 只需要稍微修改一下检查的目标即可:
+  - 如果三元组之和等于目标 `target`, 那么答案已经找到, 可以直接 return;
+  - 如果三元组之和小于目标 `target`, 那么更新历史最大上有界三元组之和 `maximum_upper_bounded_sum`;
+  - 如果三元组之和大于目标 `target`, 那么更新历史最小下有界三元组之和 `minimum_lower_bounded_sum`.
+
+  最终结果要么为 `target` 自身, 要么为 `maximum_upper_bounded_sum` 和 `minimum_lower_bounded_sum` 中距离 `target` 最近的那个.
+
+{{< notice tip >}}
+
+- 由于 `maximum_upper_bounded_sum` 和 `minimum_lower_bounded_sum` 的初值分别为 `int` 类型的两个极值, 在最后计算与 `target` 之间距离时可能会溢出, 因此需要在计算前强制转换为 `long` 类型.
+
+{{< /notice >}}
+
+代码:
+
+```cpp
+class Solution {
+public:
+    int threeSumClosest(vector<int> &nums, int target) {
+        // 升序排序:
+        sort(nums.begin(), nums.end());
+
+        int maximum_upper_bounded_sum = numeric_limits<int>::min();
+        int minimum_lower_bounded_sum = numeric_limits<int>::max();
+
+        for (int main_pointer = 0; main_pointer < nums.size() - 2;) {
+            int main_value = nums[main_pointer];
+
+            int left_pointer = main_pointer + 1;
+            int right_pointer = nums.size() - 1;
+
+            while (left_pointer < right_pointer) {
+                int left_value = nums[left_pointer];
+                int right_value = nums[right_pointer];
+                int current_sum = main_value + left_value + right_value;
+
+                // 如果三元组之和等于目标, 则可以直接返回:
+                if (current_sum == target) {
+                    return target;
+                }
+
+                if (current_sum < target) {
+                    maximum_upper_bounded_sum =
+                        max(maximum_upper_bounded_sum, current_sum);
+                    left_pointer++;
+
+                    while (left_pointer < right_pointer
+                           && nums[left_pointer] == left_value) {
+                        left_pointer++;
+                    }
+                } else {
+                    minimum_lower_bounded_sum =
+                        min(minimum_lower_bounded_sum, current_sum);
+                    right_pointer--;
+
+                    while (left_pointer < right_pointer
+                           && nums[right_pointer] == right_value) {
+                        right_pointer--;
+                    }
+                }
+            }
+
+            main_pointer++;
+
+            while (main_pointer < nums.size()
+                   && nums[main_pointer] == main_value) {
+                main_pointer++;
+            }
+        }
+
+        // 为避免溢出, 需要强制转换为 `long` 类型:
+        int result = abs((long)target - maximum_upper_bounded_sum)
+                             < abs((long)target - minimum_lower_bounded_sum)
+                         ? maximum_upper_bounded_sum
+                         : minimum_lower_bounded_sum;
+
+        return result;
+    }
+};
+```
