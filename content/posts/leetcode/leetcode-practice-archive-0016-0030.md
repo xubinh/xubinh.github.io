@@ -843,3 +843,106 @@ public:
     }
 };
 ```
+
+## 20. 有效的括号
+
+英文题目名称: Valid Parentheses
+
+标签: 栈, 字符串
+
+思路:
+
+- 第一反应是存储左括号, 并在右括号到来时检查栈顶是否为对应的左括号. 但是这题非常细节, 每次提交都会发现一个坑, 归纳如下:
+  - 即使通过所有左括号匹配也并不意味着整个模式匹配成功, 因为此时栈中还有可能剩余一些未匹配的左括号.
+  - 匹配左括号时需要先检查栈是否为空.
+- 看了自己很早之前提交的一次解答, 发现其实完全可以存储右括号, 并在右括号到来时检查栈顶是否为**自身**. 这样做就把匹配左括号的三个 `if` 语句归约为一个 `==` 判断, 时间效率直接爆炸.
+
+代码 (匹配左括号版本):
+
+```cpp
+class Solution {
+public:
+    bool isValid(string s) {
+        stack<char> stacked_left_brackets;
+
+        for (char bracket : s) {
+            switch (bracket) {
+            case '(':
+            case '{':
+            case '[':
+                stacked_left_brackets.push(bracket);
+                break;
+
+            case ')':
+                if (stacked_left_brackets.empty()
+                    || stacked_left_brackets.top() != '(') {
+                    return false;
+                }
+
+                stacked_left_brackets.pop();
+                break;
+
+            case '}':
+                if (stacked_left_brackets.empty()
+                    || stacked_left_brackets.top() != '{') {
+                    return false;
+                }
+
+                stacked_left_brackets.pop();
+                break;
+
+            case ']':
+                if (stacked_left_brackets.empty()
+                    || stacked_left_brackets.top() != '[') {
+                    return false;
+                }
+
+                stacked_left_brackets.pop();
+                break;
+            }
+        }
+
+        return stacked_left_brackets.empty();
+    }
+};
+```
+
+代码 (匹配右括号自身版本):
+
+```cpp
+class Solution {
+public:
+    bool isValid(string s) {
+        stack<char> stacked_left_brackets;
+
+        for (char bracket : s) {
+            switch (bracket) {
+            case '(':
+                stacked_left_brackets.push(')');
+                break;
+
+            case '{':
+                stacked_left_brackets.push('}');
+                break;
+
+            case '[':
+                stacked_left_brackets.push(']');
+                break;
+
+            case ')':
+            case '}':
+            case ']':
+                if (stacked_left_brackets.empty()
+                    || stacked_left_brackets.top() != bracket) {
+                    return false;
+                }
+
+                stacked_left_brackets.pop();
+                break;
+            }
+        }
+
+        return stacked_left_brackets.empty();
+    }
+};
+```
