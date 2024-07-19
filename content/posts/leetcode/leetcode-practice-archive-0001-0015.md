@@ -1049,6 +1049,8 @@ public:
 
         string result(collected_chars);
 
+        delete collected_chars;
+
         return result;
     }
 };
