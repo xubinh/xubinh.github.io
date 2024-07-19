@@ -88,7 +88,7 @@ public:
 思路:
 
 - 本题题型为模拟题, 没什么技巧.
-- 一开始还以为可以使用上一题 (即 [7. 整数反转](https://leetcode.cn/problems/reverse-integer/description/)) 的用于判断是否溢出的结论速通, 后来发现上一题的结论是有前提条件的, 而该前提条件在本题中并不成立, 因此只能手动判断是否溢出.
+- 一开始还以为可以使用 [7. 整数反转](https://leetcode.cn/problems/reverse-integer/description/)中的用于判断是否溢出的结论进行速通, 后来发现该题的结论是有前提条件的, 并且在本题中并不成立, 因此只能手动判断是否溢出.
 
 代码:
 
@@ -541,7 +541,7 @@ public:
 
 {{< notice tip >}}
 
-- 由于 `maximum_upper_bounded_sum` 和 `minimum_lower_bounded_sum` 的初值分别为 `int` 类型的两个极值, 在最后计算与 `target` 之间距离时可能会溢出, 因此需要在计算前强制转换为 `long` 类型.
+- 由于 `maximum_upper_bounded_sum` 和 `minimum_lower_bounded_sum` 的初值分别为 `int` 类型的两个极值, 最后在计算与 `target` 之间的距离时可能会溢出, 因此需要先强制转换为 `long` 类型.
 
 {{< /notice >}}
 
