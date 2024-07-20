@@ -43,9 +43,9 @@ menu:
       url: search/
       weight: 15
 
-    - name: GitHub
-      url: https://github.com/xubinh
-      weight: 20
+    # - name: GitHub
+    #   url: https://github.com/xubinh
+    #   weight: 20
 
 params:
   copyrightStartYear: 2024
@@ -78,10 +78,10 @@ params:
     Content: |
       欢迎来到我的博客.
 
-  # socialIcons:
-  #   - name: github
-  #     title: GitHub
-  #     url: https://github.com/xubinh
+  socialIcons:
+    - name: github
+      title: GitHub
+      url: https://github.com/xubinh
 
   editPost:
     disabled: true
