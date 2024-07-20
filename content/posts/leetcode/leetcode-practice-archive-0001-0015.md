@@ -18,32 +18,36 @@ math: true
 
 思路:
 
-- 第一反应是排序 + 双指针, 但这样做会丢失下标信息, 需要在找到方案之后再拿着方案回原数组遍历一遍. 时间消耗是 $O(n \log n)$
-- 第二反应是使用哈希表, 但是**当时**觉得哈希表的大小和元素大小量级正相关, 为 1e9, 太大了, 于是跳过.
-- 第三反应是使用 `std::pair` 存储下标信息, 但转念一想这样做时间复杂度大概率在常数系数意义下大于第一个方案.
-- 最后选择第一个方案.
-- 由于两个下标不能相同, 在找到第二个下标的过程中不仅要比较数组元素值, 还要比较当前下标是否和第一个下标相同.
-- 看了题解之后意识到哈希表的大小是动态增长的, 虽然还是很大但是不会大到 1e9 的量级. 时间消耗是 $O(n)$
-- 重新实现之后发现时间消耗确实减少了, 内存消耗也确实增大了.
+- 第一反应是排序 + 双指针, 但这样做要么必须在排序前 (使用另一个类, 例如 `std::pair`) 将数组元素与其下标联系起来, 否则会丢失下标信息, 要么需要在找到正确二元组之后再回到原数组寻找二元组中两个元素的下标. 这种方案的时间复杂度为 $O(n \log n)$.
+  - 最后选择了实现后者, 因为觉得前者的复杂度虽然和后者相同但常数系数可能会很大.
+  - 由于两个下标不能相同, 在找到第二个下标的过程中不仅要比较数组元素值, 还要比较当前下标是否和第一个下标相同.
+- 看了题解发现居然能用哈希表做, 其实当时是有想到哈希表的, 但当时脑子生锈了觉得哈希表的大小和元素大小量级正相关 (即 1e9), 太大了所以没深入去想. 哈希表巧妙的地方在于将顺序匹配的过程简化为了单次查找, 原先我要一个一个在数组中顺序遍历元素看看这个元素和我要找的元素是否相等, 现在是直接拿着我要找的元素在哈希表中查找, 时间复杂度大大降低. 哈希表方案的时间复杂度为 $O(n)$.
 
-代码:
+代码 (哈希表方案):
 
 ```cpp
 class Solution {
 public:
     vector<int> twoSum(vector<int> &nums, int target) {
-        unordered_map<int, int> visited;
-        for (int i = 0; i < nums.size(); i++) {
-            int current_val = nums[i];
-            int val_need_check = target - current_val;
-            auto it = visited.find(val_need_check);
-            if (it == visited.end()) {
-                visited[current_val] = i;
-            } else {
-                return {it->second, i};
+        unordered_map<int, int> integer_to_index;
+
+        for (int current_position_in_nums = 0;
+             current_position_in_nums < nums.size();
+             current_position_in_nums++) {
+            int current_integer = nums[current_position_in_nums];
+
+            auto integer_to_index_iterator =
+                integer_to_index.find(target - current_integer);
+
+            if (integer_to_index_iterator != integer_to_index.end()) {
+                return {integer_to_index_iterator->second,
+                        current_position_in_nums};
             }
+
+            integer_to_index[current_integer] = current_position_in_nums;
         }
-        exit(1);
+
+        return {};
     }
 };
 ```
@@ -66,21 +70,21 @@ public:
 ```cpp
 class Solution {
 public:
-    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        ListNode* result = l1;
+    ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
+        ListNode *added_integer_head = l1;
         int carry = 0;
 
-        // 进入循环前保证两个指针非空:
+        // 循环不变量: 两个指针非空
         while (1) {
             // 求和并进位:
-            int val_1 = l1->val;
-            int val_2 = l2->val;
-            int sum = val_1 + val_2 + carry;
+            int value_1 = l1->val;
+            int value_2 = l2->val;
+            int sum = value_1 + value_2 + carry;
             carry = sum >= 10 ? 1 : 0;
             sum = sum >= 10 ? sum - 10 : sum;
             l1->val = sum;
 
-            // 如果下两个指针仍然非空:
+            // 如果接下来两个指针仍然非空:
             if (l1->next && l2->next) {
                 l1 = l1->next;
                 l2 = l2->next;
@@ -89,28 +93,28 @@ public:
                 continue;
             }
 
-            // 如果下两个指针为空:
+            // 如果接下来两个指针均为空:
             if (!l1->next && !l2->next) {
                 // 说明到头了, 处理剩下的进位:
                 if (carry) {
-                    l1->next = new ListNode(0);
+                    l1->next = new ListNode;
                     l1->next->val = carry;
                 }
 
                 // 直接返回:
-                return result;
+                return added_integer_head;
             }
 
             // 否则两个链表一长一短, 需要另外处理:
             break;
         }
 
-        // 如果 l1 长则保持原样, 如果是 l2 长则将其嫁接到 l1 后面:
+        // 如果 l1 长则保持原样, 如果是 l2 长则将其拼接到 l1 后面:
         if (l2->next) {
             l1->next = l2->next;
         }
 
-        // 重复同样的循环:
+        // 循环不变量: l1 指针非空
         l1 = l1->next;
         while (1) {
             int val = l1->val;
@@ -125,14 +129,14 @@ public:
             }
 
             if (carry) {
-                l1->next = new ListNode(0);
+                l1->next = new ListNode;
                 l1->next->val = carry;
             }
 
-            return result;
+            return added_integer_head;
         }
 
-        exit(1);
+        return nullptr;
     }
 };
 ```
@@ -304,8 +308,8 @@ public:
                 cut_1 == 0
                     ? false
                     : (cut_2 == 0 ? true : nums1[cut_1 - 1] > nums2[cut_2 - 1]);
-            left = is_nums1_bigger ? left : cut_1 + 1; // 条件传送
-            right = is_nums1_bigger ? cut_1 : right;   // 条件传送
+            left = is_nums1_bigger ? left : cut_1 + 1;
+            right = is_nums1_bigger ? cut_1 : right;
         }
 
         int left_max = get_left_max(nums1, nums2, cut_1, cut_2);
@@ -315,7 +319,7 @@ public:
         return is_odd ? right_min : (left_max + right_min) / 2.0;
     }
 
-    inline int get_left_max(const vector<int> &nums1, const vector<int> &nums2,
+    int get_left_max(const vector<int> &nums1, const vector<int> &nums2,
                             const int cut_1, const int cut_2) {
         return cut_1 == 0
                    ? nums2[cut_2 - 1]
@@ -323,7 +327,7 @@ public:
                                  : max(nums1[cut_1 - 1], nums2[cut_2 - 1]));
     }
 
-    inline int get_right_min(const vector<int> &nums1, const vector<int> &nums2,
+    int get_right_min(const vector<int> &nums1, const vector<int> &nums2,
                              const int cut_1, const int cut_2,
                              const int nums1_size, const int nums2_size) {
         return cut_1 == nums1_size
@@ -358,6 +362,16 @@ public:
 ```cpp
 class Solution {
 public:
+    string add_marker(const string &s) {
+        string s2;
+        for (const auto &c : s) {
+            s2.push_back('#');
+            s2.push_back(c);
+        }
+        s2.push_back('#');
+        return s2;
+    }
+
     string longestPalindrome(string s) {
         // 对原字符串进行备份:
         string s_temp = s;
@@ -425,20 +439,11 @@ public:
         }
 
         // 将预处理后的字符串映射回原字符串:
-        int __n = best_P_i - 1;
-        int __pos = (best_i - best_P_i + 1) / 2;
+        int result_length = best_P_i - 1;
+        int result_position = (best_i - best_P_i + 1) / 2;
+        string result = s_temp.substr(result_position, result_length);
 
-        return s_temp.substr(__pos, __n);
-    }
-
-    string add_marker(const string &s) {
-        string s2;
-        for (const auto &c : s) {
-            s2.push_back('#');
-            s2.push_back(c);
-        }
-        s2.push_back('#');
-        return s2;
+        return result;
     }
 };
 ```
@@ -561,6 +566,7 @@ public:
                 }
             }
         }
+
         return dp[s_length];
     }
 };
@@ -622,27 +628,38 @@ class Solution {
 public:
     TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder) {
         int n = preorder.size();
-        return _buildTree(preorder, inorder, 0, n, 0, n);
+
+        TreeNode *root =
+            divide_and_conquer_for_buildTree(preorder, inorder, 0, n, 0, n);
+
+        return root;
     }
-    TreeNode *_buildTree(vector<int> &preorder, vector<int> &inorder,
-                         int preorder_left, int preorder_right,
-                         int inorder_left, int inorder_right) {
+
+    TreeNode *divide_and_conquer_for_buildTree(
+        vector<int> &preorder, vector<int> &inorder, int preorder_left,
+        int preorder_right, int inorder_left, int inorder_right) {
         if (preorder_left == preorder_right) {
             return nullptr;
         }
+
         int val = preorder[preorder_left];
         int left_sub_tree_length = find(inorder.begin() + inorder_left,
                                         inorder.begin() + inorder_right, val)
                                    - inorder.begin() - inorder_left;
-        auto new_node = new TreeNode(val);
-        new_node->left =
-            _buildTree(preorder, inorder, preorder_left + 1,
-                       preorder_left + 1 + left_sub_tree_length, inorder_left,
-                       inorder_left + left_sub_tree_length);
-        new_node->right =
-            _buildTree(preorder, inorder,
-                       preorder_left + 1 + left_sub_tree_length, preorder_right,
-                       inorder_left + left_sub_tree_length + 1, inorder_right);
+
+        auto new_node = new TreeNode;
+        new_node->val = val;
+
+        new_node->left = divide_and_conquer_for_buildTree(
+            preorder, inorder, preorder_left + 1,
+            preorder_left + 1 + left_sub_tree_length, inorder_left,
+            inorder_left + left_sub_tree_length);
+
+        new_node->right = divide_and_conquer_for_buildTree(
+            preorder, inorder, preorder_left + 1 + left_sub_tree_length,
+            preorder_right, inorder_left + left_sub_tree_length + 1,
+            inorder_right);
+
         return new_node;
     }
 };

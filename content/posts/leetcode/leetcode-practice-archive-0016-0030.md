@@ -839,7 +839,10 @@ public:
         delete_position->next = delete_position->next->next;
 
         // 还需要考虑删除头结点的情况:
-        return dummy_head->next;
+        head = dummy_head->next;
+        delete dummy_head;
+
+        return head;
     }
 };
 ```
@@ -980,7 +983,10 @@ public:
 
         merged_list_tail->next = list1 ? list1 : list2;
 
-        return merged_list_dummy_head->next;
+        ListNode *merged_list_head = merged_list_dummy_head->next;
+        delete merged_list_dummy_head;
+
+        return merged_list_head;
     }
 };
 ```
@@ -1133,11 +1139,11 @@ public:
             }
         }
 
-        ListNode *head = merged_list_dummy_head->next;
+        ListNode *merged_list_head = merged_list_dummy_head->next;
 
         delete merged_list_dummy_head;
 
-        return head;
+        return merged_list_head;
     }
 };
 ```
