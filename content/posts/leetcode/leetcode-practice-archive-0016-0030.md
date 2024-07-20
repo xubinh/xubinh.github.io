@@ -984,3 +984,75 @@ public:
     }
 };
 ```
+
+## 22. 括号生成
+
+英文题目名称: Generate Parentheses
+
+标签: 字符串, 动态规划, 回溯
+
+思路:
+
+- 第一反应是分治法, 例如将 $n = 3$ 拆成 $n = 2 + 1$, $n = 1 + 1 + 1$ 等等, 但越想越觉得思维难度颇高, 于是放弃分治法, 转向回溯法:
+- 首先观察到在 $n$ 固定的情况下, 任何一个有效括号组合的长度均为 $2n$, 因此可以从左往右对一个由 $2n$ 个槽位构成的字符串中的每一个槽位枚举该槽位应该放左括号还是右括号来进行生成. 其次也并不是每一个槽位都可以放左括号和右括号:
+  - 能够放左括号当且仅当还有未放置的左括号剩余;
+  - 能够放右括号当且仅当还有未放置的 (之前放置的左括号所需要匹配的) 右括号剩余.
+
+代码:
+
+```cpp
+class Solution {
+public:
+    void
+    DFS_for_generating_parenthesis(vector<string> &valid_bracket_combinations,
+                                   int number_of_left_brackets_left,
+                                   int number_of_right_brackets_left,
+                                   vector<char> &pushed_brackets);
+    vector<string> generateParenthesis(int n);
+};
+
+void Solution::DFS_for_generating_parenthesis(
+    vector<string> &valid_bracket_combinations,
+    int number_of_left_brackets_left, int number_of_right_brackets_left,
+    vector<char> &pushed_brackets) {
+    // 左右括号均已放置完毕:
+    if (!number_of_left_brackets_left && !number_of_right_brackets_left) {
+        valid_bracket_combinations.emplace_back(pushed_brackets.begin(),
+                                                pushed_brackets.end());
+        return;
+    }
+
+    // 可以放置左括号 (此时左括号剩余数量减少, 同时右括号剩余数量增加):
+    if (number_of_left_brackets_left) {
+        pushed_brackets.push_back('(');
+        DFS_for_generating_parenthesis(
+            valid_bracket_combinations, number_of_left_brackets_left - 1,
+            number_of_right_brackets_left + 1, pushed_brackets);
+        pushed_brackets.pop_back();
+    }
+
+    // 可以放置右括号 (此时仅减少右括号剩余数量):
+    if (number_of_right_brackets_left) {
+        pushed_brackets.push_back(')');
+        DFS_for_generating_parenthesis(
+            valid_bracket_combinations, number_of_left_brackets_left,
+            number_of_right_brackets_left - 1, pushed_brackets);
+        pushed_brackets.pop_back();
+    }
+
+    return;
+}
+
+vector<string> Solution::generateParenthesis(int n) {
+    vector<string> valid_bracket_combinations;
+    int number_of_left_brackets_left = n;
+    int number_of_right_brackets_left = 0;
+    vector<char> pushed_brackets;
+
+    DFS_for_generating_parenthesis(
+        valid_bracket_combinations, number_of_left_brackets_left,
+        number_of_right_brackets_left, pushed_brackets);
+
+    return valid_bracket_combinations;
+}
+```
