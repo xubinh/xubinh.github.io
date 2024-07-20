@@ -191,21 +191,21 @@ public:
         }
 
         // 利用 next 数组, 采用动态规划思想, 使用滚动数组进行求解:
-        int max_no_duplecate_length = 1;
-        int current_no_duplecate_length = 1;
+        int max_no_duplicate_length = 1;
+        int current_no_duplicate_length = 1;
         for (int i = 1; i < n; i++) {
             // 动态规划 + 滚动数组:
-            current_no_duplecate_length = min(current_no_duplecate_length + 1,
+            current_no_duplicate_length = min(current_no_duplicate_length + 1,
                                               i - current2previous_idx[i]);
 
             // 由于最终答案为所有 n
             // 个元素开始延伸的最长不重复子串的长度的最大值,
             // 所以直接在滚动过程中进行求解最大值:
-            max_no_duplecate_length =
-                max(max_no_duplecate_length, current_no_duplecate_length);
+            max_no_duplicate_length =
+                max(max_no_duplicate_length, current_no_duplicate_length);
         }
 
-        return max_no_duplecate_length;
+        return max_no_duplicate_length;
     }
 };
 ```
@@ -346,109 +346,129 @@ public:
 
 思路:
 
-- 一般的单双中心向两边拓展的动态规划的算法早就做烂了, 这里直接使用 Manacher 算法.
-- Manacher 算法采用的也是动态规划的思想, 但是和一般的动态规划算法只往一个方向拓展不同, Manacher 算法利用的性质是回文子串的对称性, 在迭代过程中维护一个右端点最靠右的回文子串, 如果当前遍历到的字符包含在这个右端点最靠右的回文子串中, 那么可以利用当前字符关于右端点最靠右回文子串的中心的对称点的信息对当前字符的回文半径进行初始化, 也就是转移了状态.
-- 细节一: 右端点最靠右回文子串只负责其覆盖半径内的信息, 对于覆盖半径外的信息其一概不知 (因为其右端点之外的信息实际上都还没有被遍历过), 所以当前字符初始化的回文半径的初始化值实际上是其 "对称点的回文半径" 和 "对称点距离右端点最靠右回文子串的左端点的距离" 之间的较小值.
-- 细节二: 对于遍历到的每一个点, 如果其位于右端点最靠右回文子串的覆盖范围内, 并且对称点的回文范围是右端点最靠右回文子串的覆盖范围的真子集, 那么无需再对其回文半径进行拓展; 反之如果该点位于覆盖半径之外或者其对称点的回文半径触及了右端点最靠右回文子串的左端点, 那么就需要对其进行拓展. 如果能够拓展出去, 那么当前字符就成为新的右端点最靠右回文子串. 由于要么不用拓展, 要么直接拓展完使得拓展范围内的字符不用拓展, 整体的时间复杂度为 $O(n)$.
-- 细节三: 由于 Manacher 算法需要对初始字符串进行插入记号 (marker) (一般是字符 `#`) 的预处理, 在求得最长回文子串之后若要转换回原字符串需要在预处理后的字符串和原字符串的下标和回文范围之间进行正确的映射.
-  - 对于回文范围, 假设预处理后的字符串的最大回文子串的回文半径 (注意这里是回文半径) 是 `best_P_i`, 通过在草稿纸上简单画图可知该回文子串的右半部分的非 `#` 字符总是可以插入到左半部分的 `#` 字符中, 最后对应到原字符串中的回文范围 (注意这里是回文范围) 总是等于 `best_P_i - 1`.
-  - 对于下标, 很容易可推知预处理后的字符串映射回原字符串只需要将下标整除以 2 即可.
-    - 原字符串的最长回文子串的左端点可以通过先计算预处理后的字符串的最长回文子串的左端点然后映射回原字符串的方法计算得到.
-- 细节四: 右端点最靠右回文子串并不是最长回文子串, 右端点最靠右回文子串的作用只是为了转移状态.
-- 细节五: 关于是否需要对原字符串进行预处理, 自己原先是比较疑惑的, 看了[这篇帖子](https://stackoverflow.com/questions/37811437/manachers-algorithm)之后我的想法是在个人实现的时候需要预处理, 正如帖子里那位老哥所说的, 算法本身已经很饶舌了再不预处理一下直接变成天书, 写的人写不懂看的人更看不懂. 如果是生产级别的代码那该优化优化, 不过那就是另一回事了.
+- 一般的单双中心向两边拓展的动态规划 (实际上是迭代) 的算法已经显得太简单了, 这里直接使用 Manacher 算法. 当然面试的时候最好还是用迭代的做法, 因为手撸 Manacher 的难度级别和手撸 RBT 差不多.
+- Manacher 算法实际上也属于动态规划, 其主要思想是在迭代过程中维护一个 "右端点最靠右" 的回文子串, 如果当前遍历到的字符包含在这个右端点最靠右的回文子串中, 那么可以利用回文子串的对称性, 使用当前字符关于右端点最靠右回文子串的中心的对称点的已有信息对当前字符的回文半径进行初始化. 下面是对 Manacher 算法的一些理解:
+  - 右端点最靠右回文子串只负责其覆盖半径内的信息, 对于覆盖半径外的信息其一概不知 (因为其右端点之外的字符还未被遍历), 所以当前字符初始化的回文半径的初始化值实际上是 "其对称点的回文半径" 和 "其对称点距离右端点最靠右回文子串的左端点的距离" 之间的较小值.
+    - 需要注意的是右端点最靠右回文子串并不是最长回文子串, 右端点最靠右回文子串的作用只是为了转移状态.
+  - 对于遍历到的每一个点, 如果其位于右端点最靠右回文子串的覆盖范围内, 并且对称点的回文范围是右端点最靠右回文子串的覆盖范围的真子集, 那么无需对其进行拓展 (因为能拓展早就拓展了); 反之如果该点位于右端点最靠右回文子串的覆盖范围之外或者其对称点的回文半径触及了右端点最靠右回文子串的左端点, 那么就需要尝试对其进行拓展 (因为右端点最靠右回文子串不能拓展不代表该点不能拓展). 如果能够拓展出去, 那么当前字符就成为新的右端点最靠右回文子串. 由于右端点最靠右回文子串的右端点只会向右前进, 不会向左倒退, 总拓展次数不可能超过 $n$ 次, 因此 Manacher 算法整体的时间复杂度为 $O(n)$.
+  - Manacher 算法还通过对初始字符串进行插入记号 (marker) (一般是字符 `#`) 的预处理来将偶数长度的原字符串情况并入奇数长度的情况中以简化问题. 在求得最长回文子串之后, 若要转换回原字符串, 需要在预处理后的字符串和原字符串的下标和回文范围之间进行正确的映射.
+    - 对于回文半径, 假设预处理后的字符串的最大回文子串的回文半径 (注意这里是回文半径) 是 `best_P_i`, 通过简单画图可知回文子串的右半部分的非 `#` 字符总是可以插入到左半部分的 `#` 字符中, 最后对应到原字符串中的回文范围 (注意这里是回文范围) 总是等于 `best_P_i - 1`.
+    - 对于下标, 易知将预处理后的字符串中的每个字符映射回原字符串只需要将下标整除以 2 即可.
+    - 关于是否需要对原字符串进行预处理, 自己原先是比较疑惑的, 看了[这篇帖子](https://stackoverflow.com/questions/37811437/manachers-algorithm)之后我的想法是在个人实现的时候需要预处理, 正如帖子里那位老哥所说的, 算法本身已经很饶舌了再不预处理一下直接变成天书, 写的人写不懂看的人更看不懂. 如果是生产级别的代码那该优化优化, 不过那就是另一回事了.
+- Manacher 算法做得非常快, 而上面的 "4. 寻找两个正序数组的中位数" 却做了一下午. 这也体现了自己的一个做题的特点就是特别不擅长边界条件多的思路.
 
 代码:
 
 ```cpp
 class Solution {
 public:
-    string add_marker(const string &s) {
-        string s2;
-        for (const auto &c : s) {
-            s2.push_back('#');
-            s2.push_back(c);
+    string add_marker(const string &original_string) {
+        string preprocessed_string;
+
+        for (const auto &current_character : original_string) {
+            preprocessed_string.push_back('#');
+            preprocessed_string.push_back(current_character);
         }
-        s2.push_back('#');
-        return s2;
+
+        preprocessed_string.push_back('#');
+
+        return preprocessed_string;
     }
 
     string longestPalindrome(string s) {
-        // 对原字符串进行备份:
-        string s_temp = s;
-
-        // 预处理, 添加 `#` 标记:
+        // 备份并预处理:
+        string s_duplicate = s;
         s = add_marker(s);
-        int n = s.length();
 
-        // 右端点最靠右回文子串:
-        int C = -1;
-        int R = 1;
-        int C_left_end = C - R + 1; // 左端点
+        int string_length = s.length();
 
-        // 存储每个字符串的回文半径的数组:
-        vector<int> P(n, 1);
+        // 初始化右端点最靠右回文子串:
+        int rightmost_right_end_palindromic_sub_string_center = -1;
+        int rightmost_right_end_palindromic_sub_string_radius = 1;
+        int rightmost_right_end_palindromic_sub_string_left_end =
+            rightmost_right_end_palindromic_sub_string_center
+            - rightmost_right_end_palindromic_sub_string_radius + 1;
+        int rightmost_right_end_palindromic_sub_string_right_end =
+            rightmost_right_end_palindromic_sub_string_center
+            + rightmost_right_end_palindromic_sub_string_radius - 1;
 
-        // 最长回文子串:
-        int best_i = -1;
-        int best_P_i = 1;
+        // 初始化最长回文子串:
+        int longest_palindromic_sub_string_center = -1;
+        int longest_palindromic_sub_string_radius = 1;
 
-        // 遍历每个字符:
-        for (int i = 0; i < n; i++) {
-            char c = s[i];
+        vector<int> palindromic_sub_strings_radii(string_length, 1);
 
-            int P_i_temp = 1; // 减少内存读写
+        for (int current_center = 0; current_center < string_length;
+             current_center++) {
+            int current_radius = 1;
 
-            // 如果位于右端点最靠右回文子串的覆盖范围内:
-            if (i <= C + R - 1) {
-                // 求对称点:
-                int i2 = 2 * C - i;
+            if (current_center
+                <= rightmost_right_end_palindromic_sub_string_right_end) {
+                int symmetric_center =
+                    2 * rightmost_right_end_palindromic_sub_string_center
+                    - current_center;
+                int symmetric_radius =
+                    palindromic_sub_strings_radii[symmetric_center];
+                int symmetric_left_end =
+                    symmetric_center - symmetric_radius + 1;
 
-                // 对称点的回文半径:
-                int P_i2 = P[i2];
-
-                // 如果对称点的回文范围是真子集:
-                if (C_left_end < i2 - P_i2 + 1) {
-                    // 当前字符无需拓展:
-                    P[i] = P_i2;
+                if (rightmost_right_end_palindromic_sub_string_left_end
+                    < symmetric_left_end) {
+                    palindromic_sub_strings_radii[current_center] =
+                        symmetric_radius;
                     continue;
                 }
 
-                // 否则初始化, 准备拓展:
-                P_i_temp = i2 - C_left_end + 1;
+                current_radius =
+                    symmetric_center
+                    - rightmost_right_end_palindromic_sub_string_left_end + 1;
             }
 
-            // 拓展当前字符的回文半径:
-            while (i - P_i_temp >= 0 && i + P_i_temp <= n
-                   && s[i - P_i_temp] == s[i + P_i_temp] && ++P_i_temp) {
+            while (current_center - current_radius >= 0
+                   && current_center + current_radius <= string_length
+                   && s[current_center - current_radius]
+                          == s[current_center + current_radius]) {
+                current_radius++;
             }
 
-            P[i] = P_i_temp;
+            palindromic_sub_strings_radii[current_center] = current_radius;
 
-            // 更新右端点最靠右回文子串:
-            if (C + R < i + P_i_temp) {
-                C = i;
-                R = P_i_temp;
-                C_left_end = C - R + 1;
+            int current_left_end = current_center - current_radius + 1;
+            int current_right_end = current_center + current_radius - 1;
+
+            if (rightmost_right_end_palindromic_sub_string_right_end
+                < current_right_end) {
+                rightmost_right_end_palindromic_sub_string_center =
+                    current_center;
+                rightmost_right_end_palindromic_sub_string_radius =
+                    current_radius;
+                rightmost_right_end_palindromic_sub_string_left_end =
+                    current_left_end;
+                rightmost_right_end_palindromic_sub_string_right_end =
+                    current_right_end;
             }
 
-            // 更新最长回文子串:
-            if (best_P_i < P_i_temp) {
-                best_i = i;
-                best_P_i = P_i_temp;
+            if (longest_palindromic_sub_string_radius < current_radius) {
+                longest_palindromic_sub_string_center = current_center;
+                longest_palindromic_sub_string_radius = current_radius;
             }
         }
 
-        // 将预处理后的字符串映射回原字符串:
-        int result_length = best_P_i - 1;
-        int result_position = (best_i - best_P_i + 1) / 2;
-        string result = s_temp.substr(result_position, result_length);
+        // 将预处理后的回文子串映射回原字符串:
+        int original_longest_palindromic_sub_string_length =
+            longest_palindromic_sub_string_radius - 1;
+        int original_longest_palindromic_sub_string_start_position =
+            (longest_palindromic_sub_string_center
+             - longest_palindromic_sub_string_radius + 1)
+            / 2;
+        string original_longest_palindromic_sub_string = s_duplicate.substr(
+            original_longest_palindromic_sub_string_start_position,
+            original_longest_palindromic_sub_string_length);
 
-        return result;
+        return original_longest_palindromic_sub_string;
     }
 };
 ```
-
-Manacher 算法做得非常快, 而上面的 "4. 寻找两个正序数组的中位数" 却做了一下午. 这也体现了自己的一个做题的特点就是特别不擅长边界条件多的思路.
 
 ## 10. 正则表达式匹配
 
