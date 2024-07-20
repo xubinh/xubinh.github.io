@@ -1056,3 +1056,88 @@ vector<string> Solution::generateParenthesis(int n) {
     return valid_bracket_combinations;
 }
 ```
+
+## 23. 合并 K 个升序链表
+
+英文题目名称: Merge k Sorted Lists
+
+标签: 链表, 分治, 堆（优先队列）, 归并排序
+
+思路:
+
+- 不知道这题以前做没做过, 但是一看到 k 个有序链表脑子里便自动过拟合到了败者树和堆排序那边去了. 但这里不是硬盘, 因此直接使用堆排序即可. 堆的操作的复杂度为 $\log(k)$, 共需要比较 $kn$ 次, 每次都需要至多一次插入和至多一次删除, 因此时间复杂度为 $kn\log(k)$.
+- 最朴素的做法是顺次合并两个相邻的有序链表, 但是这样做的话每次合并得到的新链表长度均为两个旧链表的长度之和, 累积效应显著 (时间复杂度 $k^2n$). 优化的话可以考虑 Huffman Tree (或等价的 2 路归并), 每一轮合并的时间复杂度均为 $kn$, 共合并 $\log(k)$ 轮, 因此总时间复杂度仍为 $kn\log(k)$.
+
+代码:
+
+```cpp
+struct ListNodeHeapWrapperNode {
+    ListNode *list_node;
+    int list_node_value;
+    int list_index;
+};
+
+class ListNodeHeapWrapperNodeLessThanRule {
+public:
+    bool operator()(ListNodeHeapWrapperNode *const &node_1,
+                    const ListNodeHeapWrapperNode *const &node_2) {
+        return node_1->list_node_value > node_2->list_node_value;
+    }
+};
+
+class Solution {
+public:
+    ListNode *mergeKLists(vector<ListNode *> &lists) {
+        priority_queue<ListNodeHeapWrapperNode *,
+                       vector<ListNodeHeapWrapperNode *>,
+                       ListNodeHeapWrapperNodeLessThanRule>
+            k_smallest_heap;
+
+        for (int list_index = 0; list_index < lists.size(); list_index++) {
+            if (lists[list_index] == nullptr) {
+                continue;
+            }
+
+            ListNodeHeapWrapperNode *heap_node = new ListNodeHeapWrapperNode();
+            heap_node->list_node = lists[list_index];
+            heap_node->list_node_value = lists[list_index]->val;
+            heap_node->list_index = list_index;
+
+            k_smallest_heap.push(heap_node);
+
+            lists[list_index] = lists[list_index]->next;
+        }
+
+        ListNode *merged_list_dummy_head = new ListNode();
+        ListNode *merged_list_tail = merged_list_dummy_head;
+
+        while (!k_smallest_heap.empty()) {
+            auto smallest_heap_node = k_smallest_heap.top();
+            k_smallest_heap.pop();
+
+            merged_list_tail->next = smallest_heap_node->list_node;
+            merged_list_tail = merged_list_tail->next;
+
+            if (lists[smallest_heap_node->list_index] == nullptr) {
+                delete smallest_heap_node;
+            } else {
+                auto &reused_heap_node = smallest_heap_node;
+                auto list_index = smallest_heap_node->list_index;
+
+                reused_heap_node->list_node = lists[list_index];
+                reused_heap_node->list_node_value = lists[list_index]->val;
+
+                lists[list_index] = lists[list_index]->next;
+
+                k_smallest_heap.push(reused_heap_node);
+            }
+        }
+
+        ListNode *head = merged_list_dummy_head->next;
+
+        delete merged_list_dummy_head;
+
+        return head;
+    }
+};
+```
