@@ -22,7 +22,11 @@ math: true
 - 由于涉及十进制乘法, 判断溢出也需要以十进制的思维进行.
   - 对于 $x > 0$ 的情况, 溢出等价于
   
-  $$\text{current_result} \times 10 + \text{digit} > 2147483647.$$
+  $$
+  \begin{equation}
+  \text{current_result} \times 10 + \text{digit} > 2147483647.
+  \end{equation}
+  $$
   
   - $x < 0$ 的情况同理.
   
@@ -31,7 +35,11 @@ math: true
   - 之所以能够进行优化是因为上述条件是离散的, 完全可以将所有情况列出来, 对同类情况进行合并同类项, 并对定义域进行降维.
   - 还是对于 $x > 0$ 的情况, 简单移项可知上述溢出条件又等价于
     
-    $$(\text{current_result} - 214748364) \times 10 > 7 - \text{digit}.$$
+    $$
+    \begin{equation}
+    (\text{current_result} - 214748364) \times 10 > 7 - \text{digit}.
+    \end{equation}
+    $$
 
     - 当 $\text{current_result} - 214748364 < 0$ 时, 上式不等号左边必然小于等于 $-10$, 因此不等式必然不成立.
     - 当 $\text{current_result} - 214748364 > 0$ 时, 上式不等号左边必然大于等于 $10$, 因此不等式必然成立.
