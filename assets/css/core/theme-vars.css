@@ -19,6 +19,8 @@
     --table-head-color: white;
     --table-body-background-color-odd: #f2f2f2;
     --code-color: #636363;
+    --blockquote-background-color: #f8f8f8;
+    --blockquote-color: #81858a;
 }
 
 .dark {
