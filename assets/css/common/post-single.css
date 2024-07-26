@@ -274,15 +274,15 @@ h6 code {
 }
 
 h2 {
-    border-bottom: 4px solid #000;
+    border-bottom: 4px solid var(--primary);
 }
 
 h3 {
-    border-bottom: 2px solid #000;
+    border-bottom: 2px solid var(--primary);
 }
 
 h4 {
-    border-bottom: 2px solid #cacaca;
+    border-bottom: 2px solid var(--secondary);
 }
 
 h2,

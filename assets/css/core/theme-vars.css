@@ -37,6 +37,8 @@
     --table-head-color: rgb(29, 30, 32);
     --table-body-background-color-odd: #3a3a3a;
     --code-color: #858585;
+    --blockquote-background-color: rgb(56, 56, 56);
+    --blockquote-color: rgb(136, 136, 136);
 }
 
 .list {
