@@ -265,38 +265,38 @@
 }
 
 /* 标题行中的内联代码 */
-h1 code,
-h2 code,
-h3 code,
-h4 code,
-h5 code,
-h6 code {
+.post-content h1 code,
+.post-content h2 code,
+.post-content h3 code,
+.post-content h4 code,
+.post-content h5 code,
+.post-content h6 code {
     font-size: inherit !important;
 }
 
-h2 {
+.post-content h2 {
     border-bottom: 4px solid var(--primary);
 }
 
-h3 {
+.post-content h3 {
     border-bottom: 2px solid var(--primary);
 }
 
-h4 {
+.post-content h4 {
     border-bottom: 2px solid var(--secondary);
 }
 
-h2,
-h3 {
+.post-content h2,
+.post-content h3 {
     margin-top: 64px;
 }
 
-h4 {
+.post-content h4 {
     margin-top: 32px;
 }
 
-h5,
-h6 {
+.post-content h5,
+.post-content h6 {
     margin-top: 32px;
 }
 
