@@ -10,9 +10,7 @@ author: ["xubinh"]
 type: posts
 ---
 
-## Git 入门
-
-### Git 底层数据模型
+## Git 底层数据模型
 
 - blob: 数据对象, 表示文件.
 - tree: 树对象, 表示目录, 包含子 tree 和 blob.
@@ -26,7 +24,7 @@ type: posts
 
 - [Git - Git Objects](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects)
 
-### 分支, `master` 指针, 以及 `HEAD` 指针
+## 分支, `master` 指针, 以及 `HEAD` 指针
 
 - Git 中所说的分支 (branch) 是指 history 中从叶结点开始一直回溯至根结点所形成的路径, 该路径由一个指向叶结点的指针 (引用/ref) 唯一标识. 这个指针的名称可以是任意的, 而在默认情况下 Git 将仓库中的首个分支命名为 `master` 或 `main`.
 - 相对于固定的分支而言, 程序员常常需要在不同的分支间进行切换, 为了对程序员当前所在的位置进行标识, Git 使用另一个指针 `HEAD` 指向程序员当前所在分支的叶结点的指针 (例如 `master`).
@@ -37,7 +35,7 @@ type: posts
 
 - [Git - git-checkout Documentation](https://git-scm.com/docs/git-checkout)
 
-### 特殊文件: `.gitignore`
+## 特殊文件: `.gitignore`
 
 简介:
 
@@ -74,7 +72,7 @@ type: posts
 
 - [Git - gitignore Documentation](https://git-scm.com/docs/gitignore)
 
-### 配置 Git 默认编辑器
+## 配置 Git 默认编辑器
 
 执行下列命令进行配置 (以 VS Code 为例):
 
@@ -87,7 +85,7 @@ git config --global core.editor "code --wait --new-window"
 - [How to use Visual Studio Code as default editor for git? - Stack Overflow](https://stackoverflow.com/questions/30024353/how-to-use-visual-studio-code-as-default-editor-for-git)
 - [Git - git-commit Documentation](https://git-scm.com/docs/git-commit)
 
-### bare 仓库
+## bare 仓库
 
 - bare 仓库不同于一般的 Git 仓库, 其中并不含有任何能够用于编辑的源文件, 并且原先位于一般仓库中的 `.git` 目录下的文件在 bare 仓库中被移动至根目录下. 因此 bare 仓库并不是设计为让程序员使用的, 而是给服务器使用的.
 - 可以在 `git clone` 时指定构建为一个 bare 仓库, 也可以在 `git init` 时指定新建为一个 bare 仓库.
@@ -96,9 +94,9 @@ git config --global core.editor "code --wait --new-window"
 
 - [git - What is a bare repository and why would I need one? - Stack Overflow](https://stackoverflow.com/questions/37992400/what-is-a-bare-repository-and-why-would-i-need-one)
 
-### 命令速查表 / Cheat Sheets
+## 命令速查表 / Cheat Sheets
 
-#### git add
+### git add
 
 > - `git-add` - Add file contents to the index
 
@@ -129,7 +127,7 @@ git config --global core.editor "code --wait --new-window"
 - [Git - gitglossary Documentation](https://git-scm.com/docs/gitglossary)
 - [git add - Difference between "git add -A" and "git add ." - Stack Overflow](https://stackoverflow.com/questions/572549/difference-between-git-add-a-and-git-add)
 
-#### git branch
+### git branch
 
 > - `git-branch` - List, create, or delete branches
 
@@ -148,7 +146,7 @@ git config --global core.editor "code --wait --new-window"
 
 - [Git - git-branch Documentation](https://git-scm.com/docs/git-branch)
 
-#### git checkout
+### git checkout
 
 > - `git-checkout` - Switch branches or restore working tree files
 
@@ -172,7 +170,7 @@ git config --global core.editor "code --wait --new-window"
 
 - [Git - git-checkout Documentation](https://git-scm.com/docs/git-checkout)
 
-#### git clone
+### git clone
 
 > - `git-clone` - Clone a repository into a new directory
 
@@ -185,7 +183,7 @@ git config --global core.editor "code --wait --new-window"
 
 - [Git - git-clone Documentation](https://git-scm.com/docs/git-clone)
 
-#### git commit
+### git commit
 
 > - `git-commit` - Record changes to the repository
 
@@ -233,7 +231,7 @@ single space, with blank lines in between, but conventions vary here
 
 - [Git - git-commit Documentation](https://git-scm.com/docs/git-commit)
 
-#### git config
+### git config
 
 > - `git-config` - Get and set repository or global options
 
@@ -250,7 +248,7 @@ single space, with blank lines in between, but conventions vary here
 
 - [Git - git-config Documentation](https://git-scm.com/docs/git-config)
 
-#### git help
+### git help
 
 > - `git-help` - Display help information about Git
 
@@ -262,7 +260,7 @@ single space, with blank lines in between, but conventions vary here
 
 - [Git - git-help Documentation](https://git-scm.com/docs/git-help)
 
-#### git init
+### git init
 
 > - `git-init` - Create an empty Git repository or reinitialize an existing one
 
@@ -276,7 +274,7 @@ single space, with blank lines in between, but conventions vary here
 
 - [Git - git-init Documentation](https://git-scm.com/docs/git-init)
 
-#### git log
+### git log
 
 > - `git-log` - Show commit logs
 
@@ -292,7 +290,7 @@ single space, with blank lines in between, but conventions vary here
 
 - [Git - git-log Documentation](https://git-scm.com/docs/git-log)
 
-#### git push
+### git push
 
 > - `git-push` - Update remote refs along with associated objects
 
@@ -309,7 +307,7 @@ single space, with blank lines in between, but conventions vary here
 
 - [Git - git-push Documentation](https://git-scm.com/docs/git-push)
 
-#### git remote
+### git remote
 
 > - `git-remote` - Manage set of tracked repositories
 
@@ -325,7 +323,7 @@ single space, with blank lines in between, but conventions vary here
 
 - [Git - git-remote Documentation](https://git-scm.com/docs/git-remote)
 
-#### git reset
+### git reset
 
 > - `git-reset` - Reset current HEAD to the specified state
 
@@ -346,7 +344,7 @@ single space, with blank lines in between, but conventions vary here
 
 - [Git - git-reset Documentation](https://git-scm.com/docs/git-reset)
 
-#### git rm
+### git rm
 
 > - `git-rm` - Remove files from the working tree and from the index
 
@@ -359,7 +357,7 @@ single space, with blank lines in between, but conventions vary here
 
 - [Git - git-rm Documentation](https://git-scm.com/docs/git-rm)
 
-#### git show-ref
+### git show-ref
 
 > - `git-show-ref` - List references in a local repository
 
@@ -371,7 +369,7 @@ single space, with blank lines in between, but conventions vary here
 
 - [Git - git-show-ref Documentation](https://git-scm.com/docs/git-show-ref)
 
-#### git status
+### git status
 
 > - `git-status` - Show the working tree status
 
@@ -383,7 +381,7 @@ single space, with blank lines in between, but conventions vary here
 
 - [Git - git-status Documentation](https://git-scm.com/docs/git-status)
 
-#### git submodule
+### git submodule
 
 > - `git-submodule` - Initialize, update or inspect submodules
 
