@@ -58,15 +58,18 @@
 }
 
 .post-content h4 {
-    font-size: 16px;
+    /* font-size: 16px; */
+    font-size: 19.2px;
 }
 
 .post-content h5 {
-    font-size: 14px;
+    /* font-size: 14px; */
+    font-size: 16px;
 }
 
 .post-content h6 {
-    font-size: 12px;
+    /* font-size: 12px; */
+    font-size: 16px;
 }
 
 .post-content a,
@@ -243,6 +246,16 @@
     /* border-radius: var(--radius); */
     overflow-x: auto;
     word-break: break-all;
+}
+
+/* 标题行中的内联代码 */
+h1 code,
+h2 code,
+h3 code,
+h4 code,
+h5 code,
+h6 code {
+    font-size: inherit !important;
 }
 
 .post-content blockquote {
