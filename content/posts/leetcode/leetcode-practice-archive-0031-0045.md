@@ -7,7 +7,7 @@ tags: ["LeetCode"]
 series: ["LeetCode"]
 author: ["xubinh"]
 type: posts
-math: false
+math: true
 ---
 
 ## 33. 搜索旋转排序数组
@@ -62,6 +62,102 @@ public:
         }
 
         return nums[left_end] == target ? left_end : -1;
+    }
+};
+```
+
+## 46. 全排列
+
+英文题目名称: Permutations
+
+标签: 数组, 回溯
+
+思路:
+
+- 一开始是按照常规的标记位数组的思路来的, 第几个下标的数字用了就将第几个下标的标记位置为 `false`, 然后每当用完所有数字时就将当前的全排列收集起来. 这样做的话每次遍历到非叶结点都需要 $O(n)$ 的遍历标记位数组的时间, 而每次遍历到叶结点也需要 $O(n)$ 的收集时间, 总时间复杂度为
+
+  $$
+  \begin{equation*}
+  \begin{aligned}
+  &\\, \\, \quad \left(1 + n + n (n - 1) + \dots + \frac{n!}{1!} + n!\right) \times n\\\\
+  &= \left(\frac{n!}{n!} + \frac{n!}{(n - 1)!} + \dots + \frac{n!}{1!} + n!\right) \times n\\\\
+  &\leq \left(\frac{n!}{2^(n - 1)} + \frac{n!}{2^{n - 2}} + \dots + \frac{n!}{2^0} + n!\right) \times n\\\\
+  &\leq n! \cdot 3n.
+  \end{aligned}
+  \end{equation*}
+  $$
+
+- 提交之后发现时间复杂度落在第二档, 于是跑去看题解, 发现可以通过原地置换的方法避免标记位数组 (以及中间结果数组) 的使用. 使用原地置换后的时间复杂度为
+
+  $$
+  n + n (n - 1) + n (n - 1) (n - 2) + \dots + n! + n! \times n <= n! \cdot (3 + n).
+  $$
+
+代码 (常规标记位数组做法):
+
+```cpp
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int> &nums) {
+        vector<vector<int>> permutations;
+        vector<int> used_numbers;
+        int number_of_used_numbers = 0;
+        vector<bool> flags_is_number_used(nums.size(), false);
+        DFS_for_permute(permutations, nums, used_numbers,
+                        number_of_used_numbers, flags_is_number_used);
+
+        return permutations;
+    }
+    void DFS_for_permute(vector<vector<int>> &permutations, vector<int> &nums,
+                         vector<int> &used_numbers, int number_of_used_numbers,
+                         vector<bool> &flags_is_number_used) {
+        if (number_of_used_numbers == nums.size()) {
+            permutations.emplace_back(used_numbers);
+            return;
+        }
+
+        for (int number_index = 0; number_index < nums.size(); number_index++) {
+            int current_selected_number = nums[number_index];
+
+            if (flags_is_number_used[number_index]) {
+                continue;
+            }
+
+            flags_is_number_used[number_index] = true;
+            used_numbers.push_back(current_selected_number);
+            DFS_for_permute(permutations, nums, used_numbers,
+                            number_of_used_numbers + 1, flags_is_number_used);
+            used_numbers.pop_back();
+            flags_is_number_used[number_index] = false;
+        }
+    }
+};
+```
+
+代码 (原地置换做法):
+
+```cpp
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int> &nums) {
+        vector<vector<int>> permutations;
+        DFS_for_permute(permutations, nums, 0);
+
+        return permutations;
+    }
+    void DFS_for_permute(vector<vector<int>> &permutations, vector<int> &nums,
+                         int number_of_used_numbers) {
+        if (number_of_used_numbers == nums.size()) {
+            permutations.emplace_back(nums);
+            return;
+        }
+
+        for (int number_index = number_of_used_numbers;
+             number_index < nums.size(); number_index++) {
+            swap(nums[number_of_used_numbers], nums[number_index]);
+            DFS_for_permute(permutations, nums, number_of_used_numbers + 1);
+            swap(nums[number_of_used_numbers], nums[number_index]);
+        }
     }
 };
 ```
