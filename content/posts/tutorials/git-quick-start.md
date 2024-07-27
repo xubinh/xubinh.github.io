@@ -24,7 +24,23 @@ type: posts
 
 - [Git - Git Objects](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects)
 
-## 分支, 引用, `master`, 以及 `HEAD`
+## working tree, index, commit, `git checkout`, 以及 `git reset`
+
+- working tree (工作目录) 是当前项目所在的本地文件系统中的目录, 其中包含了所有项目的文件, 程序员可以对这些文件进行编辑, 删除, 以及添加等操作. 工作目录中的文件可以处于三种状态, 分别是 "未跟踪 (untracked)", "已暂存 (staged)", 以及 "已修改 (modified)".
+- index (暂存区) 是一个介于工作目录和版本库之间的缓冲区. 暂存区保存了即将提交到版本库的文件快照, 程序员通过执行 `git add` 命令将文件从工作目录添加至暂存区, 表示这些文件已经准备好进行提交.
+- commit (提交) 是对暂存区中文件快照的持久性保存. 提交操作会将暂存区的内容保存到版本库中, 并生成一个唯一的提交 ID (SHA-1 哈希值) 用于标识该提交. 每个提交都可以附加一个提交信息 (commit message), 用于描述本次提交的内容和目的. 提交后的文件状态会保存在版本库中并构成项目的历史记录.
+- 可以看到 working tree, index 以及 commit 从小到大表示了三种不同的修改粒度. 如果将 index 比喻为正在生长的竹竿, 那么 commit 就是竹节, 而 working tree 则是竹叶. 由于 commit 已经保存至版本库中并且可以随时切换并查看, index 的更新实际上是和整个仓库的 commit 树相解耦的; 同时相对于 working tree 而言 index 又是相对固定的, 因此 working tree 的更新也可看作是和 index 相解耦的. 在这种三层结构模型下, `git checkout` 主要关注于对 index 和 working tree 的更新, 并不直接改变 commit 树本身, 而 `git reset` 则主要关注对 commit 树本身的更新. 相应地, 前者将使得 `HEAD` 引用自身指向另一个不同的引用或 commit, 后者则更新 `HEAD` 引用**所指向的引用** (例如 `master`) 的状态, 而不改变 `HEAD` 引用自身. 下面引用 [Git - Reset Demystified](https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified) 中的一幅插图作为例子:
+  
+  ![reset-checkout](https://git-scm.com/book/en/v2/images/reset-checkout.png)
+
+参考资料:
+
+- [Git - git-checkout Documentation](https://git-scm.com/docs/git-checkout)
+- [Git - git-reset Documentation](https://git-scm.com/docs/git-reset)
+- [What's the difference between "git reset" and "git checkout"? - Stack Overflow](https://stackoverflow.com/questions/3639342/whats-the-difference-between-git-reset-and-git-checkout)
+- [Git - Reset Demystified](https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified)
+
+## branch, reference, `master`, 以及 `HEAD`
 
 - 在 Git 中每个 commit 由其 SHA-1 哈希值唯一标识, 直接使用哈希值索引某个 commit 对计算机而言十分简单直接, 但对程序员而言是反人类的. 引用的作用就是为 commit (的哈希值) 起一个别名. 引用本质上就是一个文件, 其文件名就是引用的名称, 而存储的内容则是其所引用的 commit 的哈希值.
   - 可以在当前仓库的 `.git/refs` 目录下找到所有引用.
@@ -139,10 +155,10 @@ git config --global core.editor "code --wait --new-window"
 - `git branch --list [<pattern>...]`: 打印所有分支.
   - 需要注意的是 `pattern` 是用于 Shell 而不是 Git 进行 name globbing 的.
   - 尽管 `--list` 选项理论上在某些情况下可以省略, 为了避免 Git 将 `pattern` 解释为要创建的新分支名称, 还是建议显式指定 `--list` 选项.
-- `git branch <new-branch-name>`: 创建新分支, 但并不关联 `HEAD` 指针至新分支.
-  - 注意此命令并不使 `HEAD` 指针与新分支相关联, `HEAD` 指针此时仍然处于 detach 状态.
+- `git branch <new-branch-name>`: 创建新分支, 但并不关联 `HEAD` 引用至新分支.
+  - 注意此命令并不使 `HEAD` 引用与新分支相关联, `HEAD` 引用此时仍然处于 detach 状态.
 - `git branch (-d | --delete) <old-branch-name>`: 删除旧分支.
-  - 旧分支在删除前必须完全 merge 到它的 upstream 分支或 `HEAD` 当前所指的分支.
+  - 旧分支在删除前必须完全 merge 到它的 upstream 分支或 `HEAD` 引用当前所指向的分支.
 - `git branch (-m | --move) [old-branch-name] <new-branch-name>`: 重命名分支.
 
 参考资料:
@@ -155,12 +171,13 @@ git config --global core.editor "code --wait --new-window"
 
 基本命令:
 
-- `git checkout [<branch-name>]`: 移动至现有分支.
-  - 本命令会将 index 中的内容将变更为所移动至的分支的 index 的内容, 但移动前所在分支中的工作目录的改动仍然保留, 以便程序员提交到所移动至的分支. 如不需保留, 可以通过执行 `git reset` 命令进行删除.
+- `git checkout [<branch-name>]`: 移动至指定的分支.
+  - 执行本命令会将当前 index 更新为 (确切来说是复原为) 所指定的分支的叶 commit 的 index 的内容, 同时 `HEAD` 引用也会与指定分支相关联. 此前在工作目录中所做的改动仍然保留, 以便程序员在移动后继续提交 (如果不需要保留可以通过执行 `git reset` 命令进行删除).
   - 如果 `<branch-name>` 没有找到, 但是恰好有且仅有一个 remote 中含有一个同名的分支, 那么本命令等价于 `git checkout -b <branch> --track <remote>/<branch>`.
-  - 如果没有指定 `<branch-name>`, 那么本命令等价于 "checkout 当前分支".
-- `git checkout <commit-hash>`: 移动至某一分支的某一提交 (修改 index, 并将 HEAD 指针指向所移动至的提交, 此时 `HEAD` 指针将进入 detach 状态).
-  - 移动之后可以通过执行命令 `git checkout -b <new-branch-name>` 创建新分支.
+  - 如果没有指定 `<branch-name>`, 则默认为当前分支.
+- `git checkout <commit-hash>`: 移动至指定的提交.
+  - 执行本命令同样将修改 index, 同时 `HEAD` 引用将指向所指定的提交. 注意此时 `HEAD` 引用处于 detach 状态.
+  - 移动后可以通过执行命令 `git checkout -b <new-branch-name>` 创建新分支.
 - `git checkout -b new-branch`: 创建并移动至新分支.
   - 在当前 `HEAD` 所指处创建新分支并移动至该分支.
 - `git checkout [<tree-ish>] [--] <pathspec>...`: 还原文件至某一提交中的状态.
@@ -190,7 +207,7 @@ git config --global core.editor "code --wait --new-window"
 
 > - `git-commit` - Record changes to the repository
 
-写 commit 注释的最佳实践:
+撰写 commit message 的最佳实践:
 
 ```text
 Capitalized, short (50 chars or less) summary
@@ -332,16 +349,16 @@ single space, with blank lines in between, but conventions vary here
 
 基本命令:
 
-- `git reset [<tree-ish>] <pathspec>...`: 重置 index 中的部分文件为指定 commit 的 index 中的状态, 不改变工作目录.
-  - `tree-ish` 默认为 `HEAD` 当前所指的 commit.
-  - 本命令可看作是命令 `git add <pathspec>...` 的相反操作.
-- `git reset [--mixed] [<commit>]`: 重置整个 index 为指定 commit 中的 index 的状态, 但不重置工作目录, 同时移动 `HEAD` 指针.
-  - `commit` 默认为 `HEAD` 当前所指的 commit.
+- `git reset [<tree-ish>] <pathspec>...`: 将 index 中的指定文件复原为指定 commit 的 index 中的状态, 不改变工作目录, 也不移动 `HEAD` 引用.
+  - `tree-ish` 默认为 `HEAD` 引用当前所指向的 commit.
+  - 本命令可看作是命令 `git add <pathspec>...` 的反操作.
+- `git reset [--mixed] [<commit>]`: 将整个 index 复原为指定 commit 中的 index 的状态, 不改变工作目录, 但会移动 `HEAD` 引用.
+  - `commit` 默认为 `HEAD` 引用当前所指向的 commit.
   - 由于 mixed 是默认模式, 因此执行本命令时可以省略.
-- `git reset --soft [<commit>]`: 既不重置 index 也不重置工作目录, 但仍然移动 `HEAD` 指针.
-  - `commit` 默认为 `HEAD` 当前所指的 commit.
-- `git reset --hard [<commit>]`: 同时重置 index 和工作目录, 并移动 `HEAD` 指针.
-  - `commit` 默认为 `HEAD` 当前所指的 commit.
+- `git reset --soft [<commit>]`: 既不复原 index 也不复原工作目录, 只移动 `HEAD` 引用.
+  - `commit` 默认为 `HEAD` 引用当前所指向的 commit.
+- `git reset --hard [<commit>]`: 同时复原 index 和工作目录, 并移动 `HEAD` 引用.
+  - `commit` 默认为 `HEAD` 引用当前所指向的 commit.
 
 参考资料:
 
