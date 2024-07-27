@@ -18,22 +18,25 @@ type: posts
 - history: 由所有 commit 构成的树 (注意不是树对象).
 - commit: 提交对象, 记录了一个 snapshot 及其 author, message 以及所有父 commit.
 - object: 抽象对象, 对数据对象, 树对象和提交对象的统一.
-- reference: 指针, 指向一个 commit.
+- reference: 引用, 相当于C语言中的指针, 可以直接指向一个 commit,  也可以通过指向另一个引用间接指向一个 commit.
 
 参考资料:
 
 - [Git - Git Objects](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects)
 
-## 分支, `master` 指针, 以及 `HEAD` 指针
+## 分支, 引用, `master`, 以及 `HEAD`
 
-- Git 中所说的分支 (branch) 是指 history 中从叶结点开始一直回溯至根结点所形成的路径, 该路径由一个指向叶结点的指针 (引用/ref) 唯一标识. 这个指针的名称可以是任意的, 而在默认情况下 Git 将仓库中的首个分支命名为 `master` 或 `main`.
-- 相对于固定的分支而言, 程序员常常需要在不同的分支间进行切换, 为了对程序员当前所在的位置进行标识, Git 使用另一个指针 `HEAD` 指向程序员当前所在分支的叶结点的指针 (例如 `master`).
-- 正常情况下 `HEAD` 指针索引的是指向叶结点的指针, 而不是叶结点本身, 因此当程序员使用 `git commit` 进行提交时不仅会更新 `master` 至最新的叶结点, 同时还使得 `HEAD` 也间接指向最新的叶结点. 但在某些情况下程序员也许想要移动至内部非叶节点 (可以通过命令 `git checkout` 做到), 此时 `HEAD` 将会直接指向所移动至的 commit 对象, 进入所谓的 "脱离 (detach)" 状态.
-- 在 detach 状态下, 程序员仍然可以执行提交, 并且新的 commit 将按照期望从 `HEAD` 开始生长. 但需要注意的是此时新生长出来的 commit 并未形成新的分支, 而是处于一种 "未被引用" 状态. 如果程序员此时选择 checkout 至其他分支, 那么未被引用的 commit 将会被 Git 的垃圾回收进程删除. 为了避免未被引用的 commit 被回收, 可以通过执行 `git checkout` 命令或 `git branch` 命令在当前 `HEAD` 指针所指位置创建新分支以使得 commit 恢复为引用状态.
+- 在 Git 中每个 commit 由其 SHA-1 哈希值唯一标识, 直接使用哈希值索引某个 commit 对计算机而言十分简单直接, 但对程序员而言是反人类的. 引用的作用就是为 commit (的哈希值) 起一个别名. 引用本质上就是一个文件, 其文件名就是引用的名称, 而存储的内容则是其所引用的 commit 的哈希值.
+  - 可以在当前仓库的 `.git/refs` 目录下找到所有引用.
+- Git 中所说的分支 (branch) 是指 history 中从叶 commit 开始回溯一直回溯至根 commit 的过程中遍历到的所有 commit 构成的路径, 该路径由一个指向叶结点的引用唯一标识. 默认情况下 Git 将仓库中的首个分支命名为 `master` 或 `main`.
+- 由于程序员常常需要在不同的分支间进行切换, 相对于固定的分支而言, 程序员当前的位置并不是固定不变的. 为了对程序员当前所在的位置进行标识, Git 使用另一个引用 `HEAD` 指向程序员当前所在的分支 (实际上是指向标识该分支的引用, 例如 `master`).
+- 正常情况下 `HEAD` 引用指向的是标识分支的引用, 而不是该分支的叶 commit, 这么做有一个好处, 那就是当程序员使用 `git commit` 进行提交时除了更新 `master` 至新的叶 commit, 其实还使得 `HEAD` 也间接指向了新的叶 commit. 但在某些情况下程序员需要移动至内部非叶 commit (这可以通过 `git checkout` 命令做到), 此时 `HEAD` 将直接指向所移动至的 commit, 进入所谓的 "detach (脱离)" 状态.
+- 在 detach 状态下, 程序员仍然可以执行提交, 并且新的 commit 将按照期望从 `HEAD` 处开始生长. 但需要注意的是此时新生长出来的 commit 并未形成任何的分支, 而是处于一种 "未被引用" 的状态. 如果程序员此时选择切换至其他分支, 处于 "未被引用" 状态的 commit 将会被 Git 的垃圾回收机制删除. 为了避免这种情况的发生, 可以通过执行 `git checkout` 命令或 `git branch` 命令为该 commit 创建一个新分支使其恢复为引用状态.
 
 参考资料:
 
 - [Git - git-checkout Documentation](https://git-scm.com/docs/git-checkout)
+- [Git - Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)
 
 ## 特殊文件: `.gitignore`
 
