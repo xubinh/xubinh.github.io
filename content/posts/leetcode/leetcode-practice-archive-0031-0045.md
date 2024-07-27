@@ -161,3 +161,39 @@ public:
     }
 };
 ```
+
+## 53. 最大子数组和
+
+英文题目名称: Maximum Subarray
+
+标签: 数组, 分治, 动态规划
+
+思路:
+
+- 很经典的一道动态规划. 如果不使用动态规划, 暴力做法就是枚举每个子数组并计算子数组和, 如果在枚举过程中维护一个前缀和, 时间复杂度虽然可以降到 $O(n^2)$, 但也没法再少了. 动态规划的做法是对 "以位于下标 $i$ 处的数字作为右端的所有可能子数组之和的最大值 $dp[i]$" 进行枚举, 最终结果为所有 $dp[i]$ 的最大值, 状态转移方程为 $dp[i] = \max(nums[i], nums[i] + dp[i - 1])$, 时间复杂度为 $O(n)$.
+- 从状态转移方程中可以看出当前状态仅依赖于前一个状态, 因此动态规划解法完全可以使用滚动数组进行优化. 优化后的空间复杂度为 $O(1)$.
+
+代码:
+
+```cpp
+class Solution {
+public:
+    int maxSubArray(vector<int> &nums) {
+        int max_sum_of_sub_array_ends_at_current_position = nums[0];
+        int max_sub_array_sum = nums[0];
+
+        for (int current_position = 1; current_position < nums.size();
+             current_position++) {
+            int current_number = nums[current_position];
+            max_sum_of_sub_array_ends_at_current_position = max(
+                current_number,
+                current_number + max_sum_of_sub_array_ends_at_current_position);
+            max_sub_array_sum =
+                max(max_sub_array_sum,
+                    max_sum_of_sub_array_ends_at_current_position);
+        }
+
+        return max_sub_array_sum;
+    }
+};
+```
