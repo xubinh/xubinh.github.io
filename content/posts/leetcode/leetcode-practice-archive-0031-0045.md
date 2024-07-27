@@ -170,7 +170,7 @@ public:
 
 思路:
 
-- 很经典的一道动态规划. 如果不使用动态规划, 暴力做法就是枚举每个子数组并计算子数组和, 如果在枚举过程中维护一个前缀和, 时间复杂度虽然可以降到 $O(n^2)$, 但也没法再少了. 动态规划的做法是对 "以位于下标 $i$ 处的数字作为右端的所有可能子数组之和的最大值 $dp[i]$" 进行枚举, 最终结果为所有 $dp[i]$ 的最大值, 状态转移方程为 $dp[i] = \max(nums[i], nums[i] + dp[i - 1])$, 时间复杂度为 $O(n)$.
+- 很经典的一道动态规划. 如果不使用动态规划, 暴力做法就是枚举每个子数组并计算子数组和, 如果在枚举过程中维护一个前缀和, 时间复杂度虽然可以降到 $O(n^2)$, 但也没法再少了. 动态规划的做法是对 "以位于下标 $i$ 处的数字作为右端的所有可能子数组之和的最大值 $dp[i]$" 进行枚举, 最终结果为所有 $dp[i]$ 的最大值, 状态转移方程为 $dp[i] = \max(nums[i], \\ \\ nums[i] + dp[i - 1])$, 时间复杂度为 $O(n)$.
 - 从状态转移方程中可以看出当前状态仅依赖于前一个状态, 因此动态规划解法完全可以使用滚动数组进行优化. 优化后的空间复杂度为 $O(1)$.
 
 代码:
@@ -194,6 +194,44 @@ public:
         }
 
         return max_sub_array_sum;
+    }
+};
+```
+
+## 62. 不同路径
+
+英文题目名称: Unique Paths
+
+标签: 数学, 动态规划, 组合数学
+
+思路:
+
+- 这题也是很经典的一道动态规划. 易知状态转移方程为 "当前位置的总路径数等于左边位置的总路径数与上面位置的总路径数之和". 虽然可以使用二维数组进行动态规划, 但这么做空间复杂度显然太高. 由于只需要左边和上面的两个状态, 本题和背包问题一样可以使用滚动数组进行优化, 空间复杂度为 $O(n)$.
+- 但是自己并不是用的动态规划的做法, 因为上述状态转移方程实际上构建出了一个杨辉三角, 因此直接计算组合数即可.
+- 计算组合数时需要注意溢出问题, 本题即使采用了先乘分子再除分母的方法也无法避免溢出, 因此最后还是使用了 `long long` 类型.
+
+代码 (组合数方法):
+
+```cpp
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        int combinatorial_n = m + n - 2;
+        int combinatorial_k = m - 1;
+        int number_of_paths = get_combinatorial_number(
+            combinatorial_n,
+            min(combinatorial_k, combinatorial_n - combinatorial_k));
+
+        return number_of_paths;
+    }
+
+    int get_combinatorial_number(int n, int k) {
+        long long result = 1;
+        for (int i = 1; i <= k; i++) {
+            result *= (n + 1 - i);
+            result /= i;
+        }
+        return (int)result;
     }
 };
 ```
