@@ -4,8 +4,8 @@ description: "实现一个简单的具有缓存功能的并发网络代理服务
 summary: "实现一个简单的具有缓存功能的并发网络代理服务器"
 date: 2024-07-11T20:08:55+08:00
 draft: false
-tags: ["csapp"]
-series: ["csapp"]
+tags: ["CSAPP"]
+series: ["CSAPP"]
 author: ["xubinh"]
 type: posts
 ---

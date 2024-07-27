@@ -4,8 +4,8 @@ description: "从汇编代码入手反向构建出原始程序的结构, 并熟�
 summary: "从汇编代码入手反向构建出原始程序的结构, 并熟悉使用 gdb 进行 debug"
 date: 2024-07-11T20:03:55+08:00
 draft: false
-tags: ["csapp"]
-series: ["csapp"]
+tags: ["CSAPP"]
+series: ["CSAPP"]
 author: ["xubinh"]
 type: posts
 ---

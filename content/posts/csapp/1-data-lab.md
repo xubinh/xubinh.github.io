@@ -4,8 +4,8 @@ description: "熟悉整数与浮点数实现以及C语言位运算之间的关�
 summary: "熟悉整数与浮点数实现以及C语言位运算之间的关系"
 date: 2024-07-10T13:42:52+08:00
 draft: false
-tags: ["csapp"]
-series: ["csapp"]
+tags: ["CSAPP"]
+series: ["CSAPP"]
 author: ["xubinh"]
 type: posts
 math: true

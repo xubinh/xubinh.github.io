@@ -3,8 +3,8 @@ title: "LeetCode 题解归档 (0031~0045)"
 hideSummary: true
 date: 2024-07-22T17:08:56+08:00
 draft: false
-tags: ["leetcode"]
-series: ["leetcode"]
+tags: ["LeetCode"]
+series: ["LeetCode"]
 author: ["xubinh"]
 type: posts
 math: false
