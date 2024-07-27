@@ -45,39 +45,51 @@
 } */
 
 .post-content h1 {
-    margin: 40px auto 32px;
+    /* margin: 40px auto 32px; */
+    margin-top: 40px;
+    margin-bottom: 32px;
     font-size: 40px;
 }
 
 .post-content h2 {
     /* margin: 32px auto 24px; */
-    margin: 64px auto 24px;
+    /* margin: 64px auto 24px; */
+    margin-top: 64px;
+    margin-bottom: 24px;
     font-size: 32px;
 }
 
 .post-content h3 {
     /* margin: 32px 0 16px; */
-    margin: 64px 0 16px;
+    /* margin: 32px 0 16px; */
+    margin-top: 48px;
+    margin-bottom: 16px;
     font-size: 24px;
 }
 
 .post-content h4 {
     /* margin: 24px 0 16px; */
-    margin: 32px 0 16px;
+    /* margin: 32px 0 16px; */
+    margin-top: 32px;
+    margin-bottom: 16px;
     /* font-size: 16px; */
     font-size: 19.2px;
 }
 
 .post-content h5 {
     /* margin: 24px 0 16px; */
-    margin: 32px 0 16px;
+    /* margin: 32px 0 16px; */
+    margin-top: 32px;
+    margin-bottom: 16px;
     /* font-size: 14px; */
     font-size: 16px;
 }
 
 .post-content h6 {
     /* margin: 24px 0 16px; */
-    margin: 32px 0 16px;
+    /* margin: 32px 0 16px; */
+    margin-top: 32px;
+    margin-bottom: 16px;
     /* font-size: 12px; */
     font-size: 16px;
 }
@@ -285,21 +297,6 @@
 
 .post-content h4 {
     border-bottom: 2px solid var(--secondary);
-}
-
-/* 标题 margin */
-.post-content h2,
-.post-content h3 {
-    margin-top: 64px;
-}
-
-.post-content h4 {
-    margin-top: 32px;
-}
-
-.post-content h5,
-.post-content h6 {
-    margin-top: 32px;
 }
 
 /* 块引用样式 */
