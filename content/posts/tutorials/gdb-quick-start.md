@@ -4,8 +4,8 @@ description: "十分钟熟悉 GDB 基本操作"
 summary: "十分钟熟悉 GDB 基本操作"
 date: 2024-07-11T20:09:55+08:00
 draft: false
-tags: ["Tutorial"]
-series: ["Tutorial"]
+tags: ["Tutorial", "CSAPP", "CMU 15-213", "ICS"]
+series: ["Tutorial", "CSAPP", "CMU 15-213", "ICS"]
 author: ["xubinh"]
 type: posts
 ---

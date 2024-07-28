@@ -4,8 +4,8 @@ description: "模仿C语言官方 `malloc` 包, 实现一个动态内存分配�
 summary: "模仿C语言官方 `malloc` 包, 实现一个动态内存分配器"
 date: 2024-07-11T20:07:55+08:00
 draft: false
-tags: ["CSAPP"]
-series: ["CSAPP"]
+tags: ["CSAPP", "CMU 15-213", "ICS"]
+series: ["CSAPP", "CMU 15-213", "ICS"]
 author: ["xubinh"]
 type: posts
 math: true

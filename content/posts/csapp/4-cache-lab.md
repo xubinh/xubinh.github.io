@@ -4,8 +4,8 @@ description: "模拟实现一个高速缓存 cache, 同时在此基础上优化�
 summary: "模拟实现一个高速缓存 cache, 同时在此基础上优化对矩阵的转置操作"
 date: 2024-07-11T20:05:55+08:00
 draft: false
-tags: ["CSAPP"]
-series: ["CSAPP"]
+tags: ["CSAPP", "CMU 15-213", "ICS"]
+series: ["CSAPP", "CMU 15-213", "ICS"]
 author: ["xubinh"]
 type: posts
 math: true
