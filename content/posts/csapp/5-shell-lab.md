@@ -1,5 +1,5 @@
 ---
-title: "CSAPP 笔记 (5): Shell Lab"
+title: "CSAPP 实验笔记 - 5. Shell Lab"
 description: "模仿 Unix shell 使用 C 语言实现一个简单版 shell"
 summary: "模仿 Unix shell 使用 C 语言实现一个简单版 shell"
 date: 2024-07-11T20:06:55+08:00

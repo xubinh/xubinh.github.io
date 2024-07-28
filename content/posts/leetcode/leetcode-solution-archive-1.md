@@ -1,5 +1,5 @@
 ---
-title: "LeetCode 题解归档 (0001~0015)"
+title: "LeetCode 题解归档 - 1"
 hideSummary: true
 date: 2024-07-14T23:49:00+08:00
 draft: false
