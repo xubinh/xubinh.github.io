@@ -34,3 +34,6 @@
 
 - id: tags
   translation: "标签"
+
+- id: draft
+  translation: "本文仍处于草稿阶段"
