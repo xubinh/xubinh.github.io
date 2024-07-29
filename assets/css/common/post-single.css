@@ -296,7 +296,7 @@
 }
 
 .post-content h4 {
-    border-bottom: 2px solid var(--secondary);
+    border-bottom: 2px solid var(--h4-border-bottom-color);
 }
 
 /* 块引用样式 */

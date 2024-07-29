@@ -21,6 +21,7 @@
     --code-color: #636363;
     --blockquote-background-color: #f8f8f8;
     --blockquote-color: #81858a;
+    --h4-border-bottom-color: rgb(206, 206, 206);
 }
 
 .dark {
@@ -39,6 +40,7 @@
     --code-color: #858585;
     --blockquote-background-color: rgb(56, 56, 56);
     --blockquote-color: rgb(190, 190, 190);
+    --h4-border-bottom-color: rgb(94, 94, 94);
 }
 
 .list {
