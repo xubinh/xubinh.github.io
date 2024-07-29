@@ -39,13 +39,13 @@
   translation: "本文仍处于草稿阶段"
 
 - id: warning
-  translation: "警告"
+  translation: "Warning"
 
 - id: note
   translation: "Note"
 
 - id: info
-  translation: "信息"
+  translation: "Info"
 
 - id: tip
-  translation: "提示"
+  translation: "Tip"
