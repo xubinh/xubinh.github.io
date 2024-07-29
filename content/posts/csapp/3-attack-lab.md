@@ -10,7 +10,11 @@ author: ["xubinh"]
 type: posts
 ---
 
-> - **具体代码请移步至[GitHub](https://github.com/xubinh/csapp/tree/main/3-attack-lab).**
+{{< notice note >}}
+
+- **具体代码请移步至[GitHub](https://github.com/xubinh/csapp/tree/main/3-attack-lab).**
+
+{{< /notice >}}
 
 ## Attack Lab
 

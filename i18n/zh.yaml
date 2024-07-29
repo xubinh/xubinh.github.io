@@ -37,3 +37,15 @@
 
 - id: draft
   translation: "本文仍处于草稿阶段"
+
+- id: warning
+  translation: "警告"
+
+- id: note
+  translation: "Note"
+
+- id: info
+  translation: "信息"
+
+- id: tip
+  translation: "提示"

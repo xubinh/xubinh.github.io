@@ -11,7 +11,11 @@ type: posts
 math: true
 ---
 
-> - **具体代码请移步至[GitHub](https://github.com/xubinh/csapp/tree/main/4-cache-lab).**
+{{< notice note >}}
+
+- **具体代码请移步至[GitHub](https://github.com/xubinh/csapp/tree/main/4-cache-lab).**
+
+{{< /notice >}}
 
 ## Cache Lab
 

@@ -10,7 +10,11 @@ author: ["xubinh"]
 type: posts
 ---
 
-> - **具体代码请移步至[GitHub](https://github.com/xubinh/csapp/tree/main/7-proxy-lab).**
+{{< notice note >}}
+
+- **具体代码请移步至[GitHub](https://github.com/xubinh/csapp/tree/main/7-proxy-lab).**
+
+{{< /notice >}}
 
 ## Proxy Lab
 
