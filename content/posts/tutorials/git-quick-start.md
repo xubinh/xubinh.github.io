@@ -4,8 +4,8 @@ description: "十分钟熟悉 Git 基本操作"
 summary: "十分钟熟悉 Git 基本操作"
 date: 2024-07-26T23:36:23+08:00
 draft: false
-tags: ["Tutorial", "xv6", "MIT 6.s081"]
-series: ["Tutorial", "xv6", "MIT 6.s081"]
+tags: ["Tutorial", "xv6", "MIT 6.S081"]
+series: ["Tutorial", "xv6", "MIT 6.S081"]
 author: ["xubinh"]
 type: posts
 ---

@@ -3,8 +3,8 @@ title: "xv6 教材笔记 - 1. Operating system interfaces"
 hideSummary: true
 date: 2024-07-28T12:37:07+08:00
 draft: false
-tags: ["xv6", "MIT 6.s081"]
-series: ["xv6", "MIT 6.s081"]
+tags: ["xv6", "MIT 6.S081"]
+series: ["xv6", "MIT 6.S081"]
 author: ["xubinh"]
 type: posts
 math: false
