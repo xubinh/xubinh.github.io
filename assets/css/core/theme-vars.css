@@ -14,7 +14,7 @@
     --content: rgb(31, 31, 31);
     --code-block-bg: rgb(28, 29, 33);
     --code-bg: rgb(245, 245, 245);
-    --border: rgb(221, 221, 221);
+    --border: rgb(194, 194, 194);
     --table-head-background-color: #8d8d8d;
     --table-head-color: white;
     --table-body-background-color-odd: #f2f2f2;
@@ -33,9 +33,9 @@
     --content: rgb(196, 196, 197);
     --code-block-bg: rgb(46, 46, 51);
     --code-bg: rgb(55, 56, 62);
-    --border: rgb(48, 48, 48);
-    --table-head-background-color: #858585;
-    --table-head-color: rgb(29, 30, 32);
+    --border: rgb(151, 151, 151);
+    --table-head-background-color: #777777;
+    --table-head-color: rgb(3, 4, 5);
     --table-body-background-color-odd: #3a3a3a;
     --code-color: #858585;
     --blockquote-background-color: rgb(56, 56, 56);
