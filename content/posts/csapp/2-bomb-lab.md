@@ -1,7 +1,7 @@
 ---
 title: "CSAPP 实验笔记 - 2. Bomb Lab"
-description: "从汇编代码入手反向构建出原始程序的结构, 并熟悉使用 gdb 进行 debug"
-summary: "从汇编代码入手反向构建出原始程序的结构, 并熟悉使用 gdb 进行 debug"
+description: "熟悉C语言与汇编语言之间的转换, 熟悉使用 gdb 进行调试"
+summary: "熟悉C语言与汇编语言之间的转换, 熟悉使用 gdb 进行调试"
 date: 2024-07-11T20:03:55+08:00
 draft: false
 tags: ["CSAPP", "CMU 15-213", "ICS"]

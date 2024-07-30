@@ -1,7 +1,7 @@
 ---
 title: "CSAPP 实验笔记 - 3. Attack Lab"
-description: "利用缓冲区溢出实施代码注入攻击, 以及利用地址无关的代码零件实施返回导向编程攻击"
-summary: "利用缓冲区溢出实施代码注入攻击, 以及利用地址无关的代码零件实施返回导向编程攻击"
+description: "实现代码注入 (CI) 攻击和返回导向编程 (ROP) 攻击"
+summary: "实现代码注入 (CI) 攻击和返回导向编程 (ROP) 攻击"
 date: 2024-07-11T20:04:55+08:00
 draft: false
 tags: ["CSAPP", "CMU 15-213", "ICS"]

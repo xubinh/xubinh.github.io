@@ -1,7 +1,7 @@
 ---
 title: "CSAPP 实验笔记 - 6. Malloc Lab"
-description: "模仿C语言官方 `malloc` 包, 实现一个动态内存分配器"
-summary: "模仿C语言官方 `malloc` 包, 实现一个动态内存分配器"
+description: "实现动态内存分配器"
+summary: "实现动态内存分配器"
 date: 2024-07-11T20:07:55+08:00
 draft: false
 tags: ["CSAPP", "CMU 15-213", "ICS"]

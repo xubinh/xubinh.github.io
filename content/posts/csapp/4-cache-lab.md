@@ -1,7 +1,7 @@
 ---
 title: "CSAPP 实验笔记 - 4. Cache Lab"
-description: "模拟实现一个高速缓存 cache, 同时在此基础上优化对矩阵的转置操作"
-summary: "模拟实现一个高速缓存 cache, 同时在此基础上优化对矩阵的转置操作"
+description: "实现高速缓存 cache, 实现 cache 友好的矩阵转置操作"
+summary: "实现高速缓存 cache, 实现 cache 友好的矩阵转置操作"
 date: 2024-07-11T20:05:55+08:00
 draft: false
 tags: ["CSAPP", "CMU 15-213", "ICS"]

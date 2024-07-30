@@ -1,7 +1,7 @@
 ---
 title: "CSAPP 实验笔记 - 5. Shell Lab"
-description: "模仿 Unix shell 使用 C 语言实现一个简单版 shell"
-summary: "模仿 Unix shell 使用 C 语言实现一个简单版 shell"
+description: "实现 Unix shell"
+summary: "实现 Unix shell"
 date: 2024-07-11T20:06:55+08:00
 draft: false
 tags: ["CSAPP", "CMU 15-213", "ICS"]
