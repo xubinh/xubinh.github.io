@@ -1,7 +1,7 @@
 ---
-title: "`volatile` 与多线程编程"
-description: "由 `volatile` 关键字引出并介绍内存屏障等一系列并发编程中的常见概念"
-summary: "由 `volatile` 关键字引出并介绍内存屏障等一系列并发编程中的常见概念"
+title: "volatile 关键字与多线程"
+description: "介绍包含 volatile 与内存屏障在内的一系列并发编程中的常见概念"
+summary: "介绍包含 volatile 与内存屏障在内的一系列并发编程中的常见概念"
 date: 2024-08-03T00:28:51+08:00
 draft: false
 tags: ["xv6", "MIT 6.S081", "CSAPP", "CMU 15-213", "Multithreading"]
