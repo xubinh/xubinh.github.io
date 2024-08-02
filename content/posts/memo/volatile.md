@@ -10,6 +10,11 @@ author: ["xubinh"]
 type: posts
 ---
 
+事情的起因仅仅是在阅读 xv6 的源码时看到了下面两句代码:
+
+- `while(__sync_lock_test_and_set(&lk->locked, 1) != 0);` (`kernel/spinlock.c:32`)
+- `asm volatile("csrr %0, sstatus" : "=r" (x) );` (`kernel/riscv.h:53`)
+
 ## 并发的三大特征: 原子性, 可见性, 以及有序性
 
 多线程编程中有三个需要注意的点, 分别是操作的原子性, 可见性与有序性.
