@@ -4,8 +4,8 @@ description: "十分钟熟悉 Git 基本操作"
 summary: "十分钟熟悉 Git 基本操作"
 date: 2024-07-26T23:36:23+08:00
 draft: false
-tags: ["Tutorial", "xv6", "MIT 6.S081"]
-series: ["Tutorial", "xv6", "MIT 6.S081"]
+tags: ["Tutorial", "xv6", "MIT 6.S081", "Git"]
+series: ["Tutorial", "xv6", "MIT 6.S081", "Git"]
 author: ["xubinh"]
 type: posts
 ---
@@ -15,7 +15,7 @@ type: posts
 - blob: 数据对象, 表示文件.
 - tree: 树对象, 表示目录, 包含子 tree 和 blob.
 - snapshot: 顶层 tree.
-- history: 由所有 commit 构成的树 (注意不是树对象).
+- history: 由所有 commit 以及它们之间的依赖关系构成的图.
 - commit: 提交对象, 记录了一个 snapshot 及其 author, message 以及所有父 commit.
 - object: 抽象对象, 对数据对象, 树对象和提交对象的统一.
 - reference: 引用, 相当于C语言中的指针, 可以直接指向一个 commit,  也可以通过指向另一个引用间接指向一个 commit.
@@ -53,6 +53,20 @@ type: posts
 
 - [Git - git-checkout Documentation](https://git-scm.com/docs/git-checkout)
 - [Git - Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)
+
+## 指定 commit 的常见方式
+
+在日常工作中经常会遇见如 `git reset HEAD~` 这样的 "特殊形式" 的命令 (其中的 `HEAD~` 指的是 `HEAD` 当前所指向的 commit 的父 commit 对象). 下面是一些常见的指定 commit 对象的方式:
+
+- `<sha1>`: 使用 SHA-1 哈希进行指定, 可以使用完整的 40 字符十六进制串 (例如 `dae86e1950b1277e545cee180551750029cfe735`) 也可以使用某一长度的子串 (例如 `dae86e`) (前提是仅存在唯一一个 commit 的 SHA-1 以该子串开头, 否则会产生歧义).
+- `<refname>`: 使用引用的名称进行指定, 例如 `master`, `HEAD` 等等. 产生歧义时的具体解析规则请参阅文档.
+- `@`: 等价于 `HEAD`.
+- `<rev>^[<n>]`: 表示 `<rev>` 对象的第 `n` 个父结点 (一个 commit 可能具有多个父结点), 类似于广度优先搜索. 仅使用 `<rev>^` (省略 `n`) 表示该对象的第 1 个父结点.
+- `<rev>~[<n>]`: 表示 `<rev>` 对象的第 `n` 级祖先结点, 其中每次向上一级回溯时总是选择第 1 个父结点. 例如 `<rev>~3` 等价于 `<rev>^^^` 或 `<rev>^1^1^1`. 仅使用 `<rev>~` (省略 `n`) 表示该对象的第 1 个父结点 (即 `<rev>~` 和 `<rev>^` 互相等价).
+
+参考资料:
+
+- [Git - git-rev-parse Documentation](https://git-scm.com/docs/git-rev-parse#_specifying_revisions)
 
 ## 特殊文件: `.gitignore`
 
@@ -121,20 +135,34 @@ git config --global core.editor "code --wait --new-window"
 
 简介:
 
-- `git add` 命令用于将 working tree 中的改动添加至 index 中. 在提交之前可以多次使用 `git add` 添加改动.
-- 对于那些被 `.gitignore` 显式忽略的文件, `git add` 默认不会添加, 即如果这些文件被目录递归过程扫到了, 那么 `git add` 会 silently ignore 这些文件. 如果显式在 `git add` 命令中指定添加一个被忽略的文件, 那么 `git add` 命令会报错. 但是如果在显式指定添加一个被忽略的文件的同时指定了 `-f` (force) 选项, 那么 `git add` 命令将无视该文件的被忽略属性, 正常将其添加至 index 中.
-- 可以使用通配符为 `git add` 命令指定要添加改动的文件. 但是要注意在 shell 中键入命令时为通配符两边括上单引号防止 shell 提前消耗通配符.
+- `git add` 命令用于将 working tree 中的改动添加至 index 中 (如果反过来要复原 index 至某一状态可以使用 `git reset` 命令). 在一次提交之前可以重复使用 `git add` 添加改动.
+- 可以使用通配符为 `git add` 命令指定要添加改动的文件.
+- 对于那些被 `.gitignore` 显式忽略的文件, `git add` 默认不会添加. 即使这些文件被目录递归过程扫到了, `git add` 也会静默地忽略 (silently ignore) 这些文件.
+- 如果显式在 `git add` 命令中指定添加一个被忽略的文件, 那么 `git add` 命令会报错. 但是如果在显式指定添加一个被忽略的文件的同时指定了 `-f` (force) 选项, 那么 `git add` 命令将无视该文件的被忽略属性, 正常将其添加至 index 中.
 
 基本命令:
 
 - `git add <pathspec>...`: 添加, 更新, 以及删除文件.
-  - 指定要添加改动的文件的范围, 可以使用通配符 `*` 和 `?` 进行匹配. 注意通配符 `*` 和 `?` 不仅匹配常规字符, 还会匹配分隔符 `/`. 此外 `pathspec` 不仅用于匹配 working tree 中的文件, 还用于匹配 index 中的文件, 如果某个文件在 index 中匹配到了但是并没有在 working tree 中匹配到就说明该文件在 working tree 中被删除了, 相应地, `git add` 命令会将该文件从 index 中删除.
-  - Git 1.x 旧版本中只进行添加和更新, 并不进行删除. 新版本中等价于 `git add -A <pathspec>...`.
+  - 参数 `pathspec` 用于指定要添加改动的文件的范围.
+    - `pathspec` 总是相对于当前目录开始, 并且可以使用通配符 `*` 和 `?` 进行匹配, 前者匹配零个或多个字符, 后者匹配零个或一个字符 (二者均为贪婪模式).
+      - 注意 `*` 和 `?` 不仅匹配常规字符, 还会匹配目录分隔符 `/`, 因此单个星号 `*` 能够匹配**任意长度且包含任意字符的字符串**, 而单个问号 `?` 能够匹配**任意字符** (或空字符串).
+      - 此外在 shell 中键入命令时需要为通配符两边括上引号 (单引号双引号均可) 避免 shell 提前消耗通配符.
+    - `pathspec` **不仅匹配 working tree 中的文件, 还会匹配 index 中的文件**. 如果某个文件在 index 中匹配到但在 working tree 中没有匹配到, 说明在 working tree 中该文件已被删除, `git add` 命令会将其从 index 中也删除.
+    - 可以使用一种特殊的前缀进一步限定 `pathspec` 的匹配, 这种前缀包含一长一短两种形式, 较短的简洁形式由一个冒号 `:` 后接若干个魔数 (magic signature) 以及一个可选的冒号作为结尾 (如果 `pathspec` 中剩下的模式不以魔数字符开头那么这个结尾的冒号可以省略) 构成, 较长的精确形式为一个冒号 `:` 后接一个用括号 `()` 括起来的逗号分隔的魔法词语 (magic word) 列表. 可用的魔法词语和对应的魔数 (若有) 包括:
+      - `top` (魔数: `/`): 显式指定 `pathspec` 从项目的根目录开始匹配.
+      - `literal`: 禁用字符 `*` 和 `?` 的通配符作用, 二者将被作为字面量进行匹配.
+      - `icase`: 进行大小写不敏感的匹配.
+      - `glob`: 将通配符 `*` 和 `?` 按照 shell 的方式进行解析 (例如二者将不再匹配目录分隔符 `/`, 具体请参阅文档).
+      - `attr`: 具体请参阅文档.
+      - `exclude` (魔数: `!` 或 `^`): 指定进行反匹配. 例如 `git add "he*" ":^:he*.o"` 将在匹配 `he*` 的同时忽略被 `he*.o` 匹配到的文件 (即前一个集合对后一个集合作差).
+
+    例如 `*hello.c` 和 `*.c` 将匹配像 `hello.c` (位于当前目录下), `sub1/hello.c`, `sub1/sub2/hello.c` 这样的任意目录深度的文件; `*/hello.c` (注意中间的斜杠 `/`) 将匹配像 `sub1/hello.c`, `sub1/sub2/hello.c` 等至少位于某个子目录下的文件; `hello.*` 将匹配当前目录下的所有以 `hello.` 作为前缀的文件, 但无法匹配像 `sub1/hello.c` 这样的位于其他子目录下的文件.
+  - Git 1.x 旧版本中本命令只进行添加和更新, 不进行删除. 新版本中由于多了删除操作, 本命令已经等价于 `git add -A <pathspec>...`. 如果有需求可以使用 `--no-all` 选项显式告诉 `git add` 只进行添加和更新, 不进行删除操作.
 - `git add (-A | --all | --no-ignore-removal) [<pathspec>...]`: 添加, 更新, 以及删除文件.
-  - 如果没有指定任何 `pathspec`, 那么默认使用 `.` 作为 `pathspec`.
+  - 如果没有指定任何 `pathspec`, 那么默认使用**项目的根目录**作为 `pathspec`.
 - `git add (-u | --update) [<pathspec>...]`: 更新和删除文件, 不进行添加.
   - 仅对 index 中被 `pathspec` 匹配到的文件进行更新或删除, 不添加 working tree 中新增的文件.
-  - 如果没有指定任何 `pathspec`, 那么默认使用 `.` 作为 `pathspec`.
+  - 如果没有指定任何 `pathspec`, 那么默认使用**项目的根目录**作为 `pathspec`.
 
 其他选项:
 
@@ -143,8 +171,10 @@ git config --global core.editor "code --wait --new-window"
 参考资料:
 
 - [Git - git-add Documentation](https://git-scm.com/docs/git-add)
-- [Git - gitglossary Documentation](https://git-scm.com/docs/gitglossary)
+- [Git - gitglossary Documentation](https://git-scm.com/docs/gitglossary#def_pathspec)
 - [git add - Difference between "git add -A" and "git add ." - Stack Overflow](https://stackoverflow.com/questions/572549/difference-between-git-add-a-and-git-add)
+- [What does the 'git add .' ('git add' single dot) command do? - Stack Overflow](https://stackoverflow.com/questions/16969768/what-does-the-git-add-git-add-single-dot-command-do)
+- [Git: Should the add/commit be run only at top level directory of a project? - Stack Overflow](https://stackoverflow.com/questions/58966403/git-should-the-add-commit-be-run-only-at-top-level-directory-of-a-project)
 
 ### git branch
 

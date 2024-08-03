@@ -1,23 +1,28 @@
 ---
-title: "volatile 关键字与多线程"
-description: "介绍包含 volatile 与内存屏障在内的一系列并发编程中的常见概念"
-summary: "介绍包含 volatile 与内存屏障在内的一系列并发编程中的常见概念"
+title: "volatile 与多线程编程"
+description: "介绍 volatile 与内存屏障等一系列多线程编程中的常见概念"
+summary: "介绍 volatile 与内存屏障等一系列多线程编程中的常见概念"
 date: 2024-08-03T00:28:51+08:00
 draft: false
-tags: ["xv6", "MIT 6.S081", "CSAPP", "CMU 15-213", "Multithreading"]
-series: ["xv6", "MIT 6.S081", "CSAPP", "CMU 15-213", "Multithreading"]
+tags: ["xv6", "MIT 6.S081", "CSAPP", "CMU 15-213", "Multithreading", "C", "C++", "Java"]
+series: ["xv6", "MIT 6.S081", "CSAPP", "CMU 15-213", "Multithreading", "C", "C++", "Java"]
 author: ["xubinh"]
 type: posts
 ---
 
-事情的起因仅仅是在阅读 xv6 的源码时看到了下面两句代码:
+> 起因是我在阅读 xv6 源码的时候遇到了如下两行代码:
+>
+> ```c
+> // kernel/spinlock.c:32
+> while(__sync_lock_test_and_set(&lk->locked, 1) != 0);
+> 
+> // kernel/riscv.h:53
+> asm volatile("csrr %0, sstatus" : "=r" (x) );
+> ```
 
-- `while(__sync_lock_test_and_set(&lk->locked, 1) != 0);` (`kernel/spinlock.c:32`)
-- `asm volatile("csrr %0, sstatus" : "=r" (x) );` (`kernel/riscv.h:53`)
+## 并发三大特征: 原子性, 可见性, 以及有序性
 
-## 并发的三大特征: 原子性, 可见性, 以及有序性
-
-多线程编程中有三个需要注意的点, 分别是操作的原子性, 可见性与有序性.
+在多线程编程中确保程序的正确性和效率是一个极具挑战性的任务, 其复杂性主要源于线程之间对共享资源的访问和操作. 为了理解多线程编程中的问题及其解决方案, 我们首先得需要了解并发的三大核心特征: 原子性, 可见性和有序性. 这些特征决定了多线程程序如何正确且安全地执行所期望的操作.
 
 - 原子性: 原子性即多线程下操作的互斥性. 程序员使用多个 CPU 执行一个误以为具有但实际不具有原子性的操作时可能会互相重叠, 从而产生与预期不符的结果.
   - 例如像 `int x; x += 1` 这样的**读-改-写** (read-modify-write, RMW) 操作有可能被编译为多条机器指令, 从而有可能在执行到一半的时候被信号中断或是 CPU 被抢占, 导致未修改完成的值提前暴露给其他线程.
