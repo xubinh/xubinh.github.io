@@ -118,7 +118,7 @@ printf("%d\n", x); // 开始执行
 
   - `volatile` 关键字的作用是禁止对本内联汇编代码进行编译时重排序, 真正起到内存屏障作用的是括号内部的内容. 关于更多有关内联汇编的信息可以参考[这篇教程](https://www.ibiblio.org/gferg/ldp/GCC-Inline-Assembly-HOWTO.html#ss5.4).
 
-  另一方面可以使用 GCC 的内置函数 `__sync_synchronize()` 实现**运行时**完全屏障.
+  另一方面可以使用 GCC 的内置函数 `__sync_synchronize()` 同时设置**编译时和运行时**完全屏障.
 - C++11 提供了 `std::atomic`, `std::memory_order`, 以及 `std::atomic_thread_fence` 等机制实现各类内存屏障.
 
 ## 例子: 双重检查锁
