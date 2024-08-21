@@ -94,6 +94,10 @@
     font-size: 16px;
 }
 
+.post-content .MathJax a {
+    box-shadow: none;
+}
+
 .post-content a,
 /* .post-content a:hover, */
 .toc a:hover {
