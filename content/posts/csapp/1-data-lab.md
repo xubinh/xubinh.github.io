@@ -131,7 +131,7 @@ $$
 \begin{equation}
     \label{1.3.1.bitXor-1}
     \begin{aligned}
-        P \oplus Q &= (P \wedge \neg Q) \vee (\neg P \wedge Q) \\\\
+        P \oplus Q &= (P \wedge \neg Q) \vee (\neg P \wedge Q) \\
                    &= \neg (\neg (P \wedge \neg Q) \wedge \neg (\neg P \wedge Q)),
     \end{aligned}
 \end{equation}
@@ -188,7 +188,7 @@ $$
 
 $$
 \begin{numcases}{}
-x + 1 \equiv 2^{w} - 1 - x \ \ (\text{mod}\ \  2^{w}), \label{1.3.3.isTmax-1} \\\\
+x + 1 \equiv 2^{w} - 1 - x \ \ (\text{mod}\ \  2^{w}), \label{1.3.3.isTmax-1} \\
 x \neq 2^w - 1. \label{1.3.3.isTmax-2}
 \end{numcases}
 $$

@@ -137,6 +137,9 @@ markup:
             - - $
               - $
         enable: true
+      typographer:
+        leftDoubleQuote: '"'
+        rightDoubleQuote: '"'
     renderer:
       unsafe: true
   highlight:

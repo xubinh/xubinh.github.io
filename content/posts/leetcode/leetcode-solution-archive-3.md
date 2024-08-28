@@ -79,9 +79,9 @@ public:
   $$
   \begin{equation*}
   \begin{aligned}
-  &\\, \\, \quad \left(1 + n + n (n - 1) + \dots + \frac{n!}{1!} + n!\right) \times n\\\\
-  &= \left(\frac{n!}{n!} + \frac{n!}{(n - 1)!} + \dots + \frac{n!}{1!} + n!\right) \times n\\\\
-  &\leq \left(\frac{n!}{2^(n - 1)} + \frac{n!}{2^{n - 2}} + \dots + \frac{n!}{2^0} + n!\right) \times n\\\\
+  &\\, \\, \quad \left(1 + n + n (n - 1) + \dots + \frac{n!}{1!} + n!\right) \times n\\
+  &= \left(\frac{n!}{n!} + \frac{n!}{(n - 1)!} + \dots + \frac{n!}{1!} + n!\right) \times n\\
+  &\leq \left(\frac{n!}{2^(n - 1)} + \frac{n!}{2^{n - 2}} + \dots + \frac{n!}{2^0} + n!\right) \times n\\
   &\leq n! \cdot 3n.
   \end{aligned}
   \end{equation*}
