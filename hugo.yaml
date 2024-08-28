@@ -128,6 +128,15 @@ markup:
       extras:
         delete:
           enable: true
+      passthrough:
+        delimiters:
+          block:
+            - - $$
+              - $$
+          inline:
+            - - $
+              - $
+        enable: true
     renderer:
       unsafe: true
   highlight:
