@@ -20,31 +20,9 @@ math: true
 
 ## 变分推断与 ELBO
 
-谈到变分推断首先需要了解一下贝叶斯推断. 贝叶斯推断 (Bayesian inference) 通过结合以一个先验概率分布的形式存在的先验知识与贝叶斯定理来估计一个后验概率.
+变分推断 (Variational Inference) 的名称来源于变分法 (calculus of variations), 变分法是数学分析的一个领域, 这一领域所要解决的问题是对泛函 (即一个将函数映射至实数的函数, 通常表示为函数及其导数的定积分) 进行优化, 解决方法是使用函数和泛函中的**微小变化**来寻找泛函的极大值和极小值, 即 "变分".
 
-1. **贝叶斯推断**: 在贝叶斯统计中, 我们通常对给定观测数据 $x$ 的潜在变量 $z$ 的后验分布感兴趣, 记作 $p(z|x)$.
-
-   $$
-   p(z|x) = \frac{p(x|z)p(z)}{p(x)}
-   $$
-
-   其中 $p(x|z)$ 是似然函数, $p(z)$ 是先验分布, 而 $p(x)$ 是边际似然或证据.
-
-2. **不可解性**: 对于复杂模型, 直接计算后验分布 $p(z|x)$ 是不可解的, 因为这需要评估边际似然 $p(x)$, 这涉及对所有可能的潜在变量值进行积分:
-
-   $$
-   p(x) = \int p(x|z)p(z) \, dz
-   $$
-
-**变分推断**是贝叶斯推断的一种近似方法. 它通过将复杂的后验分布 $p*\theta(z|x)$ 用一个更简单的分布 $q*\phi(z|x)$ 来近似, 并通过优化使两者之间的差异 (通常通过KL散度衡量) 最小化. 为什么要额外设置一个 $q_\phi$? 而不是让 $p_{\theta}$ 既生成编码器又生成解码器? 因为不可能使用一个精度有限内存有限的模型去拟合任意复杂的分布, 要将一个概率分布使用神经网络进行近似首先要对概率分布的形式作出假设, 这里解码器 $p_{\theta}(x | z)$ 首先约定为高斯分布, 然后潜在变量的先验分布 $p_{\theta}(z)$ 也约定为标准高斯分布, 于是整个 $p_{\theta}(x)$ 的复杂度最后全部转移到理论的编码器 $p_{\theta}(z | x)$ 里去了, 没法用神经网络对其进行参数化, 必须另外设置一个实际的编码器 $q_{\phi}(z | x)$ 来近似它, 也就是 "让神经网络近似神经网络". 由于变成了近似, $q_{\phi}(z | x)$ 便能够同样被放宽为 (协方差矩阵为对角阵的) 高斯分布.
-
-- 变分推断 (Variational Inference):
-
-  - 首先记住: 提到变分推断就是 ELBO, 因为 ELBO 就是变分推断要优化的目标函数.
-  - 这个名词来源于一个称为 "calculus of variations" 的领域, 这个领域所要解决的问题是对泛函 (将函数映射至实数的函数) 进行优化. "Variational" 一词指的就是在一个函数族中进行优化并寻找最优函数 (在概率论领域下即寻找对目标分布的最优近似) 的过程. 变分法 (calculus of variations) (或变分计算 (variational calculus)) 是数学分析的一个领域, 它使用函数和泛函中的微小变化来寻找泛函的极大值和极小值. 泛函通常表示为涉及函数及其导数的定积分. 可以通过变分法中的欧拉-拉格朗日方程找到泛函的最优解.
-  - 变分推断的目的是通过优化泛函找到一个最优的近似后验 $q(z|x) \approx p(z|x)$.
-  - 在 DDPM 这篇论文中, ELBO 就是要优化的泛函 (因为它将近似后验映射至损失函数值).
-  - 由 Jensen 不等式可推出 ELBO.
+- 变分推断的目的是通过优化泛函找到一个最优的近似后验 $q(z|x) \approx p(z|x)$.
 
 1. **近似后验**: 变分推断引入一个来自较简单分布族的近似后验分布 $q(z|x)$, 在计算上更易处理. 目标是使 $q(z|x)$ 尽可能接近真实的后验分布 $p(z|x)$.
 
@@ -183,14 +161,16 @@ KL 散度具有若干性质:
 易知对于任意 $x > 0$, 有不等式 $\ln x \leq x - 1$ 成立. 于是在离散情况下有
 
 $$
-\begin{align*}
+\begin{equation}
+\begin{aligned}
 D_{\text{KL}}(P(x) \Vert Q(x)) &= \sum_{x \in \mathcal{X}} P(x) \log \bigg(\frac{P(x)}{Q(x)}\bigg)\\
 &= -\Bigg(\sum_{x \in \mathcal{X}} P(x) \log \bigg(\frac{Q(x)}{P(x)}\bigg)\Bigg)\\
 &\geq -\Bigg(\sum_{x \in \mathcal{X}} P(x) \cdot \bigg(\frac{Q(x)}{P(x)} - 1\bigg)\Bigg)\\
 &= -\sum_{x \in \mathcal{X}} P(x) \frac{Q(x)}{P(x)} + \sum_{x \in \mathcal{X}} P(x)\\
 &= -1 + 1\\
 &= 0,
-\end{align*}
+\end{aligned}
+\end{equation}
 $$
 
 即
@@ -340,18 +320,19 @@ $$
 回到 \eqref{eq:elbo2} 式, 由于已经约定 $q_\phi(z | x)$ 与 $p_\theta(z)$ 均具有高斯分布的形式, KL 散度项可重写为
 
 $$
+\newcommand\xbquad{\:\:\:\:\:\:}
+\newcommand\xbqquad{\qquad \qquad}
 \begin{equation}
 \begin{aligned}
-D_{\text{KL}}(q_\phi(z | x) \Vert p_\theta(z)) &= \int \ln{\left( \frac{q_\phi(z | x)}{p_\theta(z)} \right)} q_\phi(z | x) dz \\
+&\xbquad  D_{\text{KL}}(q_\phi(z | x) \Vert p_\theta(z)) \\
+&= \int \ln{\left( \frac{q_\phi(z | x)}{p_\theta(z)} \right)} q_\phi(z | x) dz \\
 &= \int \ln{\left( \frac{1}{|\sigma_\phi^2I|^{\frac{1}{2}}} e^{-\frac{1}{2} \left( (z - \mu_\phi)^T (\sigma_\phi^2I)^{-1} (z - \mu_\phi) - z^Tz \right)} \right)} q_\phi(z | x) dz \\
-&= \int \bigg[ -\frac{1}{2} \ln{|\sigma_\phi^2I|} - \\
-&\qquad \qquad \frac{1}{2} [ (z - \mu_\phi)^T (\sigma_\phi^2I)^{-1} (z - \mu_\phi) - z^Tz ] \bigg] q_\phi(z | x) dz \\
+&= \int \bigg[ -\frac{1}{2} \ln{|\sigma_\phi^2I|} - \frac{1}{2} [ (z - \mu_\phi)^T (\sigma_\phi^2I)^{-1} (z - \mu_\phi) - z^Tz ] \bigg] q_\phi(z | x) dz \\
 &= -\frac{1}{2} \ln{|\sigma_\phi^2I|} - \frac{1}{2} \int \sum_{d = 1}^D \left[\frac{1}{\sigma_{\phi, d}^2}(z_d - \mu_{\phi, d})^2 - z_d^2 \right] \cdot \\
-&\qquad \qquad \prod_{d = 1}^D \frac{1}{\sqrt{2\pi}\sigma_{\phi, d}} e^{-\frac{(z_d - \mu_{\phi, d})^2}{2\sigma_{\phi, d}^2}} dz_1 dz_2 \dots dz_D \\
+&\xbqquad \prod_{d = 1}^D \frac{1}{\sqrt{2\pi}\sigma_{\phi, d}} e^{-\frac{(z_d - \mu_{\phi, d})^2}{2\sigma_{\phi, d}^2}} dz_1 dz_2 \dots dz_D \\
 &= -\frac{1}{2} \ln{|\sigma_\phi^2I|} - \frac{1}{2} \sum_{d = 1}^D \int \left[\frac{1}{\sigma_{\phi, d}^2}(z_d - \mu_{\phi, d})^2 - z_d^2 \right] \cdot \\
-&\qquad \qquad \prod_{d = 1}^D \frac{1}{\sqrt{2\pi}\sigma_{\phi, d}} e^{-\frac{(z_d - \mu_{\phi, d})^2}{2\sigma_{\phi, d}^2}} dz_1 dz_2 \dots dz_D \\
-&= -\frac{1}{2} \ln{|\sigma_\phi^2I|} - \frac{1}{2} \sum_{d = 1}^D \int \left[\frac{1}{\sigma_{\phi, d}^2}(z_d - \mu_{\phi, d})^2 - z_d^2 \right] \cdot \\
-&\qquad \qquad \frac{1}{\sqrt{2\pi}\sigma_{\phi, d}} e^{-\frac{(z_d - \mu_{\phi, d})^2}{2\sigma_{\phi, d}^2}} dz_d \\
+&\xbqquad \prod_{d = 1}^D \frac{1}{\sqrt{2\pi}\sigma_{\phi, d}} e^{-\frac{(z_d - \mu_{\phi, d})^2}{2\sigma_{\phi, d}^2}} dz_1 dz_2 \dots dz_D \\
+&= -\frac{1}{2} \ln{|\sigma_\phi^2I|} - \frac{1}{2} \sum_{d = 1}^D \int \left[\frac{1}{\sigma_{\phi, d}^2}(z_d - \mu_{\phi, d})^2 - z_d^2 \right] \cdot \frac{1}{\sqrt{2\pi}\sigma_{\phi, d}} e^{-\frac{(z_d - \mu_{\phi, d})^2}{2\sigma_{\phi, d}^2}} dz_d \\
 &= -\frac{1}{2} \ln{|\sigma_\phi^2I|} - \frac{1}{2} \sum_{d = 1}^D \left[ 1 - \int z_d^2 \cdot \frac{1}{\sqrt{2\pi}\sigma_{\phi, d}} e^{-\frac{(z_d - \mu_{\phi, d})^2}{2\sigma_{\phi, d}^2}} dz_d \right] \\
 &= -\frac{1}{2} \ln{|\sigma_\phi^2I|} - \frac{1}{2} \sum_{d = 1}^D \left( 1 - E[z_d^2] \right) \\
 &= -\frac{1}{2} \sum_{d = 1}^D \ln{\sigma_{\phi, d}^2} - \frac{1}{2} \sum_{d = 1}^D \left( 1 - (\sigma_{\phi, d}^2 + \mu_{\phi, d}^2) \right) \\
