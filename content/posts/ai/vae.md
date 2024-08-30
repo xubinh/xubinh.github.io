@@ -42,7 +42,7 @@ $$
 
 其中 $x$ 为随机变量 $X$ 的可能结果. 要理解这个定义, 首先需要理解什么是 "随机变量蕴含的信息". 信息论的核心思想是所传达信息的价值取决于该信息内容能够 "令人惊讶" 的程度, 即认为如果一个事件极有可能发生, 该信息包含的价值就很小, 反之如果知道一个事件极不可能发生, 那么该信息包含的信息量就要大得多. 例如知道 "某个特定数字不会是彩票的中奖号码" 所提供的信息量非常小, 因为是个人都知道彩票的中奖概率有多低, 随便选一个数几乎肯定不会中奖, 但反过来知道 "某个特定数字会中奖" 就具有很高的信息量了.
 
-定义一个事件 $\omega$ 蕴含的**信息内容** (information content) (或自信息 (self-information)) 为
+定义一个事件 $\omega$ 蕴含的**信息内容** (information content) (或**自信息** (self-information)) 为
 
 $$
 \begin{equation}
@@ -88,7 +88,11 @@ $$
 
 $$
 \begin{equation}
-D_{\text{KL}}(P(x) || Q(x)) \triangleq \mathbb{E}_{x \sim P(\cdot)}\left[\log\frac{P(x)}{Q(x)}\right] = \sum_{x} P(x) \log \frac{P(x)}{Q(x)} = H(P, Q) - H(P),
+\begin{aligned}
+D_{\text{KL}}(P(x) || Q(x)) &\triangleq \mathbb{E}_{x \sim P(\cdot)}\left[\log\frac{P(x)}{Q(x)}\right] \\
+&= \sum_{x} P(x) \log \frac{P(x)}{Q(x)} \\
+&= H(P, Q) - H(P),
+\end{aligned}
 \end{equation}
 $$
 
@@ -106,11 +110,11 @@ K-L 散度满足如下性质:
 1. 非对称性, 即 $D_{\text{KL}}(P \| Q) \not\equiv D_{\text{KL}}(Q \| P)$.
 1. 两个 (多元) 高斯分布的 K-L 散度存在闭合形式的计算公式.
 
-性质 1 和性质 3 将在下面给出详细证明. 对于对称性, 容易验证一个反例为两个成功概率分别为 $\frac{1}{2}$ 和 $\frac{1}{3}$ 的伯努利试验.
+性质 1 和性质 3 将在下面给出详细证明. 关于对称性, 容易验证一个反例为两个成功概率分别为 $\frac{1}{2}$ 和 $\frac{1}{3}$ 的伯努利试验.
 
 #### 非负性证明
 
-首先易知 $\forall x > 0$,
+易知 $\forall x > 0$,
 
 $$
 \ln x \leq x - 1,
@@ -190,24 +194,29 @@ $$
 
 $$
 \begin{equation}
-\frac{1}{\sqrt{(2\pi)^D|\Sigma|}} \exp{\left( -\frac{1}{2}(\xbb{x} - \xbb{\mu}^T) \xbb{\Sigma}^{-1} (\xbb{x} - \xbb{\mu}) \right)}.
+\frac{1}{\sqrt{(2\pi)^k|\Sigma|}} \exp{\left( -\frac{1}{2}(\xbb{x} - \xbb{\mu}^T) \xbb{\Sigma}^{-1} (\xbb{x} - \xbb{\mu}) \right)},
 \end{equation}
 $$
 
-于是多元高斯分布 $\mathcal{N}(\mu_1, \Sigma_1)$ 和 $\mathcal{N}(\mu_2, \Sigma_2)$ 之间的 K-L 散度
+其中 $k$ 为维数. 于是任意两个多元高斯分布 $\mathcal{N}(\mu_1, \Sigma_1)$ 和 $\mathcal{N}(\mu_2, \Sigma_2)$ 之间的 K-L 散度
 
 $$
 \begin{equation}
 \begin{aligned}
 &\xbquad D_{KL}(\mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1) || \mathcal{N}(\xbb{\mu}_2, \xbb{\Sigma}_2)) \\
 &= E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ \ln{ \left( \frac{\frac{1}{\sqrt{(2\pi)^D|\xbb{\Sigma}_1|}} \exp{\left( -\frac{1}{2}(\xbb{x} - \xbb{\mu}_1^T) \xbb{\Sigma}_1^{-1} (\xbb{x} - \xbb{\mu}_1) \right)}}{\frac{1}{\sqrt{(2\pi)^D|\xbb{\Sigma}_2|}} \exp{\left( -\frac{1}{2}(\xbb{x} - \xbb{\mu}_2^T) \xbb{\Sigma}_2^{-1} (\xbb{x} - \xbb{\mu}_2) \right)}} \right) } \right] \\
-&= E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} (\xbb{x} - \xbb{\mu}_1)^T \xbb{\Sigma}_1^{-1} (\xbb{x} - \xbb{\mu}_1) + \frac{1}{2} (\xbb{x} - \xbb{\mu}_2)^T \xbb{\Sigma}_2^{-1} (\xbb{x} - \xbb{\mu}_2) \right] \\
-&= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_1)^T \xbb{\Sigma}_1^{-1} (\xbb{x} - \xbb{\mu}_1) \right] + \frac{1}{2} E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_2)^T \xbb{\Sigma}_2^{-1} (\xbb{x} - \xbb{\mu}_2) \right] \\
-&= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ \tr{(\xbb{x} - \xbb{\mu}_1) (\xbb{x} - \xbb{\mu}_1)^T \xbb{\Sigma}_1^{-1}} \right] + \frac{1}{2} E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ \tr{(\xbb{x} - \xbb{\mu}_2) (\xbb{x} - \xbb{\mu}_2)^T \xbb{\Sigma}_2^{-1}} \right] \\
-&= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} \tr{E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_1) (\xbb{x} - \xbb{\mu}_1)^T \xbb{\Sigma}_1^{-1} \right]} + \frac{1}{2} \tr{E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_2) (\xbb{x} - \xbb{\mu}_2)^T \xbb{\Sigma}_2^{-1} \right]} \\
-&= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} \tr{E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_1) (\xbb{x} - \xbb{\mu}_1)^T \right] \xbb{\Sigma}_1^{-1}} + \frac{1}{2} \tr{E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_2) (\xbb{x} - \xbb{\mu}_2)^T \right] \xbb{\Sigma}_2^{-1}} \\
+&= E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\Bigg[ \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} (\xbb{x} - \xbb{\mu}_1)^T \xbb{\Sigma}_1^{-1} (\xbb{x} - \xbb{\mu}_1) + \\
+&\xbqquad \frac{1}{2} (\xbb{x} - \xbb{\mu}_2)^T \xbb{\Sigma}_2^{-1} (\xbb{x} - \xbb{\mu}_2) \Bigg] \\
+&= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_1)^T \xbb{\Sigma}_1^{-1} (\xbb{x} - \xbb{\mu}_1) \right] + \\
+&\xbqquad \frac{1}{2} E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_2)^T \xbb{\Sigma}_2^{-1} (\xbb{x} - \xbb{\mu}_2) \right] \\
+&= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ \tr{(\xbb{x} - \xbb{\mu}_1) (\xbb{x} - \xbb{\mu}_1)^T \xbb{\Sigma}_1^{-1}} \right] + \\
+&\xbqquad \frac{1}{2} E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ \tr{(\xbb{x} - \xbb{\mu}_2) (\xbb{x} - \xbb{\mu}_2)^T \xbb{\Sigma}_2^{-1}} \right] \\
+&= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} \tr{E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_1) (\xbb{x} - \xbb{\mu}_1)^T \xbb{\Sigma}_1^{-1} \right]} + \\
+&\xbqquad \frac{1}{2} \tr{E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_2) (\xbb{x} - \xbb{\mu}_2)^T \xbb{\Sigma}_2^{-1} \right]} \\
+&= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} \tr{E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_1) (\xbb{x} - \xbb{\mu}_1)^T \right] \xbb{\Sigma}_1^{-1}} + \\
+&\xbqquad \frac{1}{2} \tr{E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_2) (\xbb{x} - \xbb{\mu}_2)^T \right] \xbb{\Sigma}_2^{-1}} \\
 &= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} \tr{ \xbb{\Sigma}_1 \xbb{\Sigma}_1^{-1}} + \frac{1}{2} \tr{(\xbb{\Sigma}_1 + (\xbb{\mu}_1 - \xbb{\mu}_2)(\xbb{\mu}_1 - \xbb{\mu}_2)^T) \xbb{\Sigma}_2^{-1}} \\
-&= \frac{1}{2} \left( \ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - D + \tr{\xbb{\Sigma}_2^{-1} \xbb{\Sigma}_1} + (\xbb{\mu}_2 - \xbb{\mu}_1)^T \xbb{\Sigma}_2^{-1} (\xbb{\mu}_2 - \xbb{\mu}_1) \right),
+&= \frac{1}{2} \left( \ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - k + \tr{\xbb{\Sigma}_2^{-1} \xbb{\Sigma}_1} + (\xbb{\mu}_2 - \xbb{\mu}_1)^T \xbb{\Sigma}_2^{-1} (\xbb{\mu}_2 - \xbb{\mu}_1) \right),
 \end{aligned}
 \end{equation}
 $$
@@ -216,7 +225,10 @@ $$
 
 $$
 \begin{equation}
-D_{KL}(\mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1) || \mathcal{N}(\xbb{\mu}_2, \xbb{\Sigma}_2)) = \frac{1}{2} \left( \ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - D + \tr{\xbb{\Sigma}_2^{-1} \xbb{\Sigma}_1} + (\xbb{\mu}_2 - \xbb{\mu}_1)^T \xbb{\Sigma}_2^{-1} (\xbb{\mu}_2 - \xbb{\mu}_1) \right).
+\begin{aligned}
+D_{KL}(\mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1) || &\mathcal{N}(\xbb{\mu}_2, \xbb{\Sigma}_2)) = \\
+\frac{1}{2} &\left( \ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - k + \tr{\xbb{\Sigma}_2^{-1} \xbb{\Sigma}_1} + (\xbb{\mu}_2 - \xbb{\mu}_1)^T \xbb{\Sigma}_2^{-1} (\xbb{\mu}_2 - \xbb{\mu}_1) \right).
+\end{aligned}
 \end{equation}
 $$
 
@@ -226,11 +238,16 @@ $$
 
 蒙特卡洛方法 (Monte Carlo methods) 指一类算法, 这类算法的思想是为所希望求得的目标数值精心设计试验, 通过重复多次随机抽样所得到的均值近似该试验的期望并间接近似目标数值. 蒙特卡洛方法的名称来源于摩纳哥 (Monaco) 的一家名为 Monte Carlo Casino 的赌场. 该方法的创始者, 物理学家 Stanislaw Ulam, 借鉴了他叔叔在这家赌场里赌博时的习惯从而发明了蒙特卡洛方法.
 
-最经典的一个说明蒙特卡洛方法的哲学思想的例子是蒙特卡洛积分, 即通过随机撒点来计算 $\pi$ 的值:
+在蒙特卡洛方法的应用中最经典的一个例子是通过随机撒点来计算 $\pi$ 的值:
 
-|                                                          Monte Carlo method applied to approximating the value of $\pi$                                                          |
-| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| ![Monte Carlo method applied to approximating the value of $\pi$](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Pi_monte_carlo_all.gif/290px-Pi_monte_carlo_all.gif) |
+<figure class="align-center">
+  <div style="display: inline-block;">
+  <a href="https://en.wikipedia.org/wiki/Monte_Carlo_method#Overview">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Pi_monte_carlo_all.gif/290px-Pi_monte_carlo_all.gif" alt="蒙特卡罗方法用于近似 $\pi$ 值" style="zoom: 100%; border: 2px solid #eef2f5;" />
+  </a>
+  </div>
+  <figcaption>蒙特卡罗方法用于近似 $\pi$ 值</figcaption>
+</figure>
 
 这个例子中蒙特卡洛方法通过重复多次随机撒点并计算点落在扇区内的频率来近似期望 $\frac{\pi}{4}$, 从而间接近似所希望求得的值, 即 $\pi$.
 

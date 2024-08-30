@@ -337,11 +337,13 @@
 
 .post-content img {
     border-radius: 4px;
-    margin: 1rem 0;
+    /* margin: 1rem 0; */
+    margin: 1rem 0 0 0;
 }
 
 .post-content img[src*="#center"] {
-    margin: 1rem auto;
+    /* margin: 1rem auto; */
+    margin: 1rem auto 0 auto;
 }
 
 .post-content figure.align-center {
@@ -350,9 +352,12 @@
 
 .post-content figure>figcaption {
     color: var(--primary);
-    font-size: 16px;
-    font-weight: bold;
-    margin: 8px 0 16px;
+    /* font-size: 16px; */
+    font-size: 14px;
+    /* font-weight: bold; */
+    font-weight: normal;
+    /* margin: 8px 0 16px; */
+    margin: 8px 0 36px;
 }
 
 .post-content figure>figcaption>p {
