@@ -138,6 +138,8 @@ markup:
               - $
         enable: true
       typographer:
+        LeftSingleQuote: "'"
+        RightSingleQuote: "'"
         leftDoubleQuote: '"'
         rightDoubleQuote: '"'
     renderer:
