@@ -34,6 +34,10 @@ $$
 \newcommand\xbquad{\:\:\:\:\:\:}
 \newcommand\xbqquad{\qquad \qquad}
 \newcommand\xbb[1]{\boldsymbol{#1}}
+\newcommand\btheta{\xbb{\theta}}
+\newcommand\bphi{\xbb{\phi}}
+\newcommand\bz{\xbb{z}}
+\newcommand\bx{\xbb{x}}
 \begin{equation}
 \label{eq:entropy}
 \operatorname{H}(P) \triangleq -\sum_x P(x) \log P(x),
@@ -80,7 +84,7 @@ H(P, Q) \triangleq -\sum_{x} P(x) \log{Q(x)} = \mathbb{E}_{x \sim P(\cdot)}[-\lo
 \end{equation}
 $$
 
-实践中常常将交叉熵用于衡量 $P$ 和 $Q$ 这两个分布函数之间的差异 (其中 $P$ 代表真实 (目标) 分布, $Q$ 代表某个用于近似 $P$ 的参数化的分布), 这一点与交叉熵和 KL 散度之间的关系有关.
+实践中常常将交叉熵用于衡量 $P$ 和 $Q$ 这两个分布函数之间的差异 (其中 $P$ 代表真实 (目标) 分布, $Q$ 代表某个用于近似 $P$ 的参数化的分布), 这一点与交叉熵和 KL 散度之间的关系有关. 交叉熵同样可推广至连续型随机变量的情况下.
 
 ### KL 散度及其性质
 
@@ -199,7 +203,7 @@ $$
 
 $$
 \begin{equation}
-\frac{1}{\sqrt{(2\pi)^k|\Sigma|}} \exp{\left( -\frac{1}{2}(\xbb{x} - \xbb{\mu}^T) \xbb{\Sigma}^{-1} (\xbb{x} - \xbb{\mu}) \right)},
+\frac{1}{\sqrt{(2\pi)^k|\Sigma|}} \exp{\left( -\frac{1}{2}(\bx - \xbb{\mu}^T) \xbb{\Sigma}^{-1} (\bx - \xbb{\mu}) \right)},
 \end{equation}
 $$
 
@@ -209,17 +213,17 @@ $$
 \begin{equation}
 \begin{aligned}
 &\xbquad D_{KL}(\mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1) || \mathcal{N}(\xbb{\mu}_2, \xbb{\Sigma}_2)) \\
-&= E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ \ln{ \left( \frac{\frac{1}{\sqrt{(2\pi)^D|\xbb{\Sigma}_1|}} \exp{\left( -\frac{1}{2}(\xbb{x} - \xbb{\mu}_1^T) \xbb{\Sigma}_1^{-1} (\xbb{x} - \xbb{\mu}_1) \right)}}{\frac{1}{\sqrt{(2\pi)^D|\xbb{\Sigma}_2|}} \exp{\left( -\frac{1}{2}(\xbb{x} - \xbb{\mu}_2^T) \xbb{\Sigma}_2^{-1} (\xbb{x} - \xbb{\mu}_2) \right)}} \right) } \right] \\
-&= E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\Bigg[ \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} (\xbb{x} - \xbb{\mu}_1)^T \xbb{\Sigma}_1^{-1} (\xbb{x} - \xbb{\mu}_1) + \\
-&\xbqquad \frac{1}{2} (\xbb{x} - \xbb{\mu}_2)^T \xbb{\Sigma}_2^{-1} (\xbb{x} - \xbb{\mu}_2) \Bigg] \\
-&= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_1)^T \xbb{\Sigma}_1^{-1} (\xbb{x} - \xbb{\mu}_1) \right] + \\
-&\xbqquad \frac{1}{2} E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_2)^T \xbb{\Sigma}_2^{-1} (\xbb{x} - \xbb{\mu}_2) \right] \\
-&= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ \tr{(\xbb{x} - \xbb{\mu}_1) (\xbb{x} - \xbb{\mu}_1)^T \xbb{\Sigma}_1^{-1}} \right] + \\
-&\xbqquad \frac{1}{2} E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ \tr{(\xbb{x} - \xbb{\mu}_2) (\xbb{x} - \xbb{\mu}_2)^T \xbb{\Sigma}_2^{-1}} \right] \\
-&= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} \tr{E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_1) (\xbb{x} - \xbb{\mu}_1)^T \xbb{\Sigma}_1^{-1} \right]} + \\
-&\xbqquad \frac{1}{2} \tr{E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_2) (\xbb{x} - \xbb{\mu}_2)^T \xbb{\Sigma}_2^{-1} \right]} \\
-&= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} \tr{E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_1) (\xbb{x} - \xbb{\mu}_1)^T \right] \xbb{\Sigma}_1^{-1}} + \\
-&\xbqquad \frac{1}{2} \tr{E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\xbb{x} - \xbb{\mu}_2) (\xbb{x} - \xbb{\mu}_2)^T \right] \xbb{\Sigma}_2^{-1}} \\
+&= E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ \ln{ \left( \frac{\frac{1}{\sqrt{(2\pi)^D|\xbb{\Sigma}_1|}} \exp{\left( -\frac{1}{2}(\bx - \xbb{\mu}_1^T) \xbb{\Sigma}_1^{-1} (\bx - \xbb{\mu}_1) \right)}}{\frac{1}{\sqrt{(2\pi)^D|\xbb{\Sigma}_2|}} \exp{\left( -\frac{1}{2}(\bx - \xbb{\mu}_2^T) \xbb{\Sigma}_2^{-1} (\bx - \xbb{\mu}_2) \right)}} \right) } \right] \\
+&= E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\Bigg[ \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} (\bx - \xbb{\mu}_1)^T \xbb{\Sigma}_1^{-1} (\bx - \xbb{\mu}_1) + \\
+&\xbqquad \frac{1}{2} (\bx - \xbb{\mu}_2)^T \xbb{\Sigma}_2^{-1} (\bx - \xbb{\mu}_2) \Bigg] \\
+&= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\bx - \xbb{\mu}_1)^T \xbb{\Sigma}_1^{-1} (\bx - \xbb{\mu}_1) \right] + \\
+&\xbqquad \frac{1}{2} E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\bx - \xbb{\mu}_2)^T \xbb{\Sigma}_2^{-1} (\bx - \xbb{\mu}_2) \right] \\
+&= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ \tr{(\bx - \xbb{\mu}_1) (\bx - \xbb{\mu}_1)^T \xbb{\Sigma}_1^{-1}} \right] + \\
+&\xbqquad \frac{1}{2} E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ \tr{(\bx - \xbb{\mu}_2) (\bx - \xbb{\mu}_2)^T \xbb{\Sigma}_2^{-1}} \right] \\
+&= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} \tr{E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\bx - \xbb{\mu}_1) (\bx - \xbb{\mu}_1)^T \xbb{\Sigma}_1^{-1} \right]} + \\
+&\xbqquad \frac{1}{2} \tr{E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\bx - \xbb{\mu}_2) (\bx - \xbb{\mu}_2)^T \xbb{\Sigma}_2^{-1} \right]} \\
+&= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} \tr{E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\bx - \xbb{\mu}_1) (\bx - \xbb{\mu}_1)^T \right] \xbb{\Sigma}_1^{-1}} + \\
+&\xbqquad \frac{1}{2} \tr{E_{x \sim \mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1)}\left[ (\bx - \xbb{\mu}_2) (\bx - \xbb{\mu}_2)^T \right] \xbb{\Sigma}_2^{-1}} \\
 &= \frac{1}{2}\ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - \frac{1}{2} \tr{ \xbb{\Sigma}_1 \xbb{\Sigma}_1^{-1}} + \frac{1}{2} \tr{(\xbb{\Sigma}_1 + (\xbb{\mu}_1 - \xbb{\mu}_2)(\xbb{\mu}_1 - \xbb{\mu}_2)^T) \xbb{\Sigma}_2^{-1}} \\
 &= \frac{1}{2} \left( \ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - k + \tr{\xbb{\Sigma}_2^{-1} \xbb{\Sigma}_1} + (\xbb{\mu}_2 - \xbb{\mu}_1)^T \xbb{\Sigma}_2^{-1} (\xbb{\mu}_2 - \xbb{\mu}_1) \right),
 \end{aligned}
@@ -266,7 +270,10 @@ $$
 
 由于正方形的面积为 1, 单次撒点构成的伯努利试验的成功概率 (也即数学期望) 恰为四分之一圆的面积, 因此使用蒙特卡洛方法得到的结果最终将会逼近该面积, 进而间接得到 $\pi$ 值.
 
-[TODO] 随机变量的函数的蒙特卡洛方法.
+> TODO:
+>
+> - [ ] 随机变量的函数的蒙特卡洛方法 (VAE 中的重参数法)
+> - [ ] 重要性采样
 
 ## 变分推断与 ELBO
 
@@ -283,7 +290,7 @@ p(x) = \int p(x, z) dz = \int p(x | z) p(z),
 \end{equation}
 $$
 
-其中 $p(z)$ 为潜在变量 $z$ 的先验分布, $p(x | z)$ 为 $x$ 关于 $z$ 的似然. 换句话说任意一个可观测数据 $x$ 出现的概率等于一系列似然 $p(x | z)$ 关于先验分布 $p(z)$ 的 "加权平均" (实际上是积分). 对于第一个问题, 变分推断采用的解决方案就是对似然 $p(x | z)$ 同时关于 $z$ 和 $\theta$ 进行参数化, 此时 $p(x | z)$ 变为 $p_\theta(x | z)$, 在 $\theta$ 固定的情况下每个 $z$ 均有对应的 $p_\theta(x | z)$, 联合分布 $p_\theta(x, z) = p_\theta(x | z) p(z)$ 确定, 联合分布确定边际分布 $p_\theta(x)$ 也确定, 于是一个从参数 $\theta$ 到概率分布空间的一个子空间 (概率函数族) $\{p_\theta(x)\}_\theta$ 的映射也随之确立. 注意这里先验分布 $p(z)$ 的形式是什么并不重要, 因为自由度完全可以由 $\theta$ 包揽, 即使 $p(z)$ 固定, 仍然可以通过优化 $\theta$ 对任意目标分布 $p^*(x)$ 进行拟合. 不失一般性可令 $p(z) = \mathcal{N}(0, 1)$.
+其中 $p(z)$ 为潜在变量 $z$ 的先验分布, $p(x | z)$ 为 $x$ 关于 $z$ 的似然. 换句话说任意一个可观测数据 $x$ 出现的概率等于一系列似然 $p(x | z)$ 关于先验分布 $p(z)$ 的 "加权平均" (实际上是积分). 对于第一个问题, 变分推断采用的解决方案就是对似然 $p(x | z)$ 同时关于 $z$ 和 $\theta$ 进行参数化, 此时 $p(x | z)$ 变为 $p_\theta(x | z)$, 在 $\theta$ 固定的情况下每个 $z$ 均有对应的 $p_\theta(x | z)$, 联合分布 $p_\theta(x, z) = p_\theta(x | z) p(z)$ 确定, 联合分布确定边际分布 $p_\theta(x)$ 也确定, 于是一个从参数 $\theta$ 到概率分布空间的一个子空间 (概率函数族) $\{p_\theta(x)\}_\theta$ 的映射也随之确立. 这里先验分布 $p(z)$ 的形式是什么并不重要, 因为自由度完全可以由 $\theta$ 包揽, 即使 $p(z)$ 固定, 仍然可以通过优化 $\theta$ 对目标分布 $p^*(x)$ 进行拟合. 不失一般性可令 $p(z) = \mathcal{N}(0, 1)$.
 
 解决了参数化的问题, 接下来就需要解决第二个问题也就是如何衡量参数化的分布与真实分布之间的差异大小的问题. 首先可以确定的是变分推断的目标为使用参数化分布 $p_\theta(x)$ 逼近真实分布 $p^*(x)$, 或者用 KL 散度的语言来说就是要解决优化问题
 
@@ -324,76 +331,127 @@ $$
 
 其中使用训练集 $\{x^{(i)}\}_{i = 1}^N$ 作为真实分布 $p^*(x)$ 的采样结果, $N$ 为训练集大小.
 
-为了对 \eqref{eq:loss-monte} 式进行优化, 我们需要分别对每个训练集数据 $x$ 计算对应的对数似然 $\ln{p_\theta(x)}$. 一般情况下 [TODO], 但在变分推断的情况下我们并不这样做, 而是 [TODO]...
-
-## VAE
-
-VAE 想要求解最优化问题
+为了对 \eqref{eq:loss-monte} 式进行优化, 我们需要分别对每个训练集数据 $x$ 计算对应的对数 (边际) 似然 $\ln{p_\theta(x)}$. 一个很自然的想法是通过蒙特卡洛方法根据 $z$ 的先验对 $x$ 的似然进行采样,
 
 $$
 \begin{equation}
-\min_\theta \dbsp -\ln{p_{\theta}(x^{(1)}, x^{(2)}, \dots, x^{(N)})} = -\sum_{i = 1}^N \ln{p_{\theta}(x^{(i)})},
-\end{equation}
-$$
-
-即尽可能最大化数据集 $X = \\\{x^{(i)}\\\}_{i = 1}^N$ 的似然. 单点对数似然 [TODO]
-
-$$
-\begin{equation}
-\label{eq:likelyhood}
 \begin{aligned}
-\ln{p_\theta(x)} &= \ln{p_\theta(x)} \int_z q_\phi(z | x) dz \\
-&= \int_z \ln{\left(\frac{p_\theta(x, z)}{p_\theta(z | x)}\right)} q_\phi(z | x) dz \\
-&= \int_z \ln{\left(\frac{p_\theta(x, z)}{q_\phi(z | x)} \cdot \frac{q_\phi(z | x)}{p_\theta(z | x)}\right)} q_\phi(z | x) dz \\
-&= \int_z \ln{\left(\frac{p_\theta(x, z)}{q_\phi(z | x)}\right)} q_\phi(z | x) dz + \int_z \ln{\left(\frac{q_\phi(z | x)}{p_\theta(z | x)}\right)} q_\phi(z | x) dz \\
-&\triangleq L(\theta, \phi; x) + D_{\text{KL}}(q_\phi(z | x) || p_\theta(z | x)),
+p_\theta(x) &= \int p_\theta(x, z) dz \\
+&= \int p_\theta(x | z) p(z) dz \\
+&= E_{z \sim p(\cdot)}[p_\theta(x | z)] \\
+&\approx \frac{1}{K} \sum_{i = 1}^K p_\theta(x | z^{(i)}), \xbquad z^{(i)} \sim p(\cdot).
 \end{aligned}
 \end{equation}
 $$
 
-即
+但这样做有些问题, 注意到 $p(z)$ 的定义域是整个实数轴, 而 $p_\theta(x | z)$ 的值有可能只在很小的一个范围内有比较明显的起伏, 其他地方均接近于零, 在资源有限因而 $K$ 有限的情况下上述采样很难说能有多好的效果. 更好的方法是使用[重要性采样](https://en.wikipedia.org/wiki/Importance_sampling), 即根据某个特殊的关于 $x$ 的后验 $q(z | x)$ 进行采样,
 
 $$
 \begin{equation}
-\label{eq:likelyhood2}
-\ln{p_\theta(x)} \triangleq L(\theta, \phi; x) + D_{\text{KL}}(q_\phi(z | x) || p_\theta(z | x)),
+\begin{aligned}
+p_\theta(x) &= \int p_\theta(x | z) p(z) dz \\
+&= \int p_\theta(x | z) \frac{p(z)}{q(z | x)} q(z | x) dz \\
+&= E_{z \sim q(\cdot | x)}\left[p_\theta(x | z) \frac{p(z)}{q(z | x)}\right] \\
+&\approx \frac{1}{K} \sum_{i = 1}^K p_\theta(x | z^{(i)}) \frac{p(z^{(i)})}{q(z^{(i)} | x)}, \xbquad z^{(i)} \sim q(\cdot | x).
+\end{aligned}
 \end{equation}
 $$
 
-其中 ELBO 可写为
+显然最好的 $q(z | x)$ 就是 $p_\theta(z | x)$, 此时
+
+$$
+\begin{equation}
+\frac{1}{K} \sum_{i = 1}^K p_\theta(x | z^{(i)}) \frac{p(z^{(i)})}{p_\theta(z^{(i)} | x)} = \frac{1}{K} \sum_{i = 1}^K p_\theta(x) \equiv p_\theta(x), \xbquad z^{(i)} \sim q(\cdot | x).
+\end{equation}
+$$
+
+问题是 $p_\theta(z | x)$ 和 $p_\theta(x)$ 一样都是未知的, 都需要通过 $p_\theta(x | z)$ 和 $p(z)$ 间接求得, 并且求 $p_\theta(z | x)$ 甚至反过来还需要用到 $p_\theta(x)$, 这无疑是陷入了循环. 为了解决这一问题, 变分推断引入由另一组参数 $\phi$ 参数化的概率函数族 $q_\phi(z | x)$ 对真实后验 $p_\theta(z | x)$ 进行近似. 这样对 $p_\theta(x)$ 的估计的问题就解决了, 但此时又引入了一个新的问题: 如何对 $\phi$ 进行优化以使其逼近 $p_\theta(z | x)$? 解决办法当然是为 $\phi$ 设计一个新的损失函数. 注意到
+
+$$
+\begin{equation}
+\label{eq:elbo-1}
+\begin{aligned}
+\ln{p_\theta(x)} &= \ln{E_{z \sim q_\phi(\cdot | x)} \left[ \frac{p_\theta(x, z)}{q_\phi(z | x)} \right]} \\
+&\geq E_{z \sim q_\phi(\cdot | x)} \left[ \ln{\frac{p_\theta(x, z)}{q_\phi(z | x)}} \right],
+\end{aligned}
+\end{equation}
+$$
+
+并且实际上
+
+$$
+\begin{equation}
+\label{eq:elbo-2}
+\begin{aligned}
+&\xbquad \ln{p_\theta(x)} - E_{z \sim q_\phi(\cdot | x)} \left[ \ln{\frac{p_\theta(x, z)}{q_\phi(z | x)}} \right] \\
+&= E_{z \sim q_\phi(\cdot | x)} \left[ \ln{\frac{p_\theta(x, z)}{p_\theta(z | x)}} \right] - E_{z \sim q_\phi(\cdot | x)} \left[ \ln{\frac{p_\theta(x, z)}{q_\phi(z | x)}} \right] \\
+&= E_{z \sim q_\phi(\cdot | x)} \left[ \ln{\frac{q_\phi(z | x)}{p_\theta(z | x)}} \right]\\
+&= D_{\text{KL}}(q_\phi(z | x) || p_\theta(z | x)),
+\end{aligned}
+\end{equation}
+$$
+
+如果定义
 
 $$
 \begin{equation}
 \label{eq:elbo}
-\begin{aligned}
-L(\theta, \phi; x) &\triangleq \int_z \ln{\left(\frac{p_\theta(x, z)}{q_\phi(z | x)}\right)} q_\phi(z | x) dz \\
-&= \int_z \ln{\left(\frac{p_\theta(z)}{q_\phi(z | x)} \cdot p_\theta(x | z) \right)} q_\phi(z | x) dz \\
-&= -D_{\text{KL}}(q_\phi(z | x) || p_\theta(z)) + E_{z \sim q_\phi(z | x)}\left[\ln{p_\theta(x | z)}\right],
-\end{aligned}
+\mathcal{L}(\theta, \phi; x) \triangleq E_{z \sim q_\phi(\cdot | x)} \left[ \ln{\frac{p_\theta(x, z)}{q_\phi(z | x)}} \right],
 \end{equation}
 $$
 
-即
+由 \eqref{eq:elbo-1} 式和 \eqref{eq:elbo-2} 式可知 $\mathcal{L}(\theta, \phi; x)$ 总是不超过 $\ln{p_\theta(x)}$ (或者说 \eqref{eq:elbo} 式定义了 $\ln{p_\theta(x)}$ 的一个下界 (lower bound)), 且它们之间的差值恰好就是近似后验 $q_\phi(z | x)$ 与真实后验 $p_\theta(z | x)$ 之间的 KL 散度 $D_{\text{KL}}(q_\phi(z | x) || p_\theta(z | x))$, 因此最大化 $\mathcal{L}(\theta, \phi; x)$ 意味着同时最大化 $\ln{p_\theta(x)}$ 并最小化 $D_{\text{KL}}(q_\phi(z | x) || p_\theta(z | x))$. 于是只需要将 $\mathcal{L}(\theta, \phi; x)$ 作为损失函数即可同时优化 $\theta$ 与 $\phi$. 由于 $\ln{p_\theta(x)}$ 被称作 $x$ 的证据 (evidence), $\mathcal{L}(\theta, \phi; x)$ 也因此被称作证据下界 (evidence lower bound, **ELBO**).
+
+除了能够构建出同时对 $\theta$ 和 $\phi$ 进行优化的损失函数这一点以外, ELBO 是否还存在其他意义? 注意到 ELBO 可以重写为多种形式,
+
+$$
+\begin{align}
+\mathcal{L}(\theta, \phi; x) &= E_{z \sim q_\phi(\cdot | x)} \left[ \ln{\frac{p_\theta(x, z)}{q_\phi(z | x)}} \right] \notag \\
+&= E_{z \sim q_\phi(\cdot | x)} \left[ \ln{p_\theta(x, z)} \right] + E_{z \sim q_\phi(\cdot | x)} \left[ -\ln{q_\phi(z | x)} \right] \notag \\
+&= E_{z \sim q_\phi(\cdot | x)} \left[ \ln{p_\theta(x, z)} \right] + H(q_\phi(z | x)) \label{eq:elbo-rewrite-1}\\
+&= E_{z \sim q_\phi(\cdot | x)} \left[ \ln{\frac{p(z)}{q_\phi(z | x)}} \right] + E_{z \sim q_\phi(\cdot | x)} \left[ \ln{p_\theta(x | z)} \right] \notag \\
+&= -D_{\text{KL}}(q_\phi(z | x) || p(z)) + E_{z \sim q_\phi(\cdot | x)} \left[ \ln{p_\theta(x | z)} \right] \label{eq:elbo-rewrite-2},
+\end{align}
+$$
+
+首先观察 \eqref{eq:elbo-rewrite-1} 式, 该式第一项的数学期望将引导 $q_\phi(z | x)$ 尽可能往 "将所有概率密度集中在一个点 $z^*$ 附近" 的方向上优化, 其中
+
+$$
+z^* = \argmax{z}\ \ln{p_\theta(x, z)},
+$$
+
+如果 $q_\phi(z | x)$ 的形式是高斯分布, 那么它的波峰将逐渐向 $z^*$ 集中并且最终将向上趋于无限 (其极限恰为[狄拉克 $\delta$ 函数](https://en.wikipedia.org/wiki/Dirac_delta_function)). 另一方面, \eqref{eq:elbo-rewrite-1} 式第二项的信息熵则将 $q_\phi(z | x)$ 往另一个方向即 "将概率密度尽可能摊平" 的方向进行优化. 仍假设 $q_\phi(z | x)$ 为高斯分布, 易知其[信息熵](https://en.wikipedia.org/wiki/Differential_entropy#Differential_entropies_for_various_distributions)等于 $\ln{(\sqrt{2\pi e}\sigma)}$, 可见信息熵越大, 其标准差 $\sigma$ 就越大, 概率密度就越分散. 因此直觉上 \eqref{eq:elbo-rewrite-1} 式希望的 $q_\phi(z | x)$ 的形式是概率密度往 $z^*$ 集中但又不至于太集中, 处于某个平衡点上.
+
+再来观察 \eqref{eq:elbo-rewrite-2} 式, 该式第一项 KL 散度将 $q_\phi(z | x)$ 往 $p(z)$ 的形式上拉扯, 这可以看作是对 $q_\phi(z | x)$ 的正则化, 而第二项关于对数似然 $\ln{p_\theta(x | z)}$ 的期望可以理解为是关于 $x$ 的**重建损失** (reconstruction loss), 也就是对从 $q_\phi(z | x)$ 中采样 $z$ 并直接计算 $\ln{p_\theta(x | z)}$ 的期望 (即重建边际似然 $\ln{p_\theta(x)}$) 的准确性的度量.
+
+至此变分推断和 ELBO 是什么已经大概摸清了, 接下来推导 VAE 就是水到渠成的事了.
+
+## VAE
+
+和变分推断类似, VAE 想要利用已知的训练集 $\{\bx^{(i)}\}_{i = 1}^N$ 在参数化的概率分布族 $p_\btheta$ 中进行优化并逼近真实的数据分布 $p^*$, 等价于求解优化问题 (见 \eqref{eq:loss-monte} 式)
 
 $$
 \begin{equation}
-\label{eq:elbo2}
-L(\theta, \phi; x) = -D_{\text{KL}}(q_\phi(z | x) || p_\theta(z)) + E_{z \sim q_\phi(z | x)}\left[\ln{p_\theta(x | z)}\right].
+\max_\btheta \dbsp \frac{1}{N} \sum_{i = 1}^N \ln{p_{\btheta}(\bx^{(i)})},
 \end{equation}
 $$
 
-上式等号右边前一项 KL 散度在 VAE 将编码器和解码器限制为协方差矩阵为对角阵的高斯分布的前提下具有闭合形式的解, 可以实现精确计算; 后一项则需要使用蒙特卡洛方法进行近似, 即
+单个样本的对数似然 $\ln{p_\btheta(\bx)}$ 等于 ELBO 加上近似后验 $q_{\bphi}(\bz | \bx)$ 与真实后验 $p_{\btheta}(\bz | \bx)$ 之间的 KL 散度 (见 \eqref{eq:elbo-2} 式),
 
 $$
 \begin{equation}
-\label{eq:monte-carlo}
-E_{z \sim q_\phi(z | x)}\left[\ln{p_\theta(x | z)}\right] \approx \frac{1}{L} \sum_{l = 1}^L \ln{p_\theta(x | z^{(l)})},
+\ln{p_\btheta(\bx)} = \mathcal{L}(\btheta, \bphi; \bx) + D_{\text{KL}}(q_\bphi(\bz | \bx) || p_\btheta(\bz | \bx)),
 \end{equation}
 $$
 
-其中 $z^{(l)} \sim q_\phi(z | x), \dbsp l = 1, 2, \dots, L$, $L$ 为采样次数.
+其中 ELBO 又等于正则化项加上重建损失 (见 \eqref{eq:elbo-rewrite-2} 式),
 
-由于 \eqref{eq:monte-carlo} 式右边对 $z$ 的采样依赖的是编码器分布 $q_\phi(z | x)$, 因此还需要将 $z$ 的梯度进一步传递到编码器分布的参数 $\phi$ 上. VAE 论文使用所谓的**重参数化**方法将随机变量 $z$ 看作是另一个新的 (与编码器分布的参数 $\phi$ 无关的) 随机变量 $\epsilon$ 的函数 (即令 $z \triangleq g_{\phi, x}(\epsilon)$, 其中 $g_{\phi, x}$ 是某个精心选择的函数), 同时将蒙特卡洛方法由对 $z$ 进行采样改为对 $\epsilon$ 进行采样. 改变后的蒙特卡罗方法的结果依然不变, 而梯度则能够正常传递到 $\phi$ 上, 从而确保了模型训练的正确性.
+$$
+\begin{equation}
+\label{eq:elbo-rewrite-2-mul-dim}
+\mathcal{L}(\btheta, \bphi; \bx) = -D_{\text{KL}}(q_\bphi(\bz | \bx) || p_\btheta(\bz)) + E_{\bz \sim q_\bphi(\cdot | \bx)} \left[ \ln{p_\btheta(\bx | \bz)} \right].
+\end{equation}
+$$
 
 VAE 论文约定潜在变量 $z$ 的先验分布 $p_\theta(z)$ 为标准高斯分布,
 
@@ -411,29 +469,20 @@ q_\phi(z | x) \triangleq \mathcal{N}(z; \mu_\phi(x), \sigma_\phi^2(x)I).
 \end{equation}
 $$
 
-回到 \eqref{eq:elbo2} 式, 由于已经约定 $q_\phi(z | x)$ 与 $p_\theta(z)$ 均具有高斯分布的形式, KL 散度项可重写为
+\eqref{eq:elbo-rewrite-2-mul-dim} 式中的 KL 散度在 VAE 将编码器和解码器限制为协方差矩阵为对角阵的高斯分布的前提下具有闭合形式的解, 可以实现精确计算; 重建损失则需要使用蒙特卡洛方法进行近似,
 
 $$
 \begin{equation}
-\begin{aligned}
-&\xbquad  D_{\text{KL}}(q_\phi(z | x) || p_\theta(z)) \\
-&= \int \ln{\left( \frac{q_\phi(z | x)}{p_\theta(z)} \right)} q_\phi(z | x) dz \\
-&= \int \ln{\left( \frac{1}{|\sigma_\phi^2I|^{\frac{1}{2}}} e^{-\frac{1}{2} \left( (z - \mu_\phi)^T (\sigma_\phi^2I)^{-1} (z - \mu_\phi) - z^Tz \right)} \right)} q_\phi(z | x) dz \\
-&= \int g[ -\frac{1}{2} \ln{|\sigma_\phi^2I|} - \frac{1}{2} [ (z - \mu_\phi)^T (\sigma_\phi^2I)^{-1} (z - \mu_\phi) - z^Tz ] g] q_\phi(z | x) dz \\
-&= -\frac{1}{2} \ln{|\sigma_\phi^2I|} - \frac{1}{2} \int \sum_{d = 1}^D \left[\frac{1}{\sigma_{\phi, d}^2}(z_d - \mu_{\phi, d})^2 - z_d^2 \right] \cdot \\
-&\xbqquad \prod_{d = 1}^D \frac{1}{\sqrt{2\pi}\sigma_{\phi, d}} e^{-\frac{(z_d - \mu_{\phi, d})^2}{2\sigma_{\phi, d}^2}} dz_1 dz_2 \dots dz_D \\
-&= -\frac{1}{2} \ln{|\sigma_\phi^2I|} - \frac{1}{2} \sum_{d = 1}^D \int \left[\frac{1}{\sigma_{\phi, d}^2}(z_d - \mu_{\phi, d})^2 - z_d^2 \right] \cdot \\
-&\xbqquad \prod_{d = 1}^D \frac{1}{\sqrt{2\pi}\sigma_{\phi, d}} e^{-\frac{(z_d - \mu_{\phi, d})^2}{2\sigma_{\phi, d}^2}} dz_1 dz_2 \dots dz_D \\
-&= -\frac{1}{2} \ln{|\sigma_\phi^2I|} - \frac{1}{2} \sum_{d = 1}^D \int \left[\frac{1}{\sigma_{\phi, d}^2}(z_d - \mu_{\phi, d})^2 - z_d^2 \right] \cdot \frac{1}{\sqrt{2\pi}\sigma_{\phi, d}} e^{-\frac{(z_d - \mu_{\phi, d})^2}{2\sigma_{\phi, d}^2}} dz_d \\
-&= -\frac{1}{2} \ln{|\sigma_\phi^2I|} - \frac{1}{2} \sum_{d = 1}^D \left[ 1 - \int z_d^2 \cdot \frac{1}{\sqrt{2\pi}\sigma_{\phi, d}} e^{-\frac{(z_d - \mu_{\phi, d})^2}{2\sigma_{\phi, d}^2}} dz_d \right] \\
-&= -\frac{1}{2} \ln{|\sigma_\phi^2I|} - \frac{1}{2} \sum_{d = 1}^D \left( 1 - E[z_d^2] \right) \\
-&= -\frac{1}{2} \sum_{d = 1}^D \ln{\sigma_{\phi, d}^2} - \frac{1}{2} \sum_{d = 1}^D \left( 1 - (\sigma_{\phi, d}^2 + \mu_{\phi, d}^2) \right) \\
-&= -\frac{1}{2} \sum_{d = 1}^D(\ln{\sigma_{\phi, d}^2} + 1 - \sigma_{\phi, d}^2 - \mu_{\phi, d}^2),
-\end{aligned}
+\label{eq:monte-carlo}
+E_{z \sim q_\phi(\cdot | x)}\left[\ln{p_\theta(x | z)}\right] \approx \frac{1}{L} \sum_{l = 1}^L \ln{p_\theta(x | z^{(l)})},
 \end{equation}
 $$
 
-即
+其中 $z^{(l)} \sim q_\phi(\cdot | x), \dbsp l = 1, 2, \dots, L$, $L$ 为采样次数.
+
+由于 \eqref{eq:monte-carlo} 式右边对 $z$ 的采样依赖的是编码器分布 $q_\phi(z | x)$, 因此还需要将 $z$ 的梯度进一步传递到编码器分布的参数 $\phi$ 上. VAE 论文使用所谓的**重参数化**方法将随机变量 $z$ 看作是另一个新的 (与编码器分布的参数 $\phi$ 无关的) 随机变量 $\epsilon$ 的函数 (即令 $z \triangleq g_{\phi, x}(\epsilon)$, 其中 $g_{\phi, x}$ 是某个精心选择的函数), 同时将蒙特卡洛方法由对 $z$ 进行采样改为对 $\epsilon$ 进行采样. 改变后的蒙特卡罗方法的结果依然不变, 而梯度则能够正常传递到 $\phi$ 上, 从而确保了模型训练的正确性.
+
+[TODO] (ELBO 中的 KL 散度项在高斯分布下具有闭合形式...)
 
 $$
 \begin{equation}
@@ -456,7 +505,7 @@ $$
 $$
 \begin{equation}
 \begin{aligned}
-E_{z \sim q_\phi(z | x)}\left[\ln{p_\theta(x | z)}\right] &= E_{\epsilon \sim \mathcal{N}(0, 1)}\left[\ln{p_\theta(x | g_{\phi, x}(\epsilon))}\right] \\
+E_{z \sim q_\phi(\cdot | x)}\left[\ln{p_\theta(x | z)}\right] &= E_{\epsilon \sim \mathcal{N}(0, 1)}\left[\ln{p_\theta(x | g_{\phi, x}(\epsilon))}\right] \\
 &\approx \frac{1}{L} \sum_{l = 1}^L \ln{p_\theta(x | g_{\phi, x}(\epsilon^{(l)}))},
 \end{aligned}
 \end{equation}
@@ -489,3 +538,4 @@ $$
 - [probability - Whats the domain of the sample average in Strong Law of Large Numbers? - Mathematics Stack Exchange](https://math.stackexchange.com/questions/1524489/whats-the-domain-of-the-sample-average-in-strong-law-of-large-numbers)
 - Bertsekas, Dimitri, and John Tsitsiklis. _Introduction to Probability_. 2nd ed. Athena Scientific, 2008. ISBN: 9781886529236.
 - [ELBO — What & Why | Yunfan’s Blog](https://yunfanj.com/blog/2021/01/11/ELBO.html)
+- [Importance sampling - Wikipedia](https://en.wikipedia.org/wiki/Importance_sampling)
