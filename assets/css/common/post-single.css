@@ -124,9 +124,22 @@
     margin-bottom: var(--content-gap);
 }
 
+/* 取消对列表最后一个元素的留白的限制, 保持上下留白大小的对称性 */
 /* .post-content ul:last-child {
     margin-bottom: 0;
 } */
+
+/* 取消待办列表左边的小黑点 */
+.post-content ul:has(input) {
+    list-style-type: none;
+}
+
+/* 调整 li 标签和 checkbox 之间的间距 */
+.post-content ul input {
+    position: absolute;
+    margin-left: -19px;
+    margin-top: 6px;
+}
 
 .post-content ol,
 .post-content ul {
