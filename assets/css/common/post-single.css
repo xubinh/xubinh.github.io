@@ -124,9 +124,9 @@
     margin-bottom: var(--content-gap);
 }
 
-.post-content ul:last-child {
+/* .post-content ul:last-child {
     margin-bottom: 0;
-}
+} */
 
 .post-content ol,
 .post-content ul {
