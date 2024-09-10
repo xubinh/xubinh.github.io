@@ -448,7 +448,7 @@ $$
 \end{equation}
 $$
 
-VAE 约定潜在变量 $\bz$ 的先验分布 $p_\btheta(\bz)$ 为标准高斯分布,
+从编码理论的角度来看, 潜在变量 $\bz$ 可看作是对可观察变量 $\bx$ 的一种**编码** (code), 因此称后验分布 $q_\bphi(\bz | \bx)$ 为概率性**编码器** (encoder), 同时称似然 $p_\btheta(\bx | \bz)$ 为概率性**解码器** (decoder), 其中编码器负责将 $\bx$ 转换为 $\bz$, 解码器负责将 $\bz$ 重建为 $\bx$. VAE 约定潜在变量 $\bz$ 的先验分布 $p_\btheta(\bz)$ 为标准高斯分布,
 
 $$
 \begin{equation}
@@ -456,7 +456,7 @@ p_\btheta(\bz) \triangleq \mathcal{N}(\bzero, \bI),
 \end{equation}
 $$
 
-并约定 $p_\btheta(\bx | \bz)$ 的形式为高斯分布. 对于 $p_\btheta(\bz | \bx)$, VAE 假设其形式接近于协方差矩阵为对角阵的高斯分布, 因此约定 $q_\bphi(\bz | \bx)$ 就为协方差矩阵为对角阵的高斯分布, 即
+并约定解码器 $p_\btheta(\bx | \bz)$ 的形式为高斯分布. 对于真实后验 $p_\btheta(\bz | \bx)$, VAE 假设其形式接近于协方差矩阵为对角阵的高斯分布, 因此约定编码器 $q_\bphi(\bz | \bx)$ 的形式就为协方差矩阵为对角阵的高斯分布, 即
 
 $$
 \begin{equation}
