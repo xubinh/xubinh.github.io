@@ -262,7 +262,7 @@ $$
 
 其中 $\overbar{X}_n \triangleq \frac{1}{n} \sum_{i = 1}^n X_i$, 记号 $\stackrel{a.s.}\longrightarrow$ 表示 "几乎处处收敛" (可类比于实分析中可测函数的几乎处处收敛). 换句话说假设同时对所有随机变量进行一次采样得到结果序列 $\{x_i\}_{i=1}^\infty$, 柯尔莫哥洛夫定律说明了均值 $\frac{1}{n}\sum_{i = 1}^n x_i$ 趋向于 $E[X_1]$ 的概率为 $1$ (注意这里每个 $\overbar{X}_n$ 的样本空间均为所有 $X_n$ 的样本空间的直和 $\bigoplus_{i = 1}^\infty \Omega_i$).
 
-作为一个示例, 下面使用蒙特卡洛方法计算 $\pi$ 值. 考虑向一个边长为 1 的正方形中随机撒点来计算四分之一圆的面积 (下图摘自[维基百科](https://en.wikipedia.org/wiki/Monte_Carlo_method#Overview)):
+作为一个示例, 下面使用蒙特卡洛方法计算 $\pi$ 值. 考虑向一个边长为 1 的正方形中随机撒点来计算四分之一圆的面积 (下图摘自<a href="https://en.wikipedia.org/wiki/Monte_Carlo_method#Overview" target="_blank">维基百科</a>):
 
 <figure style="text-align: center;">
   <div style="display: inline-block;">
@@ -342,7 +342,7 @@ p_\theta(x) &= \int p_\theta(x, z) dz \\
 \end{equation}
 $$
 
-但这样做有些问题, 因为 $p(z)$ 的定义域是整个实数轴, 而 $p_\theta(x | z)$ 的值有可能只在实数轴上很小的一个范围内有比较明显的起伏并且其他地方均接近于零, 在资源有限因而 $K$ 有限的情况下上述采样很难说能有多好的效果. 更好的方法是使用[重要性采样](https://en.wikipedia.org/wiki/Importance_sampling), 即根据某个特殊的关于 $x$ 的后验 $q(z | x)$ 进行采样,
+但这样做有些问题, 因为 $p(z)$ 的定义域是整个实数轴, 而 $p_\theta(x | z)$ 的值有可能只在实数轴上很小的一个范围内有比较明显的起伏并且其他地方均接近于零, 在资源有限因而 $K$ 有限的情况下上述采样很难说能有多好的效果. 更好的方法是使用<a href="https://en.wikipedia.org/wiki/Importance_sampling" target="_blank">重要性采样</a>, 即根据某个特殊的关于 $x$ 的后验 $q(z | x)$ 进行采样,
 
 $$
 \begin{equation}
@@ -374,7 +374,7 @@ $$
 \end{equation}
 $$
 
-其中不等号由[**詹森不等式**](https://en.wikipedia.org/wiki/Jensen%27s_inequality) (Jensen's inequality) 得到, 并且实际上二者的差
+其中不等号由<a href="https://en.wikipedia.org/wiki/Jensen%27s_inequality" target="_blank"><b>詹森不等式</b></a> (Jensen's inequality) 得到, 并且实际上二者的差
 
 $$
 \begin{equation}\label{eq:elbo-2}
@@ -417,7 +417,7 @@ $$
 z^* = \argmax{z}\ \ln{p_\theta(x, z)},
 $$
 
-如果 $q_\phi(z | x)$ 的形式是高斯分布, 那么它的波峰将逐渐向 $z^*$ 集中并且最终将向上趋于无限 (其极限恰为[狄拉克 $\delta$ 函数](https://en.wikipedia.org/wiki/Dirac_delta_function)). 另一方面, \eqref{eq:elbo-rewrite-1} 式第二项的信息熵则将 $q_\phi(z | x)$ 往另一个方向, 即 "将概率密度尽可能摊平" 的方向进行优化. 仍然假设 $q_\phi(z | x)$ 为高斯分布, 易知其[信息熵](https://en.wikipedia.org/wiki/Differential_entropy#Differential_entropies_for_various_distributions)为 $\ln{(\sqrt{2\pi e}\sigma)}$, 信息熵越大, 标准差 $\sigma$ 就越大, 概率密度就越分散. 因此直观上看 \eqref{eq:elbo-rewrite-1} 式希望引导的 $q_\phi(z | x)$ 的形式是概率密度往 $z^*$ 集中但又不至于太集中, 处于某种 "平衡" 之下. 这个 "平衡" 指的就是函数族 $q_\phi(z | x)$ 形成的子空间中到 $p_\theta(z | x)$ 的距离最短的那个点.
+如果 $q_\phi(z | x)$ 的形式是高斯分布, 那么它的波峰将逐渐向 $z^*$ 集中并且最终将向上趋于无限 (其极限恰为<a href="https://en.wikipedia.org/wiki/Dirac_delta_function" target="_blank">狄拉克 $\delta$ 函数</a>). 另一方面, \eqref{eq:elbo-rewrite-1} 式第二项的信息熵则将 $q_\phi(z | x)$ 往另一个方向, 即 "将概率密度尽可能摊平" 的方向进行优化. 仍然假设 $q_\phi(z | x)$ 为高斯分布, 易知其<a href="https://en.wikipedia.org/wiki/Differential_entropy#Differential_entropies_for_various_distributions" target="_blank">信息熵</a>为 $\ln{(\sqrt{2\pi e}\sigma)}$, 信息熵越大, 标准差 $\sigma$ 就越大, 概率密度就越分散. 因此直观上看 \eqref{eq:elbo-rewrite-1} 式希望引导的 $q_\phi(z | x)$ 的形式是概率密度往 $z^*$ 集中但又不至于太集中, 处于某种 "平衡" 之下. 这个 "平衡" 指的就是函数族 $q_\phi(z | x)$ 形成的子空间中到 $p_\theta(z | x)$ 的距离最短的那个点.
 
 再来观察 \eqref{eq:elbo-rewrite-2} 式, 该式第一项 KL 散度将 $q_\phi(z | x)$ 往 $p(z)$ 的形式上拉扯, 这可以看作是对 $q_\phi(z | x)$ 的正则化, 而第二项关于对数似然 $\ln{p_\theta(x | z)}$ 的期望被称作关于 $x$ 的**重建损失** (reconstruction loss), 注意这里是直接对 $\ln{p_\theta(x | z)}$ 求期望, 也就是对边际似然 $\ln{p_\theta(x)}$ 的重建.
 
@@ -535,21 +535,21 @@ $$
 
 ## 参考资料
 
-- [[1312.6114] Auto-Encoding Variational Bayes](https://arxiv.org/abs/1312.6114)
-- [Variational Bayesian methods - Wikipedia](https://en.wikipedia.org/wiki/Variational_Bayesian_methods)
-- [Bayesian inference - Wikipedia](https://en.wikipedia.org/wiki/Bayesian_inference)
-- [Evidence lower bound - Wikipedia](https://en.wikipedia.org/wiki/Evidence_lower_bound)
-- [Jensen's inequality - Wikipedia](https://en.wikipedia.org/wiki/Jensen%27s_inequality)
-- [Convex function - Wikipedia](https://en.wikipedia.org/wiki/Convex_function)
-- [Kullback–Leibler divergence - Wikipedia](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence)
-- [Why KL divergence is non-negative? - Stack Exchange](https://stats.stackexchange.com/questions/335197/why-kl-divergence-is-non-negative)
-- [Gibbs' inequality - Wikipedia](https://en.wikipedia.org/wiki/Gibbs'_inequality)
-- [Monte Carlo method - Wikipedia](https://en.wikipedia.org/wiki/Monte_Carlo_method)
-- [Law of large numbers - Wikipedia](https://en.wikipedia.org/wiki/Law_of_large_numbers#Strong_law)
-- [mathematical statistics - KL divergence between two multivariate Gaussians - Cross Validated](https://stats.stackexchange.com/questions/60680/kl-divergence-between-two-multivariate-gaussians)
-- [Estimation of covariance matrices - Wikipedia](https://en.wikipedia.org/wiki/Estimation_of_covariance_matrices#The_trace_of_a_1_.C3.97_1_matrix)
-- [Multivariate normal distribution - Wikipedia](https://en.wikipedia.org/wiki/Multivariate_normal_distribution)
-- [probability - Whats the domain of the sample average in Strong Law of Large Numbers? - Mathematics Stack Exchange](https://math.stackexchange.com/questions/1524489/whats-the-domain-of-the-sample-average-in-strong-law-of-large-numbers)
+- <a href="https://arxiv.org/abs/1312.6114" target="_blank">[1312.6114] Auto-Encoding Variational Bayes</a>
+- <a href="https://en.wikipedia.org/wiki/Variational_Bayesian_methods" target="_blank">Variational Bayesian methods - Wikipedia</a>
+- <a href="https://en.wikipedia.org/wiki/Bayesian_inference" target="_blank">Bayesian inference - Wikipedia</a>
+- <a href="https://en.wikipedia.org/wiki/Evidence_lower_bound" target="_blank">Evidence lower bound - Wikipedia</a>
+- <a href="https://en.wikipedia.org/wiki/Jensen%27s_inequality" target="_blank">Jensen's inequality - Wikipedia</a>
+- <a href="https://en.wikipedia.org/wiki/Convex_function" target="_blank">Convex function - Wikipedia</a>
+- <a href="https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence" target="_blank">Kullback–Leibler divergence - Wikipedia</a>
+- <a href="https://stats.stackexchange.com/questions/335197/why-kl-divergence-is-non-negative" target="_blank">information theory - Why KL divergence is non-negative? - Cross Validated</a>
+- <a href="https://en.wikipedia.org/wiki/Gibbs'_inequality" target="_blank">Gibbs' inequality - Wikipedia</a>
+- <a href="https://en.wikipedia.org/wiki/Monte_Carlo_method" target="_blank">Monte Carlo method - Wikipedia</a>
+- <a href="https://en.wikipedia.org/wiki/Law_of_large_numbers#Strong_law" target="_blank">Law of large numbers - Wikipedia</a>
+- <a href="https://stats.stackexchange.com/questions/60680/kl-divergence-between-two-multivariate-gaussians" target="_blank">mathematical statistics - KL divergence between two multivariate Gaussians - Cross Validated</a>
+- <a href="https://en.wikipedia.org/wiki/Estimation_of_covariance_matrices#The_trace_of_a_1_.C3.97_1_matrix" target="_blank">Estimation of covariance matrices - Wikipedia</a>
+- <a href="https://en.wikipedia.org/wiki/Multivariate_normal_distribution" target="_blank">Multivariate normal distribution - Wikipedia</a>
+- <a href="https://math.stackexchange.com/questions/1524489/whats-the-domain-of-the-sample-average-in-strong-law-of-large-numbers" target="_blank">probability - Whats the domain of the sample average in Strong Law of Large Numbers? - Mathematics Stack Exchange</a>
 - Bertsekas, Dimitri, and John Tsitsiklis. _Introduction to Probability_. 2nd ed. Athena Scientific, 2008. ISBN: 9781886529236.
-- [ELBO — What & Why | Yunfan’s Blog](https://yunfanj.com/blog/2021/01/11/ELBO.html)
-- [Importance sampling - Wikipedia](https://en.wikipedia.org/wiki/Importance_sampling)
+- <a href="https://yunfanj.com/blog/2021/01/11/ELBO.html" target="_blank">ELBO — What & Why | Yunfan's Blog</a>
+- <a href="https://en.wikipedia.org/wiki/Importance_sampling" target="_blank">Importance sampling - Wikipedia</a>
