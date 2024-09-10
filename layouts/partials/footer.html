@@ -75,6 +75,10 @@
         });
     }
 
+    window.addEventListener('load', (event) => {
+        makeSmoothScroll();
+    });
+
     MathJax.startup.promise.then(makeSmoothScroll);
 </script>
 
