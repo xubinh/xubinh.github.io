@@ -394,11 +394,11 @@ $$
 \end{equation}
 $$
 
-那么由 \eqref{eq:elbo-1} 式和 \eqref{eq:elbo-2} 式可知 $\ln{p_\theta(x)}$ 总是不会低于 $\mathcal{L}(\theta, \phi; x)$ (或者说 \eqref{eq:elbo} 式定义了 $\ln{p_\theta(x)}$ 的一个下界 (lower bound)), 并且它们的差恰好就是近似后验 $q_\phi(z | x)$ 与真实后验 $p_\theta(z | x)$ 之间的 KL 散度 $D_{\text{KL}}(q_\phi(z | x) || p_\theta(z | x))$, 因此最大化 $\mathcal{L}(\theta, \phi; x)$ 意味着在最大化 $\ln{p_\theta(x)}$ 的同时还会最小化 $D_{\text{KL}}(q_\phi(z | x) || p_\theta(z | x))$. 于是只需要将 $\mathcal{L}(\theta, \phi; x)$ 作为损失函数即可同时对 $\theta$ 与 $\phi$ 进行优化. 由于 $\ln{p_\theta(x)}$ 被称作 $x$ 的证据 (evidence), $\mathcal{L}(\theta, \phi; x)$ 也因此被称作**证据下界** (evidence lower bound, **ELBO**).
+那么由 \eqref{eq:elbo-1} 式和 \eqref{eq:elbo-2} 式可知 $\ln{p_\theta(x)}$ 总是不会低于 $\mathcal{L}(\theta, \phi; x)$ (即 \eqref{eq:elbo} 式定义了 $\ln{p_\theta(x)}$ 的一个下界 (lower bound)), 并且它们的差恰好就是近似后验 $q_\phi(z | x)$ 与真实后验 $p_\theta(z | x)$ 之间的 KL 散度, $D_{\text{KL}}(q_\phi(z | x) || p_\theta(z | x))$. 由此可知对 $\mathcal{L}(\theta, \phi; x)$ 进行最大化的效果等价于在最大化 $\ln{p_\theta(x)}$ 的同时不断令近似后验 $q_\phi(z | x)$ 逼近真实后验 $p_\theta(z | x)$. 于是只需要将 $\mathcal{L}(\theta, \phi; x)$ 作为损失函数即可同时对 $\theta$ 与 $\phi$ 进行优化. 由于 $\ln{p_\theta(x)}$ 被称作 $x$ 的证据 (evidence), $\mathcal{L}(\theta, \phi; x)$ 也因此被称作**证据下界** (evidence lower bound, **ELBO**).
 
-到这里一切顺理成章, 但有一点需要指出. 原先设置 $q_\phi$ 的目的就是为了求 $\ln{p_\theta(x)}$, 现在 $\ln{p_\theta(x)}$ **不见了**, 乍看上去好像是捡了芝麻丢了西瓜, 但说到底计算具体的 $\ln{p_\theta(x)}$ 值本身还是为了比较不同的 $\theta$ 之间的优劣, 换成计算 $\ln{p_\theta(x)} + C$ 把 $C$ 代入包括常数在内的任何不影响比较的值也一样, 因此形式是无所谓的. 关键在于计算 ELBO 同时还附带了计算 $D_{\text{KL}}(q_\phi(z | x) || p_\theta(z | x))$, 这是选择 ELBO 的主要原因. 如果存在另一个独立的闭合形式的损失函数能够计算这个 KL 散度, 那完全可以把这个独立的损失函数和 $\ln{p_\theta(x)}$ 相加得到的和作为新的损失函数, 但这又绕回来了——这个和实际上就是 ELBO.
+目前为止一切顺理成章, 除了有一点需要额外指出. 原先设置 $q_\phi$ 的目的就是为了求 $\ln{p_\theta(x)}$, 现在 $\ln{p_\theta(x)}$ **不见了**, 乍看上去好像是捡了芝麻丢了西瓜, 但说到底计算具体的 $\ln{p_\theta(x)}$ 值本身还是为了比较不同的 $\theta$ 之间的优劣, 换成计算 $\ln{p_\theta(x)} + C$ 把 $C$ 代入包括常数在内的任何不影响比较的值也一样, 因此形式是无所谓的. 关键在于计算 ELBO 同时还附带了计算 $D_{\text{KL}}(q_\phi(z | x) || p_\theta(z | x))$, 这是选择 ELBO 的主要原因. 如果存在另一个独立的闭合形式的损失函数能够计算这个 KL 散度, 那完全可以把这个独立的损失函数和 $\ln{p_\theta(x)}$ 相加得到的和作为新的损失函数, 但这又绕回来了——这个和实际上就是 ELBO.
 
-除了能够构建出同时对 $\theta$ 和 $\phi$ 进行优化的损失函数这一点以外, ELBO 还可以从其他一些角度观察其性质. 注意到
+我们还可以从其他一些角度观察 ELBO 的性质. 注意到
 
 $$
 \begin{align}
@@ -530,7 +530,7 @@ $$
 \end{equation}
 $$
 
-实验发现只要小批量样本数 $M$ 取得稍微大一点, 例如令 $M = 100$, 那么采样次数 $L$ 可以取得非常低, 例如 $L = 1$, 并且仍然能够取得比较好的效果.
+实验发现只要小批量样本数 $M$ 取得稍微大一点 (例如令 $M = 100$), 那么采样次数 $L$ 可以取得非常低 (例如 $L = 1$), 并且仍然能够取得比较好的效果.
 
 ## 参考资料
 
