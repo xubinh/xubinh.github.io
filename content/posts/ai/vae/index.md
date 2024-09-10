@@ -1,8 +1,9 @@
 ---
 title: "VAE (变分自编码器) 学习笔记"
-hideSummary: true
+description: "浅谈 VAE 背后的设计思想与缘由"
+summary: "浅谈 VAE 背后的设计思想与缘由"
 date: 2024-08-19T17:49:24+08:00
-draft: true
+draft: false
 tags: ["AI", "VAE"]
 series: ["AI", "VAE"]
 author: ["xubinh"]
