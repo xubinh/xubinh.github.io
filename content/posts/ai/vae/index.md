@@ -21,7 +21,7 @@ math: true
 
 ## KL 散度
 
-KL 散度, 全称为 **KullbacKLeibler 散度** (KullbacKLeibler Divergence), 是一种衡量两个概率分布之间差异的**非对称**度量, 一般用于在使用某个分布 $Q$ 逼近某个真实分布 $P$ 时需要对这两个分布之间的差距进行估计的场合下. 在探讨 KL 散度之前首先介绍一下什么是信息熵和交叉熵 (KL 散度也被称为 "相对熵").
+KL 散度, 全称为 **Kullback–Leibler 散度** (Kullback–Leibler Divergence), 是一种衡量两个概率分布之间差异的非对称度量, 一般用于在使用某个分布 $Q$ 逼近某个真实分布 $P$ 时需要对这两个分布之间的差距进行估计的场合下. 在探讨 KL 散度之前首先介绍一下什么是信息熵和交叉熵 (KL 散度也被称为 "相对熵").
 
 ### 信息熵
 
@@ -53,7 +53,7 @@ $$
 
 其中 $x$ 为随机变量 $X$ 的可能结果. 要理解这个定义, 首先需要理解什么是 "随机变量蕴含的信息". 信息论的核心思想是所传达信息的价值取决于该信息内容能够 "令人惊讶" 的程度, 即认为如果一个事件极有可能发生, 该信息包含的价值就很小, 反之如果知道一个事件极不可能发生, 那么该信息包含的信息量就要大得多. 例如知道 "某个特定数字不会是彩票的中奖号码" 所提供的信息量非常小, 因为是个人都知道彩票的中奖概率有多低, 随便选一个数几乎肯定不会中奖, 但反过来知道 "某个特定数字会中奖" 就具有很高的信息量了.
 
-定义一个事件 $\omega$ 蕴含的**信息内容** (information content) (或**自信息** (self-information)) 为
+定义一个事件 $\omega$ 蕴含的信息内容 (information content) (或自信息 (self-information)) 为
 
 $$
 \begin{equation}
@@ -241,10 +241,12 @@ $$
 \begin{equation}\label{eq:closed-form-kl}
 \begin{aligned}
 D_{KL}(\mathcal{N}(\xbb{\mu}_1, \xbb{\Sigma}_1) || &\mathcal{N}(\xbb{\mu}_2, \xbb{\Sigma}_2)) = \\
-\frac{1}{2} &\left( \ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - k + \tr{\xbb{\Sigma}_2^{-1} \xbb{\Sigma}_1} + (\xbb{\mu}_2 - \xbb{\mu}_1)^T \xbb{\Sigma}_2^{-1} (\xbb{\mu}_2 - \xbb{\mu}_1) \right).
+\frac{1}{2} &\left( \ln{\frac{|\xbb{\Sigma}_2|}{|\xbb{\Sigma}_1|}} - k + \tr{\xbb{\Sigma}_2^{-1} \xbb{\Sigma}_1} + (\xbb{\mu}_2 - \xbb{\mu}_1)^T \xbb{\Sigma}_2^{-1} (\xbb{\mu}_2 - \xbb{\mu}_1) \right),
 \end{aligned}
 \end{equation}
 $$
+
+其中利用到了两个任意矩阵 $A$ 和 $B$ 的乘积的**迹** (trace) 的性质, $\tr{AB} = \tr{BA}$.
 
 ## 蒙特卡洛方法
 
@@ -277,7 +279,7 @@ $$
 
 ## 变分推断与 ELBO
 
-变分推断 (Variational Inference) 这一名称的来源是变分法 (calculus of variations). 变分法是数学分析下的一个子领域, 这一领域主要关注如何对泛函进行优化的问题. 泛函 (functional) 指的是将函数映射至实数的函数, 即 "函数的函数", 其形式通常为函数 (及其导数) 的定积分. 变分法的关键思想是在函数上施加**微小变化** (即 "变分") 并观察泛函的相应变化来寻找泛函的极值. 以变分法为基础, 变分推断的目标是在由所有概率分布构成的空间中逼近某个形式复杂的真实分布, 此时有两个问题:
+**变分推断** (Variational Inference) 这一名称的来源是变分法 (calculus of variations). 变分法是数学分析下的一个子领域, 这一领域主要关注如何对泛函进行优化的问题. 泛函 (functional) 指的是将函数映射至实数的函数, 即 "函数的函数", 其形式通常为函数 (及其导数) 的定积分. 变分法的关键思想是在函数上施加微小变化 (即 "变分") 并观察泛函的相应变化来寻找泛函的极值. 以变分法为基础, 变分推断的目标是在由所有概率分布构成的空间中逼近某个形式复杂的真实分布, 此时有两个问题:
 
 1. 如何定义一个合适的概率分布函数族以便进行优化? 即如何对概率分布空间的一个子空间使用某些参数 $\theta$ 进行参数化?
 1. 如何评估当前已经得到的概率分布与真实分布之间的差异以便指导优化过程?
@@ -397,7 +399,7 @@ $$
 
 那么由 \eqref{eq:elbo-1} 式和 \eqref{eq:elbo-2} 式可知 $\ln{p_\theta(x)}$ 总是不会低于 $\mathcal{L}(\theta, \phi; x)$ (即 \eqref{eq:elbo} 式定义了 $\ln{p_\theta(x)}$ 的一个下界 (lower bound)), 并且它们的差恰好就是近似后验 $q_\phi(z | x)$ 与真实后验 $p_\theta(z | x)$ 之间的 KL 散度, $D_{\text{KL}}(q_\phi(z | x) || p_\theta(z | x))$. 由此可知对 $\mathcal{L}(\theta, \phi; x)$ 进行最大化的效果等价于在最大化 $\ln{p_\theta(x)}$ 的同时不断令近似后验 $q_\phi(z | x)$ 逼近真实后验 $p_\theta(z | x)$. 于是只需要将 $\mathcal{L}(\theta, \phi; x)$ 作为损失函数即可同时对 $\theta$ 与 $\phi$ 进行优化. 由于 $\ln{p_\theta(x)}$ 被称作 $x$ 的证据 (evidence), $\mathcal{L}(\theta, \phi; x)$ 也因此被称作**证据下界** (evidence lower bound, **ELBO**).
 
-目前为止一切顺理成章, 除了有一点需要额外指出. 原先设置 $q_\phi$ 的目的就是为了求 $\ln{p_\theta(x)}$, 现在 $\ln{p_\theta(x)}$ **不见了**, 乍看上去好像是捡了芝麻丢了西瓜, 但说到底计算具体的 $\ln{p_\theta(x)}$ 值本身还是为了比较不同的 $\theta$ 之间的优劣, 换成计算 $\ln{p_\theta(x)} + C$ 把 $C$ 代入包括常数在内的任何不影响比较的值也一样, 因此形式是无所谓的. 关键在于计算 ELBO 同时还附带了计算 $D_{\text{KL}}(q_\phi(z | x) || p_\theta(z | x))$, 这是选择 ELBO 的主要原因. 如果存在另一个独立的闭合形式的损失函数能够计算这个 KL 散度, 那完全可以把这个独立的损失函数和 $\ln{p_\theta(x)}$ 相加得到的和作为新的损失函数, 但这又绕回来了——这个和实际上就是 ELBO.
+到目前为止整个推导基本上是顺理成章的, 不过有一点还是需要额外指出. 注意到原先设置 $q_\phi$ 的目的就是为了求 $\ln{p_\theta(x)}$, 现在 $\ln{p_\theta(x)}$ 却不见了. 这乍看上去好像是捡了芝麻丢了西瓜, 但说到底计算具体的 $\ln{p_\theta(x)}$ 值本身还是为了比较不同的 $\theta$ 之间的优劣, 换成计算 $\ln{p_\theta(x)} + C$ 把 $C$ 代入包括常数在内的任何不影响比较的值也一样, 因此形式是无所谓的. 关键在于计算 ELBO 同时还附带了计算 $D_{\text{KL}}(q_\phi(z | x) || p_\theta(z | x))$, 这是选择 ELBO 的主要原因. 如果存在另一个独立的闭合形式的损失函数能够计算这个 KL 散度, 那完全可以把这个独立的损失函数和 $\ln{p_\theta(x)}$ 相加得到的和作为新的损失函数, 但这又绕回来了——这个和实际上就是 ELBO.
 
 我们还可以从其他一些角度观察 ELBO 的性质. 注意到
 
@@ -449,7 +451,9 @@ $$
 \end{equation}
 $$
 
-从编码理论的角度来看, 潜在变量 $\bz$ 可看作是对可观察变量 $\bx$ 的一种**编码** (code), 因此称后验分布 $q_\bphi(\bz | \bx)$ 为概率性**编码器** (encoder), 同时称似然 $p_\btheta(\bx | \bz)$ 为概率性**解码器** (decoder), 其中编码器负责将 $\bx$ 转换为 $\bz$, 解码器负责将 $\bz$ 重建为 $\bx$. VAE 约定潜在变量 $\bz$ 的先验分布 $p_\btheta(\bz)$ 为标准高斯分布,
+从编码理论的角度来看, 潜在变量 $\bz$ 可看作是对可观察变量 $\bx$ 的一种编码 (code), 因此 VAE 将后验分布 $q_\bphi(\bz | \bx)$ 称为概率性**编码器** (encoder), 同时将似然 $p_\btheta(\bx | \bz)$ 称为概率性**解码器** (decoder), 其中编码器负责将 $\bx$ 压缩为 $\bz$, 而解码器负责将 $\bz$ 重建为 $\bx$.
+
+VAE 约定潜在变量 $\bz$ 的先验分布 $p_\btheta(\bz)$ 为标准高斯分布,
 
 $$
 \begin{equation}
@@ -483,7 +487,7 @@ $$
 \end{equation}
 $$
 
-其中 $\bz^{(l)} \sim q_\bphi(\cdot | \bx), \dbsp l = 1, 2, \dots, L$, $L$ 为采样次数. 由于 \eqref{eq:monte-carlo} 式右边对 $\bz$ 的采样依赖的是分布 $q_\bphi(\bz | \bx)$, 这里还得想办法把 $\bz$ 的梯度向下传播到参数 $\bphi$ 上. VAE 使用所谓的**重参数化**方法, 把随机变量 $\bz$ 看作是另一个新的随机变量 $\bepsilon$ 的函数, 其中参数 $\bphi$ 被全部保留到函数中, 而 $\bepsilon$ 本身与参数 $\bphi$ 无关 (即令 $\bz \triangleq g_{\bphi, \bx}(\bepsilon)$, 其中 $g_{\bphi, \bx}$ 是某个精心选择的关于 $\bphi$ 的函数), 这样不仅原先关于某个函数 $f(\bz)$ 的蒙特卡洛方法可以转化为等价的关于函数 $(f(g_{\bphi, \bx}(\bepsilon)))$ 的蒙特卡洛方法, 同时还使得梯度能够成功传播到 $\bphi$ 上. 例如对于一维高斯分布 $z \sim \mathcal{N}(\mu, \sigma^2)$, 令 $\epsilon \sim \mathcal{N}(0, 1)$ 并令 $g(\epsilon) = \sigma\epsilon + \mu$ (暂时不考虑 $\phi$ 和 $x$, 因为对这两个变量的处理只不过是重参数法的副作用), 易知 $z \equiv g(\epsilon)$, 并且随机变量 $\eta \triangleq f(z) = f(g(\epsilon))$ 既是 $z$ 的函数又是 $\epsilon$ 的函数, 于是
+其中 $\bz^{(l)} \sim q_\bphi(\cdot | \bx), \dbsp l = 1, 2, \dots, L$, $L$ 为采样次数. 由于 \eqref{eq:monte-carlo} 式右边对 $\bz$ 的采样依赖的是分布 $q_\bphi(\bz | \bx)$, 这里还得想办法把 $\bz$ 的梯度向下传播到参数 $\bphi$ 上. VAE 使用所谓的**重参数化** (Reparameterization) 方法, 把随机变量 $\bz$ 看作是另一个新的随机变量 $\bepsilon$ 的函数, 其中参数 $\bphi$ 被全部保留到函数中, 而 $\bepsilon$ 本身与参数 $\bphi$ 无关 (即令 $\bz \triangleq g_{\bphi, \bx}(\bepsilon)$, 其中 $g_{\bphi, \bx}$ 是某个精心选择的关于 $\bphi$ 的函数), 这样不仅原先关于某个函数 $f(\bz)$ 的蒙特卡洛方法可以转化为等价的关于函数 $(f(g_{\bphi, \bx}(\bepsilon)))$ 的蒙特卡洛方法, 同时还使得梯度能够成功传播到 $\bphi$ 上. 例如对于一维高斯分布 $z \sim \mathcal{N}(\mu, \sigma^2)$, 令 $\epsilon \sim \mathcal{N}(0, 1)$ 并令 $g(\epsilon) = \sigma\epsilon + \mu$ (暂时不考虑 $\phi$ 和 $x$, 因为对这两个变量的处理只不过是重参数法的副作用), 易知 $z \equiv g(\epsilon)$, 并且随机变量 $\eta \triangleq f(z) = f(g(\epsilon))$ 既是 $z$ 的函数又是 $\epsilon$ 的函数, 于是
 
 $$
 \begin{align}\label{eq:reparameterization}
