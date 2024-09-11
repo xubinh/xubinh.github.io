@@ -416,7 +416,9 @@ $$
 首先观察 \eqref{eq:elbo-rewrite-1} 式, 该式第一项的数学期望将引导 $q_\phi(z | x)$ 尽可能往 "将所有概率密度集中在一个点 $z^*$ 附近" 的方向上优化, 其中
 
 $$
+\begin{equation}
 z^* = \argmax{z}\ \ln{p_\theta(x, z)},
+\end{equation}
 $$
 
 如果 $q_\phi(z | x)$ 的形式是高斯分布, 那么它的波峰将逐渐向 $z^*$ 集中并且最终将向上趋于无限 (其极限恰为<a href="https://en.wikipedia.org/wiki/Dirac_delta_function" target="_blank">狄拉克 $\delta$ 函数</a>). 另一方面, \eqref{eq:elbo-rewrite-1} 式第二项的信息熵则将 $q_\phi(z | x)$ 往另一个方向, 即 "将概率密度尽可能摊平" 的方向进行优化. 仍然假设 $q_\phi(z | x)$ 为高斯分布, 易知其<a href="https://en.wikipedia.org/wiki/Differential_entropy#Differential_entropies_for_various_distributions" target="_blank">信息熵</a>为 $\ln{(\sqrt{2\pi e}\sigma)}$, 信息熵越大, 标准差 $\sigma$ 就越大, 概率密度就越分散. 因此直观上看 \eqref{eq:elbo-rewrite-1} 式希望引导的 $q_\phi(z | x)$ 的形式是概率密度往 $z^*$ 集中但又不至于太集中, 处于某种 "平衡" 之下. 这个 "平衡" 指的就是函数族 $q_\phi(z | x)$ 形成的子空间中到 $p_\theta(z | x)$ 的距离最短的那个点.
