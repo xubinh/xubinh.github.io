@@ -269,7 +269,7 @@ $$
 <figure style="text-align: center;">
   <div style="display: inline-block;">
   <a href="https://en.wikipedia.org/wiki/Monte_Carlo_method#Overview" target="_blank">
-    <img src="images/290px-Pi_monte_carlo_all.gif" alt="蒙特卡罗方法用于近似 $\pi$ 值" style="zoom: 100%; border: 2px solid #eef2f5;" />
+    <img src="images/580px-Pi_monte_carlo_all.gif" alt="蒙特卡罗方法用于近似 $\pi$ 值" style="zoom: 100%; border: 2px solid #eef2f5;" />
   </a>
   </div>
   <figcaption>蒙特卡罗方法用于近似 $\pi$ 值</figcaption>
