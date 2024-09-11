@@ -76,12 +76,12 @@
     }
 
     function dynamicMathJaxDisplayMathFontSize() {
-        let deviceWidth = document.querySelector("main").offsetWidth;
-        if (deviceWidth > 768) {
+        let mainWidth = document.querySelector("main").offsetWidth;
+        if (mainWidth > 768) {
             return;
         }
         const gap = 14;
-        const mainWidth = deviceWidth - 2 * gap;
+        const textWidth = mainWidth - 2 * gap;
 
         var displayMathElements = document.querySelectorAll(
             'mjx-container.MathJax.CtxtMenu_Attached_0[display="true"]'
@@ -94,7 +94,7 @@
                 currentFontSize.length - 1
             );
             var elementWidth = element.offsetWidth;
-            var newFontSizeValue = (mainWidth / elementWidth) * fontSizeValue;
+            var newFontSizeValue = (textWidth / elementWidth) * fontSizeValue;
 
             if (newFontSizeValue < 113.4) {
                 element.style.fontSize = newFontSizeValue + "%";
