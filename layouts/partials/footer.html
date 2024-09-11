@@ -75,11 +75,37 @@
         });
     }
 
+    function dynamicMathJaxDisplayMathFontSize() {
+        let deviceWidth = document.querySelector("main").offsetWidth;
+        if (deviceWidth > 768) {
+            return;
+        }
+        const gap = 14;
+        const mainWidth = deviceWidth - 2 * gap;
+
+        var displayMathElements = document.querySelectorAll(
+            'mjx-container.MathJax.CtxtMenu_Attached_0[display="true"]'
+        );
+
+        displayMathElements.forEach(function (element) {
+            var currentFontSize = element.style.fontSize;
+            var fontSizeValue = currentFontSize.substring(
+                0,
+                currentFontSize.length - 1
+            );
+            var elementWidth = element.offsetWidth;
+            var newFontSizeValue = (mainWidth / elementWidth) * fontSizeValue;
+
+            if (newFontSizeValue < 113.4) {
+                element.style.fontSize = newFontSizeValue + "%";
+            }
+        });
+    }
+
     window.addEventListener('load', (event) => {
         makeSmoothScroll();
+        MathJax.startup.promise.then(makeSmoothScroll).then(dynamicMathJaxDisplayMathFontSize);
     });
-
-    MathJax.startup.promise.then(makeSmoothScroll);
 </script>
 
 {{- if (not site.Params.disableScrollToTop) }}
