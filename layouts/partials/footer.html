@@ -53,18 +53,12 @@
                 e.preventDefault();
                 var id = this.getAttribute("href").substr(1);
                 // console.log(id);
-                if (
-                    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-                ) {
-                    document
-                        .querySelector(`[id='${decodeURIComponent(id)}']`)
-                        .scrollIntoView({
-                            behavior: "smooth",
-                        });
+                if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                    document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                        behavior: "smooth",
+                    });
                 } else {
-                    document
-                        .querySelector(`[id='${decodeURIComponent(id)}']`)
-                        .scrollIntoView();
+                    document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
                 }
                 if (id === "top") {
                     history.replaceState(null, null, " ");
@@ -83,16 +77,11 @@
         const gap = 14;
         const textWidth = mainWidth - 2 * gap;
 
-        var displayMathElements = document.querySelectorAll(
-            'mjx-container.MathJax.CtxtMenu_Attached_0[display="true"]'
-        );
+        var displayMathElements = document.querySelectorAll('mjx-container.MathJax.CtxtMenu_Attached_0[display="true"]');
 
         displayMathElements.forEach(function (element) {
             var currentFontSize = element.style.fontSize;
-            var fontSizeValue = currentFontSize.substring(
-                0,
-                currentFontSize.length - 1
-            );
+            var fontSizeValue = currentFontSize.substring(0, currentFontSize.length - 1);
             var elementWidth = element.offsetWidth;
             var newFontSizeValue = (textWidth / elementWidth) * fontSizeValue;
 
@@ -102,15 +91,23 @@
         });
     }
 
-    window.addEventListener('load', (event) => {
+    window.addEventListener("load", (event) => {
         makeSmoothScroll();
-        MathJax.startup.promise.then(makeSmoothScroll).then(() => {
-            console.log("[MathJax] Enable smooth scroll for cross references of math✔️")
-        }).then(dynamicMathJaxDisplayMathFontSize).then(() => {
-            console.log("[MathJax] Set dynamic font sizes of math blocks✔️")
-        }).then(() => {
-            console.log("[MathJax] MathJax is fully loaded✔️")
-        });
+        try {
+            MathJax.startup.promise
+                .then(makeSmoothScroll)
+                .then(() => {
+                    console.log("[MathJax] Enable smooth scroll for cross references of math✔️");
+                })
+                .then(dynamicMathJaxDisplayMathFontSize)
+                .then(() => {
+                    console.log("[MathJax] Set dynamic font sizes of math blocks✔️");
+                })
+                .then(() => {
+                    console.log("[MathJax] MathJax is fully loaded✔️");
+                });
+        }
+        catch { }
     });
 </script>
 
