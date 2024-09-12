@@ -4,11 +4,10 @@
 <!-- <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script> -->
 
 <!-- MathJax -->
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script>
     window.MathJax = {
         loader: {
-            load: ["[tex]/empheq", "[tex]/cases", '[tex]/boldsymbol'],
+            load: ["[tex]/empheq", "[tex]/cases"],
         },
         tex: {
             inlineMath: [
@@ -21,8 +20,15 @@
             ],
             tags: "ams",
             packages: {
-                "[+]": ["empheq", "cases", 'boldsymbol'],
+                "[+]": ["empheq", "cases"],
+            },
+        },
+        startup: {
+            ready: function () {
+                MathJax.startup.defaultReady();
+                console.log("[MathJax] Initialize MathJax✔️");
             },
         },
     };
 </script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>

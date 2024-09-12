@@ -104,7 +104,13 @@
 
     window.addEventListener('load', (event) => {
         makeSmoothScroll();
-        MathJax.startup.promise.then(makeSmoothScroll).then(dynamicMathJaxDisplayMathFontSize);
+        MathJax.startup.promise.then(makeSmoothScroll).then(() => {
+            console.log("[MathJax] Enable smooth scroll for cross references of math✔️")
+        }).then(dynamicMathJaxDisplayMathFontSize).then(() => {
+            console.log("[MathJax] Set dynamic font sizes of math blocks✔️")
+        }).then(() => {
+            console.log("[MathJax] MathJax is fully loaded✔️")
+        });
     });
 </script>
 
