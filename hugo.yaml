@@ -63,6 +63,7 @@ params:
   ShowRssButtonInSectionTermList: true
   ShowAllPagesInArchive: true
   ShowToc: true
+  UseHugoToc: false
   comments: false
   tocOpen: true
   # math: true

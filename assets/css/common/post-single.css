@@ -420,6 +420,10 @@
     outline: 0;
 }
 
+.toc li.hide-in-toc {
+    display: none;
+}
+
 .post-footer {
     margin-top: 56px;
 }

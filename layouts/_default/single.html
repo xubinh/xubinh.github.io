@@ -36,10 +36,11 @@
 
         {{- if .Content }}
             <div class="post-content">
+                {{- $cleanContent := replaceRE "(?: !|-)hide-in-toc" "" .Content }}
                 {{- if not (.Param "disableAnchoredHeadings") }}
-                    {{- partial "anchored_headings.html" .Content -}}
+                    {{- partial "anchored_headings.html" $cleanContent -}}
                 {{- else }}
-                    {{ .Content }}
+                    {{ $cleanContent }}
                 {{ end }}
             </div>
         {{- end }}
