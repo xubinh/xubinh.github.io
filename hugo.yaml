@@ -9,7 +9,7 @@ theme: ["hugo-notice", "PaperMod"]
 mainSections: ["posts"]
 enableInlineShortcodes: true
 enableRobotsTXT: true
-buildDrafts: true
+buildDrafts: false
 buildFuture: false
 buildExpired: false
 enableEmoji: true
