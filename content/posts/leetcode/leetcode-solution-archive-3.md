@@ -246,3 +246,39 @@ public:
 
 - 本题一眼动态规划. 一开始还没发现, 做到后面发现这不就是斐波那契数列么.
 - 看了题解居然还有矩阵+快速幂以及直接通项公式两种做法, 这就属于奇技淫巧了, 自己并不大想去单独记这些东西, 能记住并在面试的时候提一嘴最好, 记不住那也认了.
+
+## 78. 子集
+
+英文题目名称: Subsets
+
+标签: 位运算, 数组, 回溯
+
+思路:
+
+- 本题一眼递归, 采用的就是一般的 DFS 的做法, 主函数 `subsets` 仅作为入口, 然后自己另外写一个用于 DFS 的帮手函数 `_subsets` 进行递归并在递归到每个叶路径的时候将当前答案 push back 到总的答案集合中.
+- 最后一提交发现运行速度打败了 1% 的用户, 这不优化一下不得直接失眠了. 一开始想到的优化手段是将对一整个 `vector` 的 `push_back` 替换为 `emplace_back`, 但仔细一想好像不论是哪个都调用的拷贝构造函数, 最多最多就是 `std::move` 一下顶天了, 而 `std::move` 放在这里也不合适, 因为将要复制的 `vector` 之后还要用, 得到的推论就是要传入整个 `vector` 就避免不了对这个 `vector` 的整体复制. 最后想到 `vector` 还有个关于迭代器的构造函数, 使用迭代器进行 inplace 构造相当于在两个数组之间进行复制, 这再怎么样也比先复制整个 `vector` 再进行逐元素复制要快, 于是便采用这个方法并顺利优化运行时间至击败 100%.
+- 除了运行时间, 内存消耗击败 5% 也得优化一下. 一开始想到的是将递归改写为栈, 但这个想法太复杂了. 看了题解发现可以通过枚举二进制模式并根据每个模式临时构造对应的序列, 这种做法虽然思维难度为零, 但是一点也不优雅, 自己并不想采用. 最后想着把题解的递归做法提交一遍看看它的内存消耗会不会比自己的小, 如果不会那自己也不改了, 结果一提交发现题解的内存消耗居然还不错. 经过二分法对齐自己和题解的代码之后发现很奇妙的一点是只需要将
+
+  ```cpp
+  // 不使用当前数字:
+  _subsets(nums, range_end + 1, current_used_integers, results);
+  
+  // 使用当前数字:
+  current_used_integers.push_back(nums[range_end]);
+  _subsets(nums, range_end + 1, current_used_integers, results);
+  current_used_integers.pop_back();
+  ```
+
+  上下替换一下改为
+
+  ```cpp
+  // 使用当前数字:
+  current_used_integers.push_back(nums[range_end]);
+  _subsets(nums, range_end + 1, current_used_integers, results);
+  current_used_integers.pop_back();
+  
+  // 不使用当前数字:
+  _subsets(nums, range_end + 1, current_used_integers, results);
+  ```
+
+  内存消耗就下去了, 这应该是涉及到硬件例如缓存命中率之类的东西了, 这就太微妙了. 由于上面的形式直观上是 "先短后长", 下面的形式直观上是 "先分配后缩短", 因此两种代码组织方法在内存消耗上的差异估计和 `malloc` 的底层行为有关.
