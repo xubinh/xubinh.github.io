@@ -500,3 +500,63 @@ public:
     }
 };
 ```
+
+## 236. 二叉树的最近公共祖先
+
+英文题目名称: Lowest Common Ancestor of a Binary Tree
+
+标签: 树, 深度优先搜索, 二叉树
+
+思路:
+
+- 这题一开始以为很简单, 思考一会之后才发现有蹊跷. 一般这种二叉树的题都是采用 "获取左子树的返回值 -> 获取右子树的返回值 -> 结合两个子树的返回值得到当前树的结果并返回" 的思路, 而本题蹊跷就蹊跷在**一个返回值根本不够用**, 因为有太多种可能结果:
+  1. 当前树中啥也没有.
+  1. 当前树的根结点为 `p` (或 `q`), 并且 `q` (或 `p`) 并不位于当前树中.
+  1. 当前树的根结点为 `p` (或 `q`), 并且 `q` (或 `p`) 位于当前树的某个子树中.
+  1. 当前树的左子树同时包含 `p` 和 `q`.
+  1. 当前树的右子树同时包含 `p` 和 `q`.
+  1. 当前树的左右子树分别包含 `p` 和 `q`.
+- 为了解决单一返回值表达能力不足的问题, 最终采用的办法是将单一返回值**结合上下文进行多种解释**. 设主函数 `lowestCommonAncestor(root, p, q)` 的逻辑为:
+  1. 如果根结点恰为 `p`, `q` 之一则直接返回根结点. **此时根结点并不一定是最近公共祖先, 需要调用者根据上下文进行确定**.
+  1. 否则递归向左子树和右子树进行调用:
+     1. 如果左子树和右子树均返回了非空指针, 说明当前树就是最近公共祖先, 因此返回根结点.
+     1. 如果左子树和右子树均返回空指针, 那说明什么也没有, 因此当前树也返回空指针.
+     1. 否则仅有左子树和右子树其中之一返回了非空指针, 那么返回该指针. **此时该指针并不一定是最近公共祖先, 需要调用者根据上下文进行确定**.
+  "上下文" 除了包含 "左右子树的结果的是否非空" 的信息以外, 实际上还包含 "当前树是否为顶层树" 的信息:
+  1. 如果当前树为顶层树, 那么由 "根结点恰为 `p`, `q` 之一" 可立即推出最近公共祖先为根结点, 因此 `lowestCommonAncestor` 应该返回根结点, 而在上述逻辑中 `lowestCommonAncestor` 返回的也确实是根结点.
+  1. 如果当前树为顶层树, 那么由 "仅有左子树和右子树其中之一返回了非空指针" 可立即推出最近公共祖先为所返回的指针. 而上述逻辑中所返回的也确实是该指针.
+
+代码:
+
+```cpp
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if (root == p || root == q) {
+            return root;
+        }
+
+        if (!root->left && !root->right) {
+            return nullptr;
+        }
+
+        if (!root->left) {
+            return lowestCommonAncestor(root->right, p, q);
+        }
+
+        if (!root->right) {
+            return lowestCommonAncestor(root->left, p, q);
+        }
+
+        auto left_sub_tree_result = lowestCommonAncestor(root->left, p, q);
+        auto right_sub_tree_result = lowestCommonAncestor(root->right, p, q);
+
+        if (left_sub_tree_result && right_sub_tree_result) {
+            return root;
+        }
+
+        return left_sub_tree_result ? left_sub_tree_result
+                                    : right_sub_tree_result;
+    }
+};
+```
