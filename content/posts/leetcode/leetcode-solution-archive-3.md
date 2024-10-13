@@ -79,9 +79,9 @@ public:
   $$
   \begin{equation*}
   \begin{aligned}
-  &\\, \\, \quad \left(1 + n + n (n - 1) + \dots + \frac{n!}{1!} + n!\right) \times n\\
-  &= \left(\frac{n!}{n!} + \frac{n!}{(n - 1)!} + \dots + \frac{n!}{1!} + n!\right) \times n\\
-  &\leq \left(\frac{n!}{2^(n - 1)} + \frac{n!}{2^{n - 2}} + \dots + \frac{n!}{2^0} + n!\right) \times n\\
+  &\, \, \quad \left(1 + n + n (n - 1) + \dots + \frac{n!}{1!} + n!\right) \times n \\
+  &= \left(\frac{n!}{n!} + \frac{n!}{(n - 1)!} + \dots + \frac{n!}{1!} + n!\right) \times n \\
+  &\leq \left(\frac{n!}{2^(n - 1)} + \frac{n!}{2^{n - 2}} + \dots + \frac{n!}{2^0} + n!\right) \times n \\
   &\leq n! \cdot 3n.
   \end{aligned}
   \end{equation*}
@@ -294,7 +294,7 @@ public:
   ```cpp
   // 不使用当前数字:
   _subsets(nums, range_end + 1, current_used_integers, results);
-  
+
   // 使用当前数字:
   current_used_integers.push_back(nums[range_end]);
   _subsets(nums, range_end + 1, current_used_integers, results);
@@ -308,7 +308,7 @@ public:
   current_used_integers.push_back(nums[range_end]);
   _subsets(nums, range_end + 1, current_used_integers, results);
   current_used_integers.pop_back();
-  
+
   // 不使用当前数字:
   _subsets(nums, range_end + 1, current_used_integers, results);
   ```
@@ -522,7 +522,7 @@ public:
      1. 如果左子树和右子树均返回了非空指针, 说明当前树就是最近公共祖先, 因此返回根结点.
      1. 如果左子树和右子树均返回空指针, 那说明什么也没有, 因此当前树也返回空指针.
      1. 否则仅有左子树和右子树其中之一返回了非空指针, 那么返回该指针. **此时该指针并不一定是最近公共祖先, 需要调用者根据上下文进行确定**.
-  "上下文" 除了包含 "左右子树的结果的是否非空" 的信息以外, 实际上还包含 "当前树是否为顶层树" 的信息:
+        "上下文" 除了包含 "左右子树的结果的是否非空" 的信息以外, 实际上还包含 "当前树是否为顶层树" 的信息:
   1. 如果当前树为顶层树, 那么由 "根结点恰为 `p`, `q` 之一" 可立即推出最近公共祖先为根结点, 因此 `lowestCommonAncestor` 应该返回根结点, 而在上述逻辑中 `lowestCommonAncestor` 返回的也确实是根结点.
   1. 如果当前树为顶层树, 那么由 "仅有左子树和右子树其中之一返回了非空指针" 可立即推出最近公共祖先为所返回的指针. 而上述逻辑中所返回的也确实是该指针.
 
@@ -557,6 +557,54 @@ public:
 
         return left_sub_tree_result ? left_sub_tree_result
                                     : right_sub_tree_result;
+    }
+};
+```
+
+## 141. 环形链表
+
+英文题目名称: Linked List Cycle
+
+标签: 哈希表, 链表, 双指针
+
+思路:
+
+- 快慢指针绕圈追尾, 没啥好说的. 这题才是快慢指针, 前面那题 "160. 相交链表" 之前做的时候一直往快慢指针上面靠结果最后发现并不是, 浪费了许多时间.
+
+代码:
+
+```cpp
+class Solution {
+public:
+    bool hasCycle(ListNode* head) {
+        if (!head) {
+            return false;
+        }
+
+        auto fast_pointer = head;
+        auto slow_pointer = head;
+
+        while (1) {
+            fast_pointer = fast_pointer->next;
+
+            if (!fast_pointer) {
+                return false;
+            }
+
+            fast_pointer = fast_pointer->next;
+
+            if (!fast_pointer) {
+                return false;
+            }
+
+            slow_pointer = slow_pointer->next;
+
+            if (slow_pointer == fast_pointer) {
+                return true;
+            }
+        }
+
+        return false;
     }
 };
 ```
