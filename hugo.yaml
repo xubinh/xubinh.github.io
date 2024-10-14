@@ -1,4 +1,4 @@
-baseURL: https://example.org/
+# baseURL: https://example.org/
 title: xubinh's blog
 # copyright: '© 2024 [xubinh's blog](https://xubinh.github.io/) All rights reserved.'
 defaultContentLanguage: zh
