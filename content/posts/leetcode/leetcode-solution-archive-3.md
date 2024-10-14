@@ -1,7 +1,7 @@
 ---
 title: "LeetCode 题解归档 - 3"
 hideSummary: true
-date: 2024-07-22T17:08:56+08:00
+date: 2024-10-14T22:39:56+08:00
 draft: true
 tags: ["LeetCode"]
 series: ["LeetCode"]
@@ -628,6 +628,203 @@ public:
     int singleNumber(vector<int>& nums) {
         return std::accumulate(nums.cbegin(), nums.cend(), 0,
                                std::bit_xor<int>());
+    }
+};
+```
+
+## 146. LRU 缓存
+
+英文题目名称: LRU Cache
+
+标签: 设计, 哈希表, 链表, 双向链表
+
+思路:
+
+- 很好的一道题, 很早之前做过但是忘光了, 这次相当于复习了一遍, 学到很多东西.
+- 因为要实现 LRU, 所以肯定使用双向链表. 同时需要使用一个哈希表存储从键到对应的链表结点指针的映射.
+- **双向链表一定要使用假头结点和假尾结点**, 自己第一遍做的时候没有这个意识, 写出来的代码这里检查那里检查的, 可读性基本为零.
+- 实现链表的基本操作的时候不要同步修改除链表以外的其他成员, 例如哈希表等等. 因为很多时候将一个结点从链表中移出很快又会把它移入, 这种动作只会影响链表, 并不会影响其他成员. 修改其他成员的动作放到调用者中去做.
+- 插入和删除元素的时候最好按照成员的定义顺序一个一个检查是否造成改变, 以避免遗漏, 并且删除元素对成员的修改动作最好和插入元素的逆着来.
+
+代码:
+
+```cpp
+struct KeyValuePairNode {
+    const int key;
+    int value;
+    KeyValuePairNode *previous;
+    KeyValuePairNode *next;
+    KeyValuePairNode(const int &key_input, const int &value_input)
+        : key(key_input), value(value_input), previous(nullptr), next(nullptr) {
+    }
+};
+
+class LRUCache {
+private:
+    const int capacity;
+    KeyValuePairNode *phony_head = new KeyValuePairNode(0, 0);
+    KeyValuePairNode *phony_tail = new KeyValuePairNode(0, 0);
+    int size = 0;
+    unordered_map<int, KeyValuePairNode *> key2address;
+
+public:
+    LRUCache(int capacity_input) : capacity(capacity_input) {
+        phony_head->next = phony_tail;
+        phony_tail->previous = phony_head;
+    }
+
+    void _pop(KeyValuePairNode *const &target_ptr) {
+        target_ptr->next->previous = target_ptr->previous;
+        target_ptr->previous->next = target_ptr->next;
+    }
+
+    KeyValuePairNode *_pop_back() {
+        auto back = phony_tail->previous;
+
+        _pop(back);
+
+        return back;
+    }
+
+    void _insert_to_front(KeyValuePairNode *const &target_ptr) {
+        target_ptr->next = phony_head->next;
+        phony_head->next->previous = target_ptr;
+        phony_head->next = target_ptr;
+        target_ptr->previous = phony_head;
+    }
+
+    void _move_to_front(KeyValuePairNode *const &target_ptr) {
+        _pop(target_ptr);
+        _insert_to_front(target_ptr);
+    }
+
+    int get(int key) {
+        if (!key2address.count(key)) {
+            return -1;
+        }
+
+        auto target_ptr = key2address[key];
+
+        _move_to_front(target_ptr);
+
+        return target_ptr->value;
+    }
+
+    void put(int key, int value) {
+        if (key2address.count(key)) {
+            auto target_ptr = key2address[key];
+
+            target_ptr->value = value;
+
+            _move_to_front(target_ptr);
+        } else {
+            auto target_ptr = new KeyValuePairNode(key, value);
+
+            _insert_to_front(target_ptr);
+
+            ++size;
+
+            key2address[key] = target_ptr;
+
+            if (size > capacity) {
+                auto back = _pop_back();
+
+                key2address.erase(back->key);
+
+                --size;
+
+                delete back;
+            }
+        }
+    }
+};
+```
+
+## 148. 排序链表
+
+英文题目名称: Sort List
+
+标签: 链表, 双指针, 分治, 排序, 归并排序
+
+思路:
+
+- 因为是链表, 无法随机读写, 所以只能归并排序.
+  - 力扣题解还提到一个自底向上的**迭代**的做法, 那个做法太过于依赖微操, 面试遇到直接开摆.
+- 可以将主函数分解为 "对链表进行二分" -> "递归对两个子链表进行排序" -> "归并两个有序链表", 其中将 "二分" 实现为一个函数, 将 "归并" 实现为另一个函数.
+- 二分函数直接用快慢指针的话需要特别注意 "off-by-one" 细节, 因为需要将左子链表和右子链表断开, 而需要注意的点就是判定什么时候到达了左子链表的尾结点. 归并函数没什么好说的, 就正常实现即可.
+- 另外提一嘴不要使用哨兵结点什么的, 因为这里存在递归, 只要使用哨兵结点就是至少 $O(\log{n})$ (实际上是 $O(n)$) 次的 `malloc` 消耗.
+
+代码:
+
+```cpp
+class Solution {
+public:
+    ListNode *sortList(ListNode *head) {
+        if (!head || !head->next) {
+            return head;
+        }
+
+        head = _sort_list(head);
+
+        return head;
+    }
+
+    // 对链表进行实际的递归的排序, 假设链表长度大于等于 2:
+    ListNode *_sort_list(ListNode *list) {
+        auto new_list = _split_list(list);
+
+        if (list->next) {
+            list = _sort_list(list);
+        }
+
+        if (new_list->next) {
+            new_list = _sort_list(new_list);
+        }
+
+        list = _merge_two_ordered_lists(list, new_list);
+
+        return list;
+    }
+
+    // 二分链表, 假设链表长度大于等于 2, 返回新链表的头结点:
+    ListNode *_split_list(ListNode *list) {
+        auto fast_ptr = list;
+        auto slow_ptr = list;
+
+        // 这里需要注意 off-by-one 的细节, 比较微妙, 最好在脑子里复现一下:
+        while (fast_ptr->next && fast_ptr->next->next) {
+            fast_ptr = fast_ptr->next->next;
+            slow_ptr = slow_ptr->next;
+        }
+
+        auto new_list_head = slow_ptr->next;
+        slow_ptr->next = nullptr;
+
+        return new_list_head;
+    }
+
+    // 合并两个有序非空链表:
+    ListNode *_merge_two_ordered_lists(ListNode *list_1, ListNode *list_2) {
+        ListNode *new_list_head = list_1->val < list_2->val ? list_1 : list_2;
+        list_1 = new_list_head == list_1 ? list_1->next : list_1;
+        list_2 = new_list_head == list_2 ? list_2->next : list_2;
+        auto new_list_tail = new_list_head;
+
+        while (list_1 && list_2) {
+            if (list_1->val < list_2->val) {
+                new_list_tail->next = list_1;
+                list_1 = list_1->next;
+            } else {
+                new_list_tail->next = list_2;
+                list_2 = list_2->next;
+            }
+
+            new_list_tail = new_list_tail->next;
+        }
+
+        new_list_tail->next = list_1 ? list_1 : list_2;
+
+        return new_list_head;
     }
 };
 ```
