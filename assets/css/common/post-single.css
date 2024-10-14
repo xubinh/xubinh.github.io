@@ -124,6 +124,13 @@
     margin-bottom: var(--content-gap);
 }
 
+.post-content ol ol,
+.post-content ol ul,
+.post-content ul ul,
+.post-content ul ol {
+    margin-bottom: 0px;
+}
+
 /* 取消对列表最后一个元素的留白的限制, 保持上下留白大小的对称性 */
 /* .post-content ul:last-child {
     margin-bottom: 0;
@@ -146,11 +153,12 @@
     padding-inline-start: 20px;
 }
 
-/* .post-content li {
+.post-content li {
     margin-top: 5px;
-} */
+}
 
 .post-content li p {
+    margin-top: 5px; /* 保持统一 */
     margin-bottom: 0;
 }
 
