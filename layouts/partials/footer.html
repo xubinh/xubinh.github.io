@@ -70,24 +70,21 @@
     }
 
     function dynamicMathJaxDisplayMathFontSize() {
-        let mainWidth = document.querySelector("main").offsetWidth;
-        if (mainWidth > 768) {
-            return;
-        }
-        const gap = 14;
-        const textWidth = mainWidth - 2 * gap;
-
-        var displayMathElements = document.querySelectorAll('mjx-container.MathJax.CtxtMenu_Attached_0[display="true"]');
+        const displayMathElements = document.querySelectorAll('mjx-container.MathJax.CtxtMenu_Attached_0[display="true"]');
 
         displayMathElements.forEach(function (element) {
-            var currentFontSize = element.style.fontSize;
-            var fontSizeValue = currentFontSize.substring(0, currentFontSize.length - 1);
-            var elementWidth = element.offsetWidth;
-            var newFontSizeValue = (textWidth / elementWidth) * fontSizeValue;
+            const currentFontSizeStr = element.style.fontSize;
+            const currentFontSize = currentFontSizeStr.substring(0, currentFontSizeStr.length - 1);
+            const equationFrameworkWidth = element.offsetWidth; // 公式的理论最大宽度
+            const actualEquationWidth = element.children[0].offsetWidth; // 公式内容当前实际的宽度
 
-            if (newFontSizeValue < 113.4) {
-                element.style.fontSize = newFontSizeValue + "%";
+            if (actualEquationWidth <= equationFrameworkWidth) {
+                return;
             }
+
+            const newFontSize = (currentFontSize / actualEquationWidth) * equationFrameworkWidth;
+
+            element.style.fontSize = newFontSize + "%";
         });
     }
 
