@@ -67,7 +67,7 @@ params:
   comments: false
   tocOpen: true
   # math: true
-  # images: ["images/papermod-cover.png"]
+  images: ["favicon.webp"]
 
   defaultTheme: auto
   disableThemeToggle: false
