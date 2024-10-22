@@ -10,7 +10,7 @@ author: ["xubinh"]
 type: posts
 ---
 
-> 起因是我在阅读 xv6 源码的时候遇到了如下两行代码:
+> 写这篇博客的动机是我想搞清楚在阅读 xv6 源码的时候遇到的如下两行代码:
 >
 > ```c
 > // kernel/spinlock.c:32
@@ -35,9 +35,8 @@ type: posts
 
 C 语言下的 `volatile` 关键字的作用是防止编译器在**无可见副作用** (assumption of non visible side effects) 的假设下对代码进行省略优化. 常见的使用场景包括:
 
-1. 内存映射 I/O (Memory-mapped I/O, MMIO). 使用 MMIO 将使得外部设备的内存和寄存器将被映射至用户的地址空间以便程序员使用内存地址直接访问设备. 在这种情况下如果外部设备改变了其内存中的数据, 程序员必须使用 `volatile` 关键字修饰变量以便使这种改变总是对程序可见.
-
-1. 信号处理函数. 和 MMIO 类似, 信号处理函数也并不是编译器对程序进行编译时需要考虑的对象, 因此程序员必须使用 `volatile` 禁止编译器优化以使得信号处理函数作出的修改总是对程序可见.
+1. **内存映射 I/O (Memory-mapped I/O, MMIO)**: 使用 MMIO 将使得外部设备的内存和寄存器将被映射至用户的地址空间以便程序员使用内存地址直接访问设备. 在这种情况下如果外部设备改变了其内存中的数据, 程序员必须使用 `volatile` 关键字修饰变量以便使这种改变总是对程序可见.
+1. **信号处理函数**: 和 MMIO 类似, 编译器在编译时也不会去考虑其他文件中注册的信号处理函数是否会对当前文件中的变量产生影响, 因此程序员必须使用 `volatile` 显式告诉编译器不要进行优化以使得信号处理函数做出的修改总是对程序可见.
 
    例如考虑 C 程序:
 
@@ -49,44 +48,44 @@ C 语言下的 `volatile` 关键字的作用是防止编译器在**无可见副�
    }
    ```
 
-   其中标志位 `finished` 将由某个异步的信号处理函数进行修改以通知当前进程某个事件已经发生. 如果不使用 `volatile` 关键字对 `finished` 进行修饰, 那么编译器将有可能因为认为 `finished` 变量的值在当前进程中没有任何修改而将其内联化, 于是循环语句会被省略优化为 `while(true)`, 这就会导致出错.
+   其中标志位 `finished` 会被其他文件中注册的某个异步的信号处理函数修改以便通知当前线程某个事件已经发生. 如果不使用 `volatile` 关键字对 `finished` 进行修饰, 编译器有可能会因为觉得 `finished` 变量的值在当前线程中保持不变而将其内联化, 也就是说条件语句 `while(!finished)` 可能会被优化为 `while(true)`, 这种情况下无论外部的信号处理函数如何修改原先的变量都无济于事, 这显然是错误的.
+1. **非本地跳转** (non-local jumps): 在非本地跳转中需要使用 `volatile` 对 `setjump` 和 `longjump` 之间定义的局部变量进行修饰, 以免结果在跳转后丢失.
 
-在使用**非本地跳转** (non-local jumps) 时也需要使用 `volatile` 对 `setjump` 和 `longjump` 之间定义的局部变量进行修饰, 避免跳转后结果丢失.
-
-C 语言下的 `volatile` 关键字只保证可见性, 并不保证原子性和有序性. 原子性的实现需要硬件层面的配合, 单独使用高级语言无法完全实现原子性. 有序性则与内存屏障有关, 下面将会讲到.
+**`volatile` 关键字只保证可见性, 并不保证原子性和有序性**. 原子性的实现需要硬件层面的配合, 仅仅使用高级语言无法完全实现原子性, 有序性则与内存屏障和编译器有关. 下面将分别介绍原子性和有序性.
 
 ## 原子性与锁
 
-在并发编程中原子性是确保线程安全和数据一致性的重要概念. **原子性**指的是一个操作在执行过程中不可被中断, 即要么全部执行成功要么完全不执行, 没有任何线程能够观察到执行的中间状态. **读-改-写** (read-modify-write, RMW) 操作是实现原子性的重要手段之一. 典型的 RMW 操作包括 Test-and-set, Fetch-and-add 和 Compare-and-swap. 这些操作能够确保在多线程访问同一共享资源时的原子性.
+在并发编程中原子性是确保线程安全和数据一致性的重要概念. **原子性**指的是一个操作在执行过程中不可被中断, 即要么全部执行成功要么完全不执行, 没有任何线程能够观察到执行的中间状态. 实现原子性的重要手段之一便是**读-改-写** (read-modify-write, RMW) 操作, 常见的 RMW 操作包括 Test-and-Set (TAS) 操作, Fetch-and-Add (TAA) 操作, 以及 Compare-and-Swap (CAS) 操作. 作为基本的同步设施, RMW 操作主要用于实现更加高级的同步操作, 特别是能够用于实现互斥锁 (Mutex) 和自旋锁 (Spinlock).
 
-### Test-and-set
+### Test-and-Set
 
-Test-and-set (TAS) 操作的作用是将某一内存地址下的数据置 1, 同时返回置 1 前该内存地址下的数据的值. 整个过程原子化不可分割, 不会受到任何外部事件的中断.
+TAS 操作将某一内存地址下的数据置为 `1` 并返回置 `1` 前的值. 整个过程是原子化不可分割的, 不会受到任何外部事件的中断.
 
-- x86 下的含有 LOCK 前缀的 `BTS` 指令便是一个 TAS 操作. 这里 LOCK 前缀是使得 `BTS` 指令成为原子操作的关键. LOCK 前缀的作用是在当前指令执行期间对**数据总线** (data bus) 进行上锁, 这样除了当前抢占到数据总线的 CPU 在指令执行期间可以访问内存, 其他 CPU 都无法访问内存, 从而确保了指令的原子性. x86 下可以对 `ADD`, `ADC`, `AND`, `BTC`, `BTR`, `BTS`, `CMPXCHG`, `DEC`, `INC`, `NEG`, `NOT`, `OR`, `SBB`, `SUB`, `XOR`, `XADD` 以及 `XCHG` 等一系列指令添加 LOCK 前缀. 其中 `XCHG` 指令默认对数据总线上锁, 因此可以省略 LOCK 前缀.
-- 需要指出的是 LOCK 前缀与如 MESI 等缓存一致性协议是两个概念. 即使实现了缓存一致性协议也无法避免两个 RMW 操作的重叠.
+- x86 下的含有 LOCK 前缀的 `BTS` 指令便是一个 TAS 操作. 这里 LOCK 前缀是使得 `BTS` 指令成为原子操作的关键. LOCK 前缀的作用是在当前指令执行期间对**数据总线** (data bus) 进行上锁, 这样除了当前抢占到数据总线的 CPU 在指令执行期间可以访问内存, 其他 CPU 都无法访问内存, 从而确保了指令的原子性.
+  - x86 下可以对 `ADD`, `ADC`, `AND`, `BTC`, `BTR`, `BTS`, `CMPXCHG`, `DEC`, `INC`, `NEG`, `NOT`, `OR`, `SBB`, `SUB`, `XOR`, `XADD` 以及 `XCHG` 等一系列指令添加 LOCK 前缀. 其中 `XCHG` 指令默认对数据总线上锁, 因此可以省略 LOCK 前缀.
+  - LOCK 前缀与 MESI 等缓存一致性协议是两个概念. 在没有 LOCK 前缀的情况下即使实现了缓存一致性协议也无法避免两个 RMW 操作的重叠.
 
-### Fetch-and-add
+### Fetch-and-Add
 
-Fetch-and-add (FAA) 操作的作用是对某一内存地址下的数据进行增加 (increment), 同时返回增加前该内存地址下的数据的值. 整个过程原子化不可分割, 不会受到任何外部事件的中断.
+FAA 操作将某一内存地址下的数据进行自增 (increment) 并返回自增前的值. 整个过程是原子化不可分割的, 不会受到任何外部事件的中断.
 
 - x86 下的含有 LOCK 前缀的 `XADD` 指令便是一个 FAA 操作.
 
-### Compare-and-swap
+### Compare-and-Swap
 
-Compare-and-swap (CAS) 操作的作用是将某一内存地址下的数据的值与一个给定的值进行比较, 当且仅当比较相等时将另一个新值写入该内存地址, 同时无论比较是否相等均返回比较前该内存地址下的数据的值. 整个过程原子化不可分割, 不会受到任何外部事件的中断.
+CAS 操作将某一内存地址下的数据与一个给定的值进行比较, 当且仅当相等时将另一个新值写入该地址, 同时返回比较前的值. 整个过程是原子化不可分割的, 不会受到任何外部事件的中断.
 
 - x86 下的含有 LOCK 前缀的 `CMPXCHG` 指令便是一个 CAS 操作.
 - CAS 操作比 FAA 操作多一个自由度. FAA 只能控制增量的大小, 而 CAS 既可以控制增量的大小, 也可以指定所要增加的数据的初始值.
-- 实际应用时如果每个线程在每一次 CAS 操作失败后立即执行下一次 CAS 操作, 有可能出现有的线程总是抢占不到期望的数据的初始值的情况导致饥饿现象. 研究表明使用**指数退避** (exponential backoff) 方法能够提高多线程下 CAS 操作的效率.
+- 多线程情况下如果每个线程在一次 CAS 操作失败后均立即执行下一次 CAS 操作, 那么有可能出现有的线程一直成功而有的线程一直失败的情况, 此时需要使用**指数退避** (exponential backoff) 的策略来减少这种情况的发生.
 
 #### CAS 操作与 ABA 问题
 
-尽管 CAS 操作本身是原子性的, 在使用 CAS 实现其他常见算法时仍然有可能导致微妙的错误, 其中最著名的便是 **ABA 问题** (ABA problem).
+尽管 CAS 操作本身是原子性的, 在使用 CAS 实现更为高层的逻辑时仍然有可能产生微妙的错误, 其中最著名的便是 **ABA 问题** (ABA problem).
 
-假设程序员想要实现这样一种逻辑: 在使用前一次 CAS 操作检测到某个变量的当前值为 A 后将在本次 CAS 操作中期望将 A 交换为 B, 反之如果前一次操作检测到该变量为 B 则将在本次操作中期望交换为 A. 初看上去这个逻辑似乎没有什么问题, 但程序员遗漏了一个重要事实: 从前一次 CAS 操作结束并读出该变量的值到本次 CAS 操作即将开始的这一段时间里这个逻辑并不是原子性的. 这意味着有可能存在 2 个线程同时读到了 A, 并打算在本次 CAS 中将其与 B 交换, 但第 1 个线程的 CPU 被抢占并因此进入睡眠, 于是第 2 个线程成功进行交换, 交换后变量的值为 B. 如果到这里为止则程序实际上还是正确的, 因为睡眠的线程恢复后将由于变量的值已经不是 A 而导致 CAS 失败. 不幸的是恰好有第 3 个线程检测到此时变量的值为 B 并又在下一次 CAS 操作中将其交换回了 A. 如果此时睡眠的线程恢复执行, 它理所当然会将 A 再一次交换为 B, 但这次交换是冗余的 (因此是错误的), 因为从一开始线程 1 和线程 2 所执行的便是同一个交换工作 (A -> B) 的两个副本而线程 2 已经帮线程 1 做完工作了. 如果没有线程 3 的加入并且线程 2 执行完 A -> B 的 CAS 操作后便不再进行 CAS 操作, 那么线程 1 的交换最终还是会失败, 此时冗余被消除, 于是程序还是正确的. 正是由于线程 3 (或者也可以是线程 2 本身) 所做的更改使得变量的值复原到了线程 1 睡眠前的状态, 让线程 1 误以为自己的交换操作仍然是必要的, 因此导致交换成功并产生冗余操作.
+假设在多线程环境下运行这样一种逻辑: 如果某个线程在前一次 CAS 操作中检测到某个变量的值为 `A`, 那么本次 CAS 操作就将其设置为 `B`, 反之如果前一次 CAS 操作检测到该变量的值为 `B`, 那么本次 CAS 就将其设置为 `A`. 乍看上去这个逻辑似乎没有什么问题, 你一次我一次, 大家和平相处, 挺正常的. 但这段逻辑遗漏了一个重要事实: 从 "前一次 CAS 操作结束并读出该变量的值" 到 "本次 CAS 操作开始" 的这一段时间里当前线程有可能被终端. 这意味着可能有两个线程同时读到了 `A`, 并打算在本次 CAS 中将其设置为 `B`, 但线程一的 CPU 在读出数据后被抢占并因此进入睡眠, 于是线程二成功进行交换, 交换后变量的值为 `B`. 如果此时到这里为止就结束那么程序实际上还是正确的, 因为线程一恢复后会因为看到变量的值已经不是 `A` 而放弃本次 CAS. 不幸的是第三个线程检测到当前变量的值为 `B` 并使用 CAS 将其改回了 `A`. 这个时候线程一醒了, 它在看到变量的值是 `A` 之后便会继续想要将其设置为 `B`, 但实际上这次交换是多余的——从一开始线程一和线程二所执行的便是同一个 (由 `A` 到 `B`) 的交换工作, 而线程二已经帮线程一做完工作了. 正常情况下线程一会因为看到线程二修改后的值和自己期望的值不一样而取消当前的冗余的 CAS 操作, 但线程二修改后的值有可能仍然和线程一期望的值相同, 因此导致线程一成功执行冗余的操作.
 
-ABA 问题本质上和一般 RMW 指令的原子性问题一样, 都是由于非原子性导致的对同一个操作需求的多次冗余执行, 区别在于一般 RMW 指令是直接写入的, 不需要比较, 而 CAS 操作本身虽然是原子性的并且写入 (交换) 前需要比较, 却有可能因为 CAS 操作所属的外部较大逻辑的非原子性而导致其错误通过了比较.
+单单观察上面的流程可以发现问题由两个部分构成, 第一个部分是多个线程从同一变量中读出了相同的值因而产生了多个重复的 CAS 操作意愿, 第二个部分是 CAS 操作只考虑变量当前的值是否和自己期望的值是否一致, 无论当前操作是否冗余只要一致就执行, 也就是说在值可重复的情况下无法判断当前的 CAS 操作是否是冗余的. 为了解决 ABA 问题, 我们可以为变量设置一个关于 "对其值进行修改的" 操作的时间戳, 这个时间戳严格递增, 因此为每个成功进行的 CAS 操作所分配的时间戳是唯一的 (实际上对于自增量为 1 的 CAS 操作而言该变量本身就是一个时间戳), 这样 CAS 操作就能通过时间戳判断自身是否为冗余.
 
 ### 互斥锁与自旋锁
 
@@ -115,39 +114,40 @@ void release() {
 
 程序员在进行多线程编程时不仅考虑代码在当前文件中的执行效果, 还会考虑代码与其他线程以及外部设备之间的相互影响, 而编译器在编译时一般只考虑前者, 并且默认不会对后者产生任何影响; 同时现代处理器在执行机器指令时为了达到更高的执行效率会在不破坏原有的前后指令之间数据的可见性依赖的前提下在执行层面对指令进行重排序, 即**乱序执行** (Out-of-order execution, OoOE). 因此有序性同时存在于两个层面, 一个是编译时 (例如使用 GCC 将源码编译为机器指令时可能发生重排序), 另一个是运行时 (即 CPU 的乱序执行).
 
-考虑某个进程下的线程 1 和线程 2, 假设线程 2 需要等待线程 1 设置好线程 2 所需的数据后才能开始执行, 并且线程 1 和 2 之间通过某个共享变量作为标志位确定同步关系:
+考虑某个进程下的线程一和线程二, 假设线程二需要等待线程一设置好线程二所需的数据后才能开始执行, 并且线程一和二之间通过某个共享变量作为标志位进行同步:
 
 ```c
-// 线程 1:
+// 线程一
 int x = 123; // 准备数据
-flag_prepared = true; // 提醒线程 2 开始
+flag_prepared = true; // 提醒线程二开始
 
-// 线程 2:
-while(!flag_prepared); // 等待线程 1 准备好数据
+// 线程二
+while(!flag_prepared); // 等待线程一准备好数据
 printf("%d\n", x); // 开始执行
 ```
 
-无论是编译器在编译上述代码的过程中还是 CPU 执行编译后的可执行文件的过程中均有可能将线程 1 对 `flag_prepared` 的设置提前到对数据 `x` 的准备之前, 这就会导致线程 2 误以为线程 1 已经准备好了数据而照常执行 (`x` 此时的值未定义). 另一方面其也有可能将线程 2 对 `x` 的读取 (位于 `printf` 函数中) 提前到对 `flag_prepared` 的测试之前, 这同样会导致未定义的行为.
+无论是编译器还是 CPU 均有可能将线程一的设置 `flag_prepared` 的操作提前到对数据 `x` 的准备之前, 这就会导致线程二误以为线程一已经准备好数据从而提前开始执行, 而此时 `x` 的值尚未定义. 另一方面也有可能将线程二对 `x` 的读取 (位于 `printf` 函数中) 提前到对 `flag_prepared` 的测试操作之前, 同样会导致未定义的行为. 究其根本是因为编译器或 CPU 在不知道两条指令之前存在高层顺序依赖关系的情况下对它们进行了位置的互换.
 
-前面提到的由于没有确保有序性而导致的问题究其根本是因为编译器或 CPU 在不知道两条指令之前存在高层顺序依赖关系的情况下对它们进行了位置的互换. 因此我们可以从一个更加底层的视角来看待有序性问题. 固定构成一个可执行文件的顺序机器指令流中的任意一点, 在这个点之前执行的指令与在这个点之后执行的指令在没有任何对有序性的限制的前提下由于编译时和运行时重排序将有可能以各种合适的方案被移动并跨越该点. **内存屏障** (memory fence) 的作用便是通过在该点插入某种特殊的高级语言表达式或者某种特殊的机器指令对编译器或 CPU 能否将该点前后的普通指令进行移动并跨越该点作出限制. 如果将位于该点前的所有指令分为读指令和写指令两个部分, 同时将位于该点后的所有指令也分为读指令和写指令两个部分, 不同的内存屏障的区别仅在于对这四个部分之间的执行顺序的要求不同. 几种常见的内存屏障如下:
+我们可以从底层来观察上述问题. 假设有一个可执行文件, 该可执行文件的机器代码形成了一条顺序指令流. 现在固定这个指令流中的任意一点, 在这个点之前执行的指令与在这个点之后执行的指令在没有任何对有序性的限制的前提下由于编译时和运行时重排序将有可能以各种合适的方案被移动并跨越该点. **内存屏障** (memory fence) 指的就是插入到该点的某种特殊的高级语言表达式或机器指令对 "编译器或 CPU 能否将该点前后的普通指令进行移动并跨越该点" 做出限制. 将位于该点前的所有指令分为读指令和写指令两个部分, 并将位于该点后的所有指令也分为读指令和写指令两个部分, 不同的内存屏障的区别仅在于对这四个部分之间的执行顺序的要求不同. 几种常见的内存屏障的规则归纳如下:
 
 - 读屏障 (read barrier): 位于读屏障前的读操作不能向后跨越读屏障, 位于读屏障后的读操作不能向前跨越读屏障.
 - 写屏障 (write barrier): 位于写屏障前的写操作不能向后跨越写屏障, 位于写屏障后的写操作不能向前跨越写屏障.
-- 释放屏障 (release barrier): 位于释放屏障前的读操作不能向后跨越释放屏障, 位于释放屏障后的读操作和写操作不能向前跨越释放屏障.
-- 获取屏障 (acquire barrier): 位于获取屏障前的读操作和写操作不能向后跨越获取屏障, 位于获取屏障后的写操作不能向前跨越获取屏障.
+- **释放屏障 (release barrier)**: 位于释放屏障前的读操作不能向后跨越释放屏障, 位于释放屏障后的读操作和写操作不能向前跨越释放屏障.
+- **获取屏障 (acquire barrier)**: 位于获取屏障前的读操作和写操作不能向后跨越获取屏障, 位于获取屏障后的写操作不能向前跨越获取屏障.
 - 完全屏障 (full barrier): 位于完全屏障前的读操作和写操作不能向后跨越完全屏障, 位于完全屏障后的读操作和写操作不能向前跨越完全屏障.
 
 内存屏障的存在使得人们对机器指令的编译时和运行时执行顺序拥有了主动权. 程序员可以通过在他们自己的代码中设置内存屏障来为代码引入有序性.
 
-- x86 处理器提供了 `lfence` (能够实现释放屏障), `sfence` (能够实现获取屏障) 以及 `mfence` (完全屏障) 三种起到内存屏障作用的指令. 值得一提的是尽管 x86 提供了 `lfence` 指令, 但它自身的内存模型已经具有足够强的有序性, `lfence` 指令实际上是可有可无的.
+- x86 处理器提供了 `lfence` (能够实现释放屏障), `sfence` (能够实现获取屏障) 以及 `mfence` (完全屏障) 三种起到内存屏障作用的指令.
+  - 尽管 x86 提供了 `lfence` 指令, 但它自身的内存模型已经具有足够强的有序性, `lfence` 指令实际上是可有可无的.
 - C语言下可以使用如下内联汇编语句设置**编译时**完全屏障:
 
   ```c
   asm volatile("" ::: "memory");
-  __asm__ __volatile__ ("" ::: "memory");
+  __asm__ __volatile__ ("" ::: "memory"); // 与前一行等价
   ```
 
-  - `volatile` 关键字的作用是禁止对本内联汇编代码进行编译时重排序, 真正起到内存屏障作用的是括号内部的内容. 关于更多有关内联汇编的信息可以参考[这篇教程](https://www.ibiblio.org/gferg/ldp/GCC-Inline-Assembly-HOWTO.html#ss5.4).
+  - `volatile` 关键字的作用是禁止对该内联汇编代码进行编译时重排序, 而真正起到内存屏障作用的是括号内的内容. 关于更多有关内联汇编的信息可以参考[这篇教程](https://www.ibiblio.org/gferg/ldp/GCC-Inline-Assembly-HOWTO.html#ss5.4).
 
   另一方面可以使用 GCC 的内置函数 `__sync_synchronize()` 同时设置**编译时和运行时**完全屏障.
 - C++11 提供了 `std::atomic`, `std::memory_order`, 以及 `std::atomic_thread_fence` 等机制实现各类内存屏障.
@@ -273,8 +273,8 @@ Singleton *Singleton::GetInstance() {
 - [linux - How to do an atomic increment and fetch in C? - Stack Overflow](https://stackoverflow.com/questions/2353371/how-to-do-an-atomic-increment-and-fetch-in-c)
 - [Atomic Builtins - Using the GNU Compiler Collection (GCC)](https://gcc.gnu.org/onlinedocs/gcc-4.5.3/gcc/Atomic-Builtins.html)
 - [__atomic Builtins - Using the GNU Compiler Collection (GCC)](https://gcc.gnu.org/onlinedocs/gcc-4.8.2/gcc/_005f_005fatomic-Builtins.html)
-- [Fetch-and-add - Wikipedia](https://en.wikipedia.org/wiki/Fetch-and-add)
-- [Compare-and-swap - Wikipedia](https://en.wikipedia.org/wiki/Compare-and-swap)
+- [Fetch-and-Add - Wikipedia](https://en.wikipedia.org/wiki/Fetch-and-Add)
+- [Compare-and-Swap - Wikipedia](https://en.wikipedia.org/wiki/Compare-and-Swap)
 - [c++ - What does the "lock" instruction mean in x86 assembly? - Stack Overflow](https://stackoverflow.com/questions/8891067/what-does-the-lock-instruction-mean-in-x86-assembly)
 - [ABA problem - Wikipedia](https://en.wikipedia.org/wiki/ABA_problem)
 - [Memory barrier - Wikipedia](https://en.wikipedia.org/wiki/Memory_barrier)
@@ -302,8 +302,8 @@ Singleton *Singleton::GetInstance() {
 - [std::atomic_thread_fence - cppreference.com](https://en.cppreference.com/w/cpp/atomic/atomic_thread_fence)
 - [multithreading - When are x86 LFENCE, SFENCE and MFENCE instructions required? - Stack Overflow](https://stackoverflow.com/questions/27595595/when-are-x86-lfence-sfence-and-mfence-instructions-required)
 - [c - GCC memory barrier __sync_synchronize vs asm volatile("": : :"memory") - Stack Overflow](https://stackoverflow.com/questions/19965076/gcc-memory-barrier-sync-synchronize-vs-asm-volatile-memory)
-- [Test-and-set - Wikipedia](https://en.wikipedia.org/wiki/Test-and-set)
+- [Test-and-Set - Wikipedia](https://en.wikipedia.org/wiki/Test-and-Set)
 - [synchronization - When should one use a spinlock instead of mutex? - Stack Overflow](https://stackoverflow.com/questions/5869825/when-should-one-use-a-spinlock-instead-of-mutex)
-- [multithreading - Implementing a mutex with test-and-set atomic operation: will it work for more than 2 threads? - Stack Overflow](https://stackoverflow.com/questions/56725078/implementing-a-mutex-with-test-and-set-atomic-operation-will-it-work-for-more-t)
+- [multithreading - Implementing a mutex with Test-and-Set atomic operation: will it work for more than 2 threads? - Stack Overflow](https://stackoverflow.com/questions/56725078/implementing-a-mutex-with-Test-and-Set-atomic-operation-will-it-work-for-more-t)
 - [language agnostic - How are mutexes implemented? - Stack Overflow](https://stackoverflow.com/questions/1485924/how-are-mutexes-implemented)
 - [Mutual exclusion - Wikipedia](https://en.wikipedia.org/wiki/Mutual_exclusion)
