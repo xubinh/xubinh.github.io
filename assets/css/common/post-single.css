@@ -119,6 +119,7 @@
 .post-content dl,
 .post-content ol,
 .post-content p,
+.post-content details,
 .post-content figure,
 .post-content ul {
     margin-bottom: var(--content-gap);
@@ -210,17 +211,17 @@
     color: var(--table-head-color);
 }
 
-/* 表身第 1, 3, ... 行 (深色) (排除代码块) */
+/* 表身第 1, 3, ... 行 (浅色) (排除代码块) */
 .post-content table:not(.lntable) tbody tr:nth-child(odd) td {
     border-left: 2px solid var(--table-border);
     border-right: 2px solid var(--table-border);
-    background-color: var(--table-body-background-color-odd);
 }
 
-/* 表身第 2, 4, ... 行 (浅色) */
+/* 表身第 2, 4, ... 行 (深色) */
 .post-content table tbody tr:nth-child(even) td {
     border-left: 2px solid var(--table-border);
     border-right: 2px solid var(--table-border);
+    background-color: var(--table-body-background-color-even);
 }
 
 .post-content table th {

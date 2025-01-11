@@ -16,9 +16,9 @@
     --code-bg: rgb(245, 245, 245);
     --border: rgb(221, 221, 221);
     --table-border: rgb(194, 194, 194);
-    --table-head-background-color: #8d8d8d;
+    --table-head-background-color: #a3a3a3;
     --table-head-color: white;
-    --table-body-background-color-odd: #f2f2f2;
+    --table-body-background-color-even: #e9e9e9;
     --code-color: #636363;
     --blockquote-background-color: #f8f8f8;
     --blockquote-color: #81858a;
@@ -38,7 +38,7 @@
     --table-border: rgb(151, 151, 151);
     --table-head-background-color: #777777;
     --table-head-color: rgb(3, 4, 5);
-    --table-body-background-color-odd: #3a3a3a;
+    --table-body-background-color-even: #3a3a3a;
     --code-color: #858585;
     --blockquote-background-color: rgb(56, 56, 56);
     --blockquote-color: rgb(190, 190, 190);
