@@ -47,23 +47,40 @@
         };
     }
 
+    function removeAriaHiddenFromMathElements() {
+        const mathElements = document.querySelectorAll('mjx-math.MJX-TEX[aria-hidden="true"]');
+
+        mathElements.forEach(function (element) {
+            element.removeAttribute('aria-hidden');
+        });
+    }
+
     function makeSmoothScroll() {
+        removeAriaHiddenFromMathElements();
+
+        // get all the in-page jump anchors
         document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-            anchor.addEventListener("click", function (e) {
-                e.preventDefault();
-                var id = this.getAttribute("href").substr(1);
-                // console.log(id);
-                if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-                    document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+            anchor.addEventListener("click", function (event) {
+                event.preventDefault();
+
+                var equation_id = this.getAttribute("href").substr(1);
+
+                if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                    document.querySelector(`[id='${decodeURIComponent(equation_id)}']`).scrollIntoView();
+                }
+
+                else {
+                    document.querySelector(`[id='${decodeURIComponent(equation_id)}']`).scrollIntoView({
                         behavior: "smooth",
                     });
-                } else {
-                    document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
                 }
-                if (id === "top") {
+
+                if (equation_id === "top") {
                     history.replaceState(null, null, " ");
-                } else {
-                    history.pushState(null, null, `#${id}`);
+                }
+
+                else {
+                    history.pushState(null, null, `#${equation_id}`);
                 }
             });
         });
@@ -72,11 +89,16 @@
     function dynamicMathJaxDisplayMathFontSize() {
         const displayMathElements = document.querySelectorAll('mjx-container.MathJax.CtxtMenu_Attached_0[display="true"]');
 
+        // console.log("displayMathElements.length: " + displayMathElements.length);
+
         displayMathElements.forEach(function (element) {
             const currentFontSizeStr = element.style.fontSize;
-            const currentFontSize = currentFontSizeStr.substring(0, currentFontSizeStr.length - 1);
-            const equationFrameworkWidth = element.offsetWidth; // 公式的理论最大宽度
-            const actualEquationWidth = element.children[0].offsetWidth; // 公式内容当前实际的宽度
+            const currentFontSize = currentFontSizeStr.substring(0, currentFontSizeStr.length - 1); // cut off `%`
+            const actualEquationWidth = element.offsetWidth; // 公式内容当前实际的宽度
+            const mainWidth = document.querySelector("main").getBoundingClientRect().width;
+            const mainPaddingString = getComputedStyle(document.querySelector("main")).getPropertyValue('--gap').trim();
+            const mainPadding = mainPaddingString.substring(0, mainPaddingString.length - 2); // cut off `px`
+            const equationFrameworkWidth = mainWidth - 2 * mainPadding; // 公式的理论最大宽度
 
             if (actualEquationWidth <= equationFrameworkWidth) {
                 return;
@@ -90,21 +112,25 @@
 
     window.addEventListener("load", (event) => {
         makeSmoothScroll();
+
         try {
             MathJax.startup.promise
                 .then(makeSmoothScroll)
                 .then(() => {
-                    console.log("[MathJax] Enable smooth scroll for cross references of math✔️");
+                    console.log("[MathJax] Enable smooth scroll for cross references of math. ✔️");
                 })
                 .then(dynamicMathJaxDisplayMathFontSize)
                 .then(() => {
-                    console.log("[MathJax] Set dynamic font sizes of math blocks✔️");
+                    console.log("[MathJax] Set dynamic font sizes of math blocks. ✔️");
                 })
                 .then(() => {
-                    console.log("[MathJax] MathJax is fully loaded✔️");
+                    console.log("[MathJax] MathJax is fully loaded. ✔️");
                 });
         }
-        catch { }
+
+        catch {
+            console.error("[MathJax] Something went wrong. ❌");
+        }
     });
 </script>
 
